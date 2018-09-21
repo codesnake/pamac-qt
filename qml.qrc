@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>HomeForm.ui.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>PageInstalledPackagesForm.ui.qml</file>
+        <file>PackageItemDelegate.qml</file>
+        <file>TableView.qml</file>
+        <file>PagePackageInfo.qml</file>
+        <file>PagePackageInfoForm.ui.qml</file>
+        <file>PagePackageTable.qml</file>
+        <file>SideBar.qml</file>
+        <file>MainSideMenu.qml</file>
+        <file>CategoriesSideMenu.qml</file>
+        <file>ReposSideMenu.qml</file>
+        <file>PackageInfoSideMenu.qml</file>
+    </qresource>
+</RCC>
