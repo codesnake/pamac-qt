@@ -1,14 +1,13 @@
-#ifndef ALPMPACKAGESMODEL_H
-#define ALPMPACKAGESMODEL_H
-#include "AlpmList.h"
+#pragma once
+#include "PackageList.h"
 #include <QObject>
 #include <QAbstractListModel>
 
-
+namespace PamacQt {
 class PackageModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(AlpmPackageList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
+    Q_PROPERTY(PackageList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
 public:
     enum PackageRole {
         NameRole = Qt::UserRole + 1,
@@ -21,7 +20,7 @@ public:
         AppNameRole
     };
 
-    PackageModel(AlpmPackageList packageList, QObject *parent = Q_NULLPTR):QAbstractListModel (parent),m_packageList(packageList){}
+    PackageModel(PackageList packageList, QObject *parent = Q_NULLPTR):QAbstractListModel (parent),m_packageList(packageList){}
     PackageModel(QObject *parent = Q_NULLPTR):QAbstractListModel(parent){}
 
     QHash<int, QByteArray> roleNames() const {
@@ -39,13 +38,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const{ Q_UNUSED(parent);return int(m_packageList.size());}
-    AlpmPackageList packageList() const
+    PackageList packageList() const
     {
         return m_packageList;
     }
 
 public slots:
-    void setPackageList(AlpmPackageList packageList)
+    void setPackageList(PackageList packageList)
     {
         beginResetModel();
         m_packageList = packageList;
@@ -53,9 +52,9 @@ public slots:
     }
 
 signals:
-    void packageListChanged(AlpmPackageList packageList);
+    void packageListChanged(PackageList packageList);
 
 private:
-    AlpmPackageList m_packageList;
+    PackageList m_packageList;
 };
-#endif // ALPMPACKAGESMODEL_H
+} //namespace PamacQt

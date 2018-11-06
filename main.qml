@@ -1,75 +1,59 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import Pamaq.alpm.database 1.0
-import Pamaq.alpm.packageModel 1.0
+import Pamac.alpm.database 1.0
+import Pamac.alpm.packageModel 1.0
 ApplicationWindow {
+    AboutDialog{
+        id:aboutDialog
+    }
+
     id: window
     visible: true
-    width: 800
+    width: 950
     height: 600
     title: qsTr("Package manager")
+    SystemPalette{id:systemPallette}
 
-
-    header: ToolBar {
-        contentHeight: toolButton.implicitHeight
-
-        ToolButton {
-            id: toolButton
-            text: "\u25C0"
-            font.pixelSize: Qt.application.font.pixelSize * 1.4
-            enabled: stackView.depth > 1 || drawer.depth > 1
-            visible: enabled
-            onClicked: {
-                if (stackView.depth > 1) {
-                    stackView.pop()
-                }
-                else if(drawer.depth>1){
-                    drawer.pop();
-                }
-            }
-        }
-
-
-        Label {
-            text: stackView.currentItem.title
-            anchors.centerIn: parent
-        }
-        TextArea {
-            font.pixelSize: Qt.application.font.pixelSize * 1.1
-            placeholderText: "Search..."
-            anchors.right: parent.right
-            anchors.rightMargin: 0.01*parent.width
-            anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle{
-                color:"white"
-                implicitWidth: parent.parent.width * 0.3
-            }
-        }
+    header: PamacToolBar {
+        id: toolBar
     }
 
     StackView{
+
         id:stackView
-        anchors.fill: parent
+        height: parent.height-bottomPanel.height
+        width: parent.width
         initialItem: Page{
-            title:"Packages"
+
             SideBar {
+                font.bold: true
                 id: drawer
-                initialItem: MainSideMenu{
+                initialItem: SideMenuMain{
                     height: parent.height-updatesItem.height
-                }
-            }
-                ItemDelegate {
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    height: 45
-                    id:updatesItem
-                    text: qsTr("Updates")
-                    width: parent.width
-                    onClicked: {
-                        stackView.push("Page2Form.ui.qml")
+                    ItemDelegate {
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        height: 45
+
+                        id:updatesItem
+                        text: qsTr("Updates")
+                        width: parent.width
+                        Connections{
+                            target: Database
+                            onUpdatesReady:{
+                                stackView.push("PagePackageTable.qml",{modelData:upds.getReposUpdates()});
+                            }
+                        }
+
+                        onClicked: {
+                            Database.getUpdatesAsync()
+                        }
                     }
                 }
+
+            }
+
 
             PagePackageTable {
                 id: mainView
@@ -85,5 +69,18 @@ ApplicationWindow {
             }
         }
     }
+    BottomPanel{
+        id:bottomPanel
+        anchors{
+            bottom:parent.bottom
+            left:parent.left
+            right:parent.right
+        }
+    }
 }
 
+
+/*##^## Designer {
+    D{i:4;anchors_x:553}
+}
+ ##^##*/

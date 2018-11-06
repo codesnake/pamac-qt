@@ -1,9 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-import Pamaq.alpm.packageModel 1.0
+import Pamac.alpm.packageModel 1.0
 
 Page {
-    AlpmPackageModel{
+    background: Rectangle{
+        color:"white"
+    }
+
+    PackageModel{
         id:packageModel
         packageList: modelData
     }

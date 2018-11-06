@@ -13,8 +13,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    AlpmPackagesModel.cpp \
-    AlpmDB.cpp
+    Database.cpp \
+    PackageModel.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,10 +30,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    AlpmPackagesModel.h \
-    AlpmPkg.h \
-    AlpmList.h \
-    AlpmDB.h
+    Database.h \
+    PackageList.h \
+    Package.h \
+    PackageModel.h \
+    Updates.h
 
 LIBS+=/usr/lib/libpamac.so /usr/lib/libgobject-2.0.so /usr/lib/libglib-2.0.so
 INCLUDEPATH += "/usr/lib/glib-2.0/include" /usr/include/glib-2.0/
+
+DISTFILES +=
