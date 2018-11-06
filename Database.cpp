@@ -2,13 +2,13 @@
 namespace PamacQt {
 Database::Database(PamacDatabase *db, QObject *parent):
     QObject(parent),
-    db(std::shared_ptr<PamacDatabase>(db,[=](PamacDatabase* ptr){g_object_unref(ptr);})){
+    db(std::shared_ptr<PamacDatabase>(db,g_object_unref)){
     pamac_database_enable_appstream(db);
 }
 
 Database::Database(QString configFile, QObject *parent):
     QObject(parent){
-    db = std::shared_ptr<PamacDatabase>(pamac_database_new(pamac_config_new(configFile.toUtf8())),[=](PamacDatabase* ptr){g_object_unref(ptr);});
+    db = std::shared_ptr<PamacDatabase>(pamac_database_new(pamac_config_new(configFile.toUtf8())),g_object_unref);
     pamac_database_enable_appstream(db.get());
 }
 

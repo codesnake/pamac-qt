@@ -12,11 +12,8 @@ class PackageList
     Q_GADGET
 public:
 
-    PackageList(GList* list):m_list(std::shared_ptr<GList>(list,[=](GList* list){
-    g_list_free_full (list, g_object_unref);
-    })){}
-    PackageList(){
-    }
+    PackageList(GList* list):m_list(std::shared_ptr<GList>(list,[=](GList* list){g_list_free_full (list, g_object_unref);})){}
+    PackageList(){}
     Package operator[](uint index) const
     {
         return Package(static_cast<PamacPackage*>(g_list_nth_data(m_list.get(),index)));

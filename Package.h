@@ -76,9 +76,7 @@ public:
 
     PackageDetails():m_details(nullptr){}
 
-    PackageDetails(PamacPackageDetails* details):m_details(std::shared_ptr<PamacPackageDetails>(details,[=](PamacPackageDetails* ptr){
-       g_object_unref(ptr);
-    })){}
+    PackageDetails(PamacPackageDetails* details):m_details(std::shared_ptr<PamacPackageDetails>(details,g_object_unref)){}
 
     PAMAC_QT_STRING_PROPERTY(name,pamac_package_details_get_name(m_details.get()))
     PAMAC_QT_STRING_PROPERTY(appName,pamac_package_details_get_app_name(m_details.get()))
