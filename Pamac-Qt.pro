@@ -14,7 +14,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     Database.cpp \
-    PackageModel.cpp
+    PackageModel.cpp \
+    Transaction.cpp \
+    Config.cpp
 
 RESOURCES += qml.qrc
 
@@ -34,7 +36,9 @@ HEADERS += \
     PackageList.h \
     Package.h \
     PackageModel.h \
-    Updates.h
+    Updates.h \
+    Transaction.h \
+    Config.h
 
 LIBS+=/usr/lib/libpamac.so /usr/lib/libgobject-2.0.so /usr/lib/libglib-2.0.so
 INCLUDEPATH += "/usr/lib/glib-2.0/include" /usr/include/glib-2.0/

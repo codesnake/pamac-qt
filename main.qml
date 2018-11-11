@@ -3,9 +3,21 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import Pamac.alpm.database 1.0
 import Pamac.alpm.packageModel 1.0
+import Pamac.alpm.transaction 1.0
 ApplicationWindow {
     AboutDialog{
         id:aboutDialog
+    }
+    PreferencesDialog{
+        id:preferencesDialog
+        onRejected: {
+            transaction.unlock();
+        }
+    }
+
+    Transaction{
+        id:transaction
+        database: Database
     }
 
     id: window
@@ -39,15 +51,9 @@ ApplicationWindow {
                         id:updatesItem
                         text: qsTr("Updates")
                         width: parent.width
-                        Connections{
-                            target: Database
-                            onUpdatesReady:{
-                                stackView.push("PagePackageTable.qml",{modelData:upds.getReposUpdates()});
-                            }
-                        }
 
                         onClicked: {
-                            Database.getUpdatesAsync()
+                            stackView.push("UpdatesPage.qml");
                         }
                     }
                 }

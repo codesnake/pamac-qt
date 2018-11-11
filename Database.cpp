@@ -8,7 +8,8 @@ Database::Database(PamacDatabase *db, QObject *parent):
 
 Database::Database(QString configFile, QObject *parent):
     QObject(parent){
-    db = std::shared_ptr<PamacDatabase>(pamac_database_new(pamac_config_new(configFile.toUtf8())),g_object_unref);
+    m_config = Config(configFile);
+    db = std::shared_ptr<PamacDatabase>(pamac_database_new(m_config),g_object_unref);
     pamac_database_enable_appstream(db.get());
 }
 
@@ -80,6 +81,14 @@ void Database::getUpdatesAsync(){
     },this);
 
 
+}
+
+void Database::init()
+{
+    g_signal_connect(db.get(),"get_updates_progress",
+                     reinterpret_cast<GCallback>(+[](GObject* obj,uint percent,Database* t){
+        emit t->getUpdatesProgress(percent);
+    }),this);
 }
 
 } // namespace PamacQt

@@ -19,5 +19,9 @@
         <file>BottomPanel.qml</file>
         <file>AboutDialog.qml</file>
         <file>AboutDialogForm.ui.qml</file>
+        <file>PreferencesDialog.qml</file>
+        <file>PreferencesDialogForm.ui.qml</file>
+        <file>JSUtils.js</file>
+        <file>UpdatesPage.qml</file>
     </qresource>
 </RCC>

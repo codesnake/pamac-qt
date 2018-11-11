@@ -3,6 +3,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 import Pamac.alpm.database 1.0
 import Pamac.alpm.packageModel 1.0
+import "JSUtils.js" as JSUtils
 ToolBar {
     id: toolBar
     padding: 5
@@ -53,7 +54,22 @@ ToolBar {
             Action { text: "Refresh databases" }
             Action { text: "View History" }
             Action { text: "Install local packages" }
-            Action { text: "Preferences" }
+            Action {
+                text: "Preferences"
+                onTriggered: {
+                    if(transaction.getLock()){
+                        JSUtils.connectOnce(transaction.getAuthorizationFinished,function(bool){
+                            if(bool)
+                                preferencesDialog.open();
+                        });
+                        transaction.startGetAuthorization();
+                    }
+
+
+
+
+                }
+            }
             Action {
                 text: "About"
                 onTriggered: {

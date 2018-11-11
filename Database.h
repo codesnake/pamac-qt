@@ -8,10 +8,13 @@
 #include <QJSValue>
 #include <QJSEngine>
 #include "Updates.h"
+#include "Config.h"
 namespace PamacQt {
 class Database:public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(Config config READ config WRITE setConfig NOTIFY configChanged)
+    Q_PROPERTY(bool checkspace READ getCheckspace)
 public:
     enum InstalledPackageTypes{
         Installed,
@@ -56,6 +59,19 @@ public:
     {
         return PackageList(pamac_database_get_group_pkgs(db.get(),group.toUtf8()));
     }
+    inline Q_INVOKABLE QStringList getIgnorePkgs()
+    {
+        QStringList result;
+        auto list = pamac_database_get_ignorepkgs(db.get());
+        for(auto el = list;el!=nullptr;el=el->next)
+        {
+            result.append(QString::fromUtf8(static_cast<char*>(el->data)));
+        }
+
+        g_list_free_full(list,g_free);
+
+        return result;
+    }
 
     Q_INVOKABLE QStringList getPkgFiles(const QString &name);
     inline Q_INVOKABLE PackageList searchPkgs(const QString & name)
@@ -67,10 +83,38 @@ public:
 
     inline operator PamacDatabase*(){return db.get();}
 
+    Config config() const
+    {
+        return m_config;
+    }
+
+    bool getCheckspace() const
+    {
+       return pamac_database_get_checkspace(db.get());
+    }
+
+public slots:
+    void setConfig(Config config)
+    {
+        m_config = config;
+        emit configChanged(config);
+    }
+
+
+
 signals:
     void updatesReady(Updates upds);
+    void getUpdatesProgress(uint percent);
+
+
+    void checkspaceChanged(bool checkspace);
+
+    void configChanged(Config config);
 
 private:
+    void init();
     std::shared_ptr<PamacDatabase> db;
+    Config m_config;
+    bool m_checkspace;
 };
 } //namespace PamacQt
