@@ -2,12 +2,43 @@
 #include "Utils.h"
 #include "QQuickDialog.h"
 #include <QQmlComponent>
+#include <QtDBus/QtDBus>
+
+void send_unity_launcherentry_message(const QVariantMap& message){
+    QDBusMessage signal = QDBusMessage::createSignal("/",
+                                                     "com.canonical.Unity.LauncherEntry",
+                                                     "Update");
+
+    signal << "application://pamac-qt.desktop";
+
+    signal << message;
+
+    QDBusConnection::sessionBus().send(signal);
+}
 
 PamacQt::Transaction::Transaction(Database *db, QObject *parent):QObject(parent),
     transaction(std::shared_ptr<PamacTransaction>(pamac_transaction_new(*db),g_object_unref)),
     m_database(db)
 {
     init();
+}
+
+void PamacQt::Transaction::startWritePamacConfig(const QVariantMap &map){
+    GHashTable* tabl = g_hash_table_new(g_direct_hash,
+                                        g_direct_equal);
+
+    for(QVariantMap::const_iterator it = map.constBegin(), total = map.constEnd();it!=total;++it){
+
+        size_t length = ulong(it.key().toUtf8().length());
+        char* var = new char[length+1];
+        std::memcpy(var,it.key().toUtf8(),length);
+        var[length]='\0';
+
+
+        g_hash_table_insert(tabl,var,Utils::qVariantToGVariant(it.value()));
+    }
+
+    pamac_transaction_start_write_pamac_config(transaction.get(),tabl);
 }
 
 void PamacQt::Transaction::start(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
@@ -62,7 +93,7 @@ void PamacQt::Transaction::init()
     PAMAC_TRANSACTION_GET_CLASS(transaction.get())->choose_optdeps=
             [](PamacTransaction* self, const gchar* pkgname, gchar** optdeps, int optdeps_length1)->GList*{
         QQuickDialog dlg(QUrl("qrc:/src/qml/TransactionOptDependsDialog.qml"));
-        dlg.setWindowTitle("Choose optional dependecies for: "+QString::fromUtf8(pkgname));
+        dlg.setWindowTitle("Choose optional dependecies for"+QString::fromUtf8(pkgname));
 
         QStringList lst = Utils::cStringArrayToQStringList(optdeps,optdeps_length1);
 
@@ -189,6 +220,7 @@ void PamacQt::Transaction::init()
         QString details = this->property("details").toString();
         details.append(action+" "+status+"\n");
         this->setProperty("details",details);
+
     });
     connect(this,&Transaction::emitAction,[=](const QString& action){
         this->setProperty("action",action);
@@ -205,5 +237,14 @@ void PamacQt::Transaction::init()
         QString details = this->property("details").toString();
         details.append(message+"\n");
         this->setProperty("details",details);
+    });
+
+    connect(this,&Transaction::startedChanged,[=](bool started){
+        send_unity_launcherentry_message({{"progress-visible",started},
+                                          {"progress",0}});
+    });
+
+    connect(this,&Transaction::progressChanged,[=](double progress){
+        send_unity_launcherentry_message({{"progress",progress}});
     });
 }

@@ -4,16 +4,64 @@ import Pamac.Database 1.0
 
 ListView {
     boundsBehavior: Flickable.StopAtBounds
-    width: parent.width
-    model:["Accessories","Audio & Video","Development","Internet","Education","Settings","Science","Games","Office","System Tools","Graphics"]
+    ScrollBar.vertical: ScrollBar {
+        active: true
+    }
+    model:ListModel{
+        ListElement{
+            readableName:qsTr("Accessories")
+            categoryName:"Utility"
+        }
+        ListElement{
+            readableName:qsTr("Audio & Video")
+            categoryName:"AudioVideo"
+        }
+        ListElement{
+            readableName:qsTr("Development")
+            categoryName:"Development"
+        }
+        ListElement{
+            readableName:qsTr("Internet")
+            categoryName:"Network"
+        }
+        ListElement{
+            readableName:qsTr("Education")
+            categoryName:"Education"
+        }
+        ListElement{
+            readableName:qsTr("Settings")
+            categoryName:"Settings"
+        }
+        ListElement{
+            readableName:qsTr("Science")
+            categoryName:"Science"
+        }
+        ListElement{
+            readableName:qsTr("Games")
+            categoryName:"Game"
+        }
+        ListElement{
+            readableName:qsTr("Office")
+            categoryName:"Office"
+        }
+        ListElement{
+            readableName:qsTr("System Tools")
+            categoryName:"System"
+        }
+        ListElement{
+            readableName:qsTr("Graphics")
+            categoryName:"Graphics"
+        }
+
+    }
     delegate: MenuItemDelegate{
-        text:modelData
+        text:readableName
         onClicked: {
             currentIndex=index;
-            mainView.modelData = Database.getCategoryPackages(modelData);
+            mainView.modelData = Database.getCategoryPackages(categoryName);
         }
     }
     Component.onCompleted: {
-        mainView.modelData = Database.getCategoryPackages(model[0]);
+        mainView.modelData = Database.getCategoryPackages(model.get(0).categoryName);
     }
 }

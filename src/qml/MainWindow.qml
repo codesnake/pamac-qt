@@ -4,7 +4,23 @@ import QtQuick.Layouts 1.3
 import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
+
 ApplicationWindow {
+
+    function tryLockAndRun(val){
+        if(transaction.getLock()){
+            val.apply(this, arguments)
+        } else{
+
+        }
+    }
+    function clear(){
+        toInstall=[];
+        toRemove=[];
+        toBuild=[];
+        toLoad=[];
+    }
+
     property var toInstall: []
     property var toRemove: []
     property var toBuild: []
@@ -25,23 +41,24 @@ ApplicationWindow {
         database: Database
         onFinished:{
             if(success){
-                toInstall=[];
-                toRemove=[];
-                toBuild=[];
-                toLoad=[];
+                clear();
             }
-
             transaction.unlock();
-
         }
-
+        onStartedChanged: {
+            if(started){
+                details = "";
+            }
+        }
     }
 
     id: mainWindow
     visible: true
     width: 950
     height: 600
+    objectName: "mainWindow"
     title: qsTr("Package manager")
+
     SystemPalette{id:systemPallette}
 
     header: PamacToolBar {
@@ -94,6 +111,13 @@ ApplicationWindow {
 
                 width: mainWindow.width-drawer.width
                 clip:true
+                focus: true
+                Keys.onPressed: {
+                    if(event.text!==""){
+                        searchPane.state="opened";
+                        searchPane.text=event.text;
+                    }
+                }
             }
         }
     }
@@ -104,14 +128,14 @@ ApplicationWindow {
             left:parent.left
             right:parent.right
         }
-        state:(toInstall.length>0 ||
+        state:(transaction.started ||
+               toInstall.length>0 ||
                toRemove.length>0 ||
                toBuild.length>0 ||
-               toLoad.length>0) ?"opened":"hidden"
+               toLoad.length>0 ||
+               sysUpgrade) ?"opened":"hidden"
     }
-    Component.onCompleted: {
-        stackView.push()
-    }
+
 }
 
 

@@ -1,5 +1,18 @@
 #include "PackageModel.h"
 #include <QLocale>
+QHash<int, QByteArray> PamacQt::PackageModel::roleNames() const {
+    QHash<int, QByteArray> roles;
+    roles[NameRole] = "name";
+    roles[SizeRole] = "size";
+    roles[DescriptionRole] = "desc";
+    roles[VersionRole] = "version";
+    roles[RepoNameRole] = "repo";
+    roles[IconRole] = "iconUrl";
+    roles[InstalledVersionRole] = "installedVersion";
+    roles[AppNameRole] = "appName";
+    return roles;
+}
+
 QVariant PamacQt::PackageModel::data(const QModelIndex &index, int role) const
 {
     switch (role) {

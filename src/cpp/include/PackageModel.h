@@ -1,10 +1,10 @@
 #pragma once
 #include "PackageList.h"
 #include <QObject>
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 
 namespace PamacQt {
-class PackageModel : public QAbstractListModel
+class PackageModel : public QAbstractTableModel
 {
     Q_OBJECT
     Q_PROPERTY(PackageList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
@@ -20,31 +20,24 @@ public:
         AppNameRole
     };
 
-    PackageModel(PackageList& packageList, QObject *parent = Q_NULLPTR):QAbstractListModel (parent),m_packageList(packageList){}
-    PackageModel(QObject *parent = Q_NULLPTR):QAbstractListModel(parent){}
+    PackageModel(PackageList& packageList, QObject *parent = Q_NULLPTR):QAbstractTableModel (parent),m_packageList(packageList){}
+    PackageModel(QObject *parent = Q_NULLPTR):QAbstractTableModel(parent){}
 
-    QHash<int, QByteArray>  roleNames() const override {
-        QHash<int, QByteArray> roles;
-        roles[NameRole] = "name";
-        roles[SizeRole] = "size";
-        roles[DescriptionRole] = "desc";
-        roles[VersionRole] = "version";
-        roles[RepoNameRole] = "repo";
-        roles[IconRole] = "iconUrl";
-        roles[InstalledVersionRole] = "installedVersion";
-        roles[AppNameRole] = "appName";
-        return roles;
-    }
+    QHash<int, QByteArray>  roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-
     int rowCount(const QModelIndex &parent = QModelIndex()) const override{ Q_UNUSED(parent);return int(m_packageList.size());}
-    PackageList packageList() const
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override
+    {
+        Q_UNUSED(parent)
+        return 5;
+    }
+    inline PackageList packageList() const
     {
         return m_packageList;
     }
 
 public slots:
-    void setPackageList(PackageList packageList)
+    inline void setPackageList(PackageList packageList)
     {
         beginResetModel();
         m_packageList = std::move(packageList);

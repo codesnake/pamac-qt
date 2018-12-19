@@ -35,7 +35,7 @@ Page {
             anchors.topMargin: 30
             asynchronous:true
             // @disable-check M126
-            source: pkg.iconUrl != "" ? "file://" + pkg.iconUrl : "file:///usr/share/icons/breeze/mimetypes/64/package-x-generic.svg"
+            source: pkg.iconUrl != "" ? "file://" + pkg.iconUrl : "image://icons/package-x-generic"
         }
 
         Label {
@@ -88,7 +88,7 @@ Page {
             visible: false
             checkable: true
             // @disable-check M222
-            checked: toInstall.indexOf(pkg.name)>-1
+            checked: toInstall.indexOf(pkg.name)>-1 &&  rectangle.state=="installedState"
         }
 
 

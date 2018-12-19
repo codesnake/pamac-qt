@@ -1,10 +1,11 @@
-import QtQuick 2.0
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.4
 import Pamac.PackageModel 1.0
+import Pamac.Database 1.0
 
 Page {
     background: Rectangle{
-        color:"white"
+        color:systemPallette.base
     }
 
     PackageModel{
@@ -12,9 +13,13 @@ Page {
         packageList: modelData
     }
     property var modelData
-
-    TableView{
-        id:table
-        model:packageModel
+    PackageTable {
+        anchors.fill: parent
+    }
+    Connections{
+        target: transaction
+        onFinished: {
+            packageModel.packageListChanged();
+        }
     }
 }

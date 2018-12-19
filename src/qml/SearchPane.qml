@@ -1,5 +1,5 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
@@ -42,9 +42,20 @@ Pane{
     }
     
     TextArea{
+       Image{
+
+            id:searchImage
+            source: "image://icons/search"
+            anchors.left: parent.left
+            height: parent.height
+            width: height
+            sourceSize.width: width
+            sourceSize.height: height
+        }
         focus: true
         id:searchArea
         width: parent.width/2
+        leftPadding: searchImage.width + 6
         anchors.centerIn: parent
         onTextChanged: {
             if(tempModel===undefined){

@@ -1,5 +1,4 @@
-QT += quick gui widgets quickwidgets quickcontrols2
-CONFIG += c++1z
+QT += quick gui widgets quickwidgets quickcontrols2 dbus
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -11,7 +10,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
+CONFIG += qtquickcompiler
 
 RESOURCES += qml.qrc
 
@@ -25,6 +24,11 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+# Desktop file
+desktop.path = /usr/share/applications
+desktop.files += data/pamac-qt.desktop
+INSTALLS += desktop
 
 
 LIBS+=/usr/lib/libpamac.so /usr/lib/libgobject-2.0.so /usr/lib/libglib-2.0.so
@@ -41,7 +45,8 @@ HEADERS += \
     src/cpp/include/QQuickDialog.h \
     src/cpp/include/Transaction.h \
     src/cpp/include/Updates.h \
-    src/cpp/include/Utils.h
+    src/cpp/include/Utils.h \
+    src/cpp/include/XDGIconProvider.h
 
 SOURCES += \
     src/cpp/src/Config.cpp \
@@ -50,4 +55,6 @@ SOURCES += \
     src/cpp/src/PackageModel.cpp \
     src/cpp/src/QQuickDialog.cpp \
     src/cpp/src/Transaction.cpp \
-    src/cpp/src/Utils.cpp
+    src/cpp/src/Utils.cpp \
+    src/cpp/src/XDGIconProvider.cpp
+

@@ -53,8 +53,8 @@ Item {
 
 
         Pane{
-
             padding: 6
+
             GridLayout {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -74,10 +74,12 @@ Item {
                     text: qsTr("Remove unrequired dependecies")
                 }
 
-                CheckBox {
+                PreferencesCheckBox {
+                    settingName: "RemoveUnrequiredDeps"
                     checked: config.recurse
                     id: checkBox
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+
                 }
 
                 Label {
@@ -85,7 +87,8 @@ Item {
                     text: qsTr("Check available disk space")
                 }
 
-                CheckBox {
+                PreferencesCheckBox {
+                    settingName: "CheckSpace"
                     checked: Database.checkspace
                     id: checkBox1
                     tristate: false
@@ -97,10 +100,11 @@ Item {
                     text: qsTr("Check for updates")
                 }
 
-                CheckBox {
+                PreferencesCheckBox {
                     checked: config.downloadUpdates
                     id: checkBox2
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    settingName: "DownloadUpdates"
                 }
             }
 
@@ -132,7 +136,7 @@ Item {
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                 }
 
-                CheckBox {
+                PreferencesCheckBox {
                     checked: config.downloadUpdates
                     id: checkBox3
                     x: 0
@@ -141,9 +145,10 @@ Item {
                     anchors.topMargin: 6
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Layout.fillWidth: true
+                    settingName: "DownloadUpdates"
                 }
 
-                CheckBox {
+                PreferencesCheckBox {
                     checked: config.noUpdateHideIcon
                     id: checkBox4
                     x: 0
@@ -152,6 +157,7 @@ Item {
                     anchors.topMargin: 6
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    settingName: "NoUpdateHideIcon"
                 }
 
                 Label {
@@ -173,24 +179,50 @@ Item {
                     anchors.left: label4.right
                     anchors.leftMargin: 6
                     background: Rectangle{
-                        color:"white"
+                        color:systemPallette.base
                     }
 
-                ListView {
+                    ListView {
+                        ScrollBar.vertical: ScrollBar{
+                            visible: true
+                        }
+                        id: listView
+                        boundsBehavior: Flickable.StopAtBounds
+                        clip: true
+                        anchors{
+                            left: parent.left
+                            right: parent.right
+                            top: parent.top
+                            bottom: ignorePkgsButtonBox.top
+                        }
 
-                    id: listView
-                    boundsBehavior: Flickable.StopAtBounds
-                    clip: true
-                   anchors.fill: parent
-                    delegate: Text{
-                        width:parent.width
-                        text: modelData
+                        delegate: Text{
+                            width:parent.width
+                            text: modelData
 
 
+                        }
+                        // @disable-check M222
+                        model:Database.getIgnorePkgs()
                     }
-                    // @disable-check M222
-                    model:Database.getIgnorePkgs()
-                }
+                    Rectangle{
+                        id:ignorePkgsButtonBox
+                        anchors{
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+                        height: 20;
+                        Row{
+                            anchors.fill: parent
+                           Button{
+                               icon.name: "list-add"
+                           }
+                           Button{
+                               icon.name: "list-remove"
+                           }
+                        }
+                    }
                 }
             }
         }
@@ -206,6 +238,10 @@ Item {
             }
 
             ComboBox {
+                // @disable-check M222
+                model: Database.getMirrorsCountries();
+                // @disable-check M222
+                currentIndex: model.indexOf(Database.getMirrorsChoosenCountry());
                 id: comboBox
                 anchors.top: parent.top
                 anchors.topMargin: 0
@@ -257,7 +293,8 @@ Item {
                 anchors.topMargin: 0
             }
 
-            CheckBox {
+            PreferencesCheckBox {
+                enabled: false //aur is not implemented
                 checked: config.enableAur
                 id: checkBox5
                 x: 465
@@ -265,15 +302,17 @@ Item {
                 anchors.rightMargin: 6
                 anchors.top: rectangle.bottom
                 anchors.topMargin: 16
+                settingName: "EnableAUR"
             }
 
-            CheckBox {
+            PreferencesCheckBox {
                 id: checkBox6
                 text: qsTr("Check for updates from AUR")
                 anchors.top: label7.bottom
                 anchors.topMargin: 0
                 anchors.left: parent.left
                 anchors.leftMargin: 30
+                settingName: "CheckAURUpdates"
             }
 
             Label {
@@ -320,7 +359,7 @@ Item {
                 anchors.topMargin: 6
             }
 
-            CheckBox {
+            PreferencesCheckBox {
                 checked: config.cleanRmOnlyUninstalled
                 id: checkBox7
                 text: qsTr("Remove only the versions of uninstalled packages")
@@ -328,6 +367,7 @@ Item {
                 anchors.topMargin: 6
                 anchors.left: parent.left
                 anchors.leftMargin: 30
+                settingName: "OnlyRmUninstalled"
             }
 
             Button {

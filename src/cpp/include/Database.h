@@ -9,6 +9,7 @@
 #include <QJSEngine>
 #include "Updates.h"
 #include "Config.h"
+#include "Utils.h"
 namespace PamacQt {
 class Database:public QObject
 {
@@ -79,6 +80,28 @@ public:
         return PackageList(pamac_database_search_pkgs(db.get(),name.toUtf8()));
     }
 
+    Q_INVOKABLE QStringList getMirrorsCountries(){
+
+        QStringList result;
+        result.append("Worldwide");
+        auto list = pamac_database_get_mirrors_countries(db.get());
+        for(auto el = list;el!=nullptr;el=el->next)
+        {
+            result.append(QString::fromUtf8(static_cast<char*>(el->data)));
+        }
+
+        g_list_free_full(list,g_free);
+
+        return result;
+    }
+    Q_INVOKABLE QString getMirrorsChoosenCountry(){
+        gchar* res = pamac_database_get_mirrors_choosen_country(db.get());
+        QString result = QString::fromUtf8(res);
+        g_free(res);
+        return result;
+
+    }
+
     Q_INVOKABLE void getUpdatesAsync();
 
     inline operator PamacDatabase*(){return db.get();}
@@ -91,6 +114,10 @@ public:
     bool getCheckspace() const
     {
        return pamac_database_get_checkspace(db.get());
+    }
+
+    inline void refresh(){
+        pamac_database_refresh(db.get());
     }
 
 public slots:

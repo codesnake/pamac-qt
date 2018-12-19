@@ -8,20 +8,18 @@ Rectangle {
 
     property int totalPending: toInstall.length+toRemove.length
 
-    function tryLockAndRun(val){
-        if(transaction.getLock()){
-            val.apply(this, arguments)
-        } else{
 
-        }
-    }
 
     function calcTotalSize(){
         var list = stackView.currentItem.updates.getReposUpdates();
         var totalSize = 0;
         for(var i =0;i<list.length;i++){
-            totalSize += list.at(i).size;
+            totalSize += list.at(i).downloadSize;
         }
+        if(totalSize==0){
+            return "";
+        }
+
         return Utils.readableFileSize(totalSize,true);
     }
 
@@ -74,7 +72,7 @@ Rectangle {
             Label{
                 width: parent.width
 
-                text: transaction.started?transaction.action:(sysUpgrade?calcTotalSize():totalPending + " pending")
+                text: transaction.started?transaction.action:(sysUpgrade?"Download size: "+calcTotalSize():totalPending + " pending")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
             }
@@ -89,6 +87,7 @@ Rectangle {
                 to:1
             }
         }
+
         Button{
 
             text:"Details"
@@ -114,6 +113,10 @@ Rectangle {
             enabled: !transaction.started
             text:"Cancel"
             onClicked: {
+                if(sysUpgrade){
+                    stackView.pop();
+                }
+
                 toInstall = [];
                 toRemove = [];
                 toBuild=[];

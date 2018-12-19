@@ -9,7 +9,9 @@ CheckBox {
     property var settingName
     id: checkBox
     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-    onCheckedChanged: {
-        transaction.startWritePamacConfig({settingName:checked});
+    onClicked: {
+        var pref = {};
+        pref[settingName]=checked;
+        transaction.startWritePamacConfig(pref);
     }
 }

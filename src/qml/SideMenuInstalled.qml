@@ -2,7 +2,6 @@ import QtQuick 2.0
 import Pamac.Database 1.0
 ListView{
     boundsBehavior: Flickable.StopAtBounds
-    width: parent.width
     model:ListModel{
         ListElement{
             name:"Installed"

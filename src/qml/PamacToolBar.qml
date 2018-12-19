@@ -1,8 +1,9 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.4
+import QtQuick.Controls 2.6
 import QtQuick.Layouts 1.3
 import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
+import QtQuick.Dialogs 1.2
 import "../js/JSUtils.js" as JSUtils
 ToolBar {
 
@@ -15,7 +16,7 @@ ToolBar {
         flat:true
         id: toolButton
         width: height
-        icon.name: "go-previous-symbolic"
+        icon.name: "go-previous"
         font.pixelSize: Qt.application.font.pixelSize * 1.4
         enabled: stackView.depth > 1 || drawer.depth > 1
         visible: enabled
@@ -32,7 +33,7 @@ ToolBar {
     
     
     Label {
-        text: stackView.currentItem.title
+        text: stackView.currentItem.title!==undefined?stackView.currentItem.title:""
         anchors.centerIn: parent
     }
 
@@ -56,6 +57,7 @@ ToolBar {
     }
 
     ToolButton {
+        checkable: true;
         id: toolButton1
         anchors.right: parent.right
         width: height
@@ -64,16 +66,42 @@ ToolBar {
         icon.name: "application-menu"
         font.pixelSize: Qt.application.font.pixelSize * 1.4
         anchors.verticalCenter: parent.verticalCenter
-        onClicked: {
-            contextMenu.open();
-        }
 
+        FileDialog{
+            id:fileDialog
+            title: qsTr("Install Local Packages")
+            folder: shortcuts.home
+            nameFilters: ["Pacman packages (*.pkg.tar.xz)"]
+            onAccepted: {
+                for(var i =0;i<fileUrls.length;i++){
+                    toLoad.push(fileUrls[i].toString());
+                }
+
+                if(transaction.getLock())
+                    transaction.start([],[],toLoad,[],[],[]);
+            }
+        }
         Menu {
+            visible: toolButton1.checked
             y: toolButton1.height
             id: contextMenu
-            Action { text: "Refresh databases" }
+            Action {
+                text: "Refresh databases"
+                onTriggered: {
+                    if(transaction.getLock()){
+                        transaction.startSysupgrade(true,false,[],[]);
+                    }
+                }
+            }
             Action { text: "View History" }
-            Action { text: "Install local packages" }
+            Action {
+
+
+                text: "Install local packages"
+                onTriggered: {
+                    fileDialog.visible = true;
+                }
+            }
             Action {
                 text: "Preferences"
                 onTriggered: {
@@ -84,10 +112,6 @@ ToolBar {
                         });
                         transaction.startGetAuthorization();
                     }
-
-
-
-
                 }
             }
             Action {

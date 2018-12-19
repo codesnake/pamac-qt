@@ -5,7 +5,6 @@
 #include <QVector>
 #include <QDebug>
 #include <memory>
-#include <iostream>
 
 namespace PamacQt {
 class PackageList

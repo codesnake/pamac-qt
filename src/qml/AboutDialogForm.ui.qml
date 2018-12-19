@@ -11,7 +11,7 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 25
         anchors.horizontalCenter: parent.horizontalCenter
-        source: "file:///usr/share/icons/breeze/mimetypes/64/package-x-generic.svg"
+        source: "image://icons/package-x-generic"
     }
 
     Label {

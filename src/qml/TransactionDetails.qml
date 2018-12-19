@@ -2,6 +2,7 @@ import QtQuick 2.11
 import QtQuick.Controls 2.4
 
 Page {
+    title: "Transaction Details"
     objectName: "transactionDetailsPage"
     TextArea{
         readOnly: true

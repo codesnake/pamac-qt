@@ -64,21 +64,7 @@ public:
     Q_INVOKABLE bool unlock(){
         return pamac_transaction_unlock(transaction.get());
     }
-    Q_INVOKABLE void startWritePamacConfig(const QVariantHash &hash){
-        GHashTable* tabl = nullptr;
-
-        for(QVariantHash::const_iterator it = hash.constBegin();it!=hash.constEnd();++it){
-            void* key = malloc(it.key().toUtf8().size());
-            std::memcpy(key,it.key().toUtf8(),it.key().toUtf8().size());
-
-            void* value = malloc(QMetaType::sizeOf(it.value().type()));
-            std::memcpy(value,it.value().data(),QMetaType::sizeOf(it.value().type()));
-
-            g_hash_table_insert(tabl,key,value);
-        }
-
-        pamac_transaction_start_write_pamac_config(transaction.get(),tabl);
-    }
+    Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
 
 
     Database* database() const
@@ -134,7 +120,7 @@ signals:
 private:
     void init();
     std::shared_ptr<PamacTransaction> transaction;
-    Database* m_database;
+    Database* m_database = nullptr;
 
     QString m_action;
     double m_progress = 0;

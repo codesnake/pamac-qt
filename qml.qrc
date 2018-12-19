@@ -4,7 +4,6 @@
         <file>src/qml/BottomPanel.qml</file>
         <file>src/qml/MainWindow.qml</file>
         <file>src/qml/MenuItemDelegate.qml</file>
-        <file>src/qml/PackageItemDelegate.qml</file>
         <file>src/qml/PagePackageInfo.qml</file>
         <file>src/qml/PagePackageTable.qml</file>
         <file>src/qml/PamacToolBar.qml</file>
@@ -19,7 +18,6 @@
         <file>src/qml/SideMenuPackageInfo.qml</file>
         <file>src/qml/SideMenuRepos.qml</file>
         <file>src/qml/SummaryCategoryListView.qml</file>
-        <file>src/qml/TableView.qml</file>
         <file>src/qml/TransactionDetails.qml</file>
         <file>src/qml/TransactionOptDependsDialog.qml</file>
         <file>src/qml/TransactionSummaryDialog.qml</file>
@@ -28,5 +26,20 @@
         <file>src/qml/AboutDialogForm.ui.qml</file>
         <file>src/qml/PagePackageInfoForm.ui.qml</file>
         <file>src/qml/PreferencesDialogForm.ui.qml</file>
+        <file>src/qml/PackageTable.qml</file>
+        <file>icons/builtin/16x16/apps/system-software-install.svg</file>
+        <file>icons/builtin/16x16/status/package-available-locked.svg</file>
+        <file>icons/builtin/16x16/status/package-available.svg</file>
+        <file>icons/builtin/16x16/status/package-install.svg</file>
+        <file>icons/builtin/16x16/status/package-installed-locked.svg</file>
+        <file>icons/builtin/16x16/status/package-installed-updated.svg</file>
+        <file>icons/builtin/16x16/status/package-reinstall.svg</file>
+        <file>icons/builtin/16x16/status/package-remove.svg</file>
+        <file>icons/builtin/16x16/status/package-upgrade.svg</file>
+        <file>icons/builtin/24x24/status/pamac-tray-no-update.svg</file>
+        <file>icons/builtin/24x24/status/pamac-tray-update.svg</file>
+        <file>icons/builtin/32x32/apps/system-software-install.svg</file>
+        <file>icons/builtin/48x48/apps/system-software-install.svg</file>
+        <file>icons/builtin/index.theme</file>
     </qresource>
 </RCC>

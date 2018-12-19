@@ -54,6 +54,8 @@ public:
 
     PAMAC_QT_INT_PROPERTY(size,pamac_package_get_size(package))
 
+    PAMAC_QT_INT_PROPERTY(downloadSize,pamac_package_get_download_size(package))
+
 
     operator PamacPackage*()
     {
