@@ -1,13 +1,20 @@
 import QtQuick 2.11
-import QtQuick.Controls 2.4
+import QtQuick.Controls 2.12
 
 Page {
     title: "Transaction Details"
     objectName: "transactionDetailsPage"
-    TextArea{
-        readOnly: true
+    ScrollView{
+        id:scrollView
         anchors.fill: parent
-        id:area
-        text: transaction.details
+        TextArea{
+            background: Rectangle{
+                color:systemPalette.alternateBase
+            }
+
+            readOnly: true
+            id:area
+            text: transaction.details
+        }
     }
 }

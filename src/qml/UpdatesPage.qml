@@ -15,7 +15,9 @@ Page {
                 updatesPackageTable.modelData = upList;
                 updatesPackageTable.visible= true;
             } else {
-                progress.text = qsTr("No updates available")
+                updatesPackageTable.modelData = undefined;
+                updates=undefined;
+                progress.text = qsTr("No updates available");
             }
 
         }

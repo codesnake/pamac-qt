@@ -18,7 +18,7 @@ ToolBar {
         width: height
         icon.name: "go-previous"
         font.pixelSize: Qt.application.font.pixelSize * 1.4
-        enabled: stackView.depth > 1 || drawer.depth > 1
+        enabled: stackView.depth > 1 || drawer.depth > 1 || searchPane.text.length>0
         visible: enabled
         onClicked: {
             if (stackView.depth > 1) {
@@ -27,6 +27,8 @@ ToolBar {
             else if(drawer.depth>1){
                 drawer.pop();
                 mainView.modelData=Database.getInstalledApps()
+            } else if(searchPane.text.length>0){
+                searchPane.text=""
             }
         }
     }
@@ -38,6 +40,7 @@ ToolBar {
     }
 
     ToolButton {
+        visible: stackView.currentItem.objectName==""
         id: toolButton2
         icon.name: "search"
         anchors.right: toolButton1.left
@@ -61,7 +64,6 @@ ToolBar {
         id: toolButton1
         anchors.right: parent.right
         width: height
-        anchors.verticalCenterOffset: 0
         flat: true
         icon.name: "application-menu"
         font.pixelSize: Qt.application.font.pixelSize * 1.4
@@ -71,7 +73,7 @@ ToolBar {
             id:fileDialog
             title: qsTr("Install Local Packages")
             folder: shortcuts.home
-            nameFilters: ["Pacman packages (*.pkg.tar.xz)"]
+            nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
             onAccepted: {
                 for(var i =0;i<fileUrls.length;i++){
                     toLoad.push(fileUrls[i].toString());
@@ -82,6 +84,9 @@ ToolBar {
             }
         }
         Menu {
+            onClosed: toolButton1.checked=false
+
+
             visible: toolButton1.checked
             y: toolButton1.height
             id: contextMenu
@@ -93,10 +98,12 @@ ToolBar {
                     }
                 }
             }
-            Action { text: "View History" }
+            Action { text: "View History"
+            onTriggered: {
+                historyDialog.open();
+            }
+            }
             Action {
-
-
                 text: "Install local packages"
                 onTriggered: {
                     fileDialog.visible = true;

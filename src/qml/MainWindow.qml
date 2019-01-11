@@ -1,6 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
+import QtGraphicalEffects 1.0
 import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
@@ -36,29 +38,36 @@ ApplicationWindow {
         }
     }
 
+    Dialog{
+        height: 400
+        width: 300
+        id:historyDialog
+        TextArea{
+            anchors.fill: parent
+            text:Database.history
+        }
+    }
+
     Transaction{
         id:transaction
         database: Database
         onFinished:{
             if(success){
                 clear();
+                 details = "";
             }
             transaction.unlock();
-        }
-        onStartedChanged: {
-            if(started){
-                details = "";
-            }
         }
     }
 
     id: mainWindow
     visible: true
+    minimumWidth: 750
+    minimumHeight: 450
     width: 950
-    height: 600
+    height: 550
     objectName: "mainWindow"
     title: qsTr("Package manager")
-
     SystemPalette{id:systemPallette}
 
     header: PamacToolBar {
@@ -73,6 +82,7 @@ ApplicationWindow {
         initialItem: Page{
 
             SideBar {
+                height: stackView.height
                 font.bold: true
                 id: drawer
                 initialItem: SideMenuMain{
@@ -81,7 +91,7 @@ ApplicationWindow {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         height: 45
-
+                        leftPadding: 15
                         id:updatesItem
                         text: qsTr("Updates")
                         width: parent.width
@@ -93,29 +103,53 @@ ApplicationWindow {
                 }
 
             }
+            Item {
+                layer.enabled: true
+                layer.effect: DropShadow {
+                    transparentBorder: true
+                    horizontalOffset: 0
+                    verticalOffset: -1
+                    radius: 6
+                    color: systemPallette.dark
+                }
 
-            SearchPane {
-                state: "hidden"
-                id: searchPane
-
-            }
-
-            PagePackageTable {
-                id: mainView
-
-                modelData: Database.getInstalledApps()
-
-                anchors.right:parent.right
-                anchors.top:searchPane.bottom
-                anchors.bottom:parent.bottom
-
+                anchors{
+                    right:parent.right
+                    top:parent.top
+                    bottom:parent.bottom
+                }
                 width: mainWindow.width-drawer.width
-                clip:true
-                focus: true
-                Keys.onPressed: {
-                    if(event.text!==""){
-                        searchPane.state="opened";
-                        searchPane.text=event.text;
+
+                SearchPane {
+                    anchors{
+                        top:parent.top
+                        right:parent.right
+                        left:parent.left
+                    }
+                    state: "hidden"
+                    id: searchPane
+
+                }
+                PagePackageTable {
+
+                    id: mainView
+
+                    modelData: Database.getInstalledApps()
+
+                    anchors{
+                        left: parent.left
+                        right: parent.right
+                        bottom:parent.bottom
+                        top:searchPane.bottom
+                    }
+
+                    clip:true
+                    focus: true
+                    Keys.onPressed: {
+                        if(event.text!==""){
+                            searchPane.state="opened";
+                            searchPane.text=event.text;
+                        }
                     }
                 }
             }

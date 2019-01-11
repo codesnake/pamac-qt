@@ -6,4 +6,6 @@ ItemDelegate {
     highlighted: index==currentIndex
     width: parent.width
     height:45
+    leftPadding: 15
+    font.pixelSize: 12
 }

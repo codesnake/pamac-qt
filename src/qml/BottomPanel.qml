@@ -3,8 +3,23 @@ import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import "../js/JSUtils.js" as Utils
 
-Rectangle {
-    property bool sysUpgrade: stackView.currentItem.objectName == "updatesPage"
+Pane {
+    background: Pane{
+        padding: 0
+        Rectangle{
+            height: 1
+
+            anchors{
+                left: parent.left
+                top:parent.top
+                right: parent.right
+            }
+            color:systemPallette.text
+        }
+    }
+
+    padding: 3
+    property bool sysUpgrade: stackView.currentItem.objectName == "updatesPage" && stackView.currentItem.updates!==undefined
 
     property int totalPending: toInstall.length+toRemove.length
 
@@ -20,26 +35,18 @@ Rectangle {
             return "";
         }
 
-        return Utils.readableFileSize(totalSize,true);
+        return qsTr("Download size: ")+Utils.readableFileSize(totalSize,true);
     }
 
     id:bottomPanel
-    Rectangle{
-        anchors{
-            top: parent.top
 
-        }
-        height: 1
-        width:parent.width
-        color:systemPallette.highlight
-    }
 
     states:[
         State{
             name:"opened"
             PropertyChanges {
                 target: bottomPanel
-                height:row.height
+                height:row.height+padding*2
             }
         },
         State{
@@ -56,6 +63,8 @@ Rectangle {
             to:"*"
             animations:[
                 NumberAnimation{
+                    duration: 350
+                    easing.type: Easing.InOutQuad
                     properties: "height"
                 }
             ]
@@ -72,7 +81,7 @@ Rectangle {
             Label{
                 width: parent.width
 
-                text: transaction.started?transaction.action:(sysUpgrade?"Download size: "+calcTotalSize():totalPending + " pending")
+                text: transaction.started?transaction.action:(sysUpgrade?calcTotalSize():totalPending + " pending")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
             }
@@ -89,11 +98,10 @@ Rectangle {
         }
 
         Button{
-
+            enabled: stackView.currentItem.objectName!="transactionDetailsPage" && transaction.started
             text:"Details"
             onClicked: {
-                if(stackView.currentItem.objectName!="transactionDetailsPage")
-                    stackView.push("TransactionDetails.qml");
+                stackView.push("TransactionDetails.qml");
             }
         }
         Button{

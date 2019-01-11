@@ -4,7 +4,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
 import Pamac.PackageModel 1.0
 
-Rectangle{
+Page{
     property var summary
     width: 600
     height: 400
@@ -66,9 +66,9 @@ Rectangle{
             right: parent.right
         }
         standardButtons: DialogButtonBox.Ok | DialogButtonBox.Cancel
-        onAccepted: parent.accepted()
-        onRejected: parent.rejected()
+        onAccepted: dialogAccepted()
+        onRejected: dialogRejected()
     }
-    signal accepted
-    signal rejected
+    signal dialogAccepted
+    signal dialogRejected
 }

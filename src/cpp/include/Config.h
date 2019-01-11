@@ -3,38 +3,8 @@
 #include <QObject>
 #include <QtDebug>
 #include <memory>
-#define PAMAC_QT_STRING_PROPERTY_GET(name,method)\
-    Q_PROPERTY(QString name READ name)\
-    QString name() const\
-{\
-    return QString::fromUtf8(method);\
-    }
-#define PAMAC_QT_STRING_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
-    Q_PROPERTY(QString name READ name WRITE setName)\
-    QString name() const\
-{\
-    return QString::fromUtf8(method);\
-    }\
-    void setName(const QString& str)\
-{\
-    setMethod(str.toUtf8());\
-    }
-#define PAMAC_QT_ULONG_PROPERTY_GET(name,method)\
-    Q_PROPERTY(ulong name READ name)\
-    ulong name() const\
-{\
-    return method;\
-    }
-#define PAMAC_QT_BOOL_PROPERTY_GET_SET(name,method,setName,setMethod)\
-    Q_PROPERTY(bool name READ name WRITE setName)\
-    bool name() const\
-{\
-    return method;\
-    }\
-    void setName(bool name)\
-{\
-    setMethod;\
-    }
+#include "Utils.h"
+
 namespace PamacQt {
 
 class Config

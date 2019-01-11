@@ -4,23 +4,29 @@ import Pamac.PackageModel 1.0
 import Pamac.Database 1.0
 
 TableView{
-onWidthChanged: {
-    forceLayout();
-}
-    property var columnWidths: [30,"exp",45,65,65]
+    onWidthChanged: {
+        forceLayout();
+    }
+    Connections{
+        target: packageModel
+        onPackageListChanged:{
+            table.selectedRows=[];
+        }
+    }
+    property var columnWidths: [50,"exp",45,65,65]
 
     function columnWidth(column) {
-            return columnWidths[column]==="exp"?
-                width-width/4:columnWidths[column];
-        }
+        return columnWidths[column]==="exp"?
+                    width-width/4:columnWidths[column];
+    }
     Row{
         topPadding: -height
         id: header
-        height: 23
+        height: 20
         width: parent.width
 
         Repeater {
-            height: 23
+            height: parent.height
             width: parent.width
             model: ListModel{
                 id:headerModel
@@ -42,11 +48,12 @@ onWidthChanged: {
             }
             Label {
                 clip: true
-                height: 23
+                height: parent.height
                 id:headerBlock
                 text: name
                 width: columnWidth(index)
-                font.pixelSize: Qt.application.font.pixelSize * 1.2
+                font.pixelSize: Qt.application.font.pixelSize * 1.1
+
                 padding: 3
                 MouseArea{
                     anchors.right: parent.right
@@ -67,7 +74,11 @@ onWidthChanged: {
                         table.forceLayout();
                     }
                 }
-                background: ToolButton{flat:true}
+                background:Rectangle{
+                    color: systemPallette.base
+                    border.width: 0.5
+                    border.color: systemPallette.alternateBase
+                }
             }
 
 

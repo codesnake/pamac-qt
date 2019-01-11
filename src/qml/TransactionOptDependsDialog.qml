@@ -1,6 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.4
-Item {
+Page {
 
     property string pkgName
     property var opDeps
@@ -29,6 +29,7 @@ Item {
             }
         }
     }
+
     DialogButtonBox{
 
         id:buttonBox
@@ -39,11 +40,11 @@ Item {
             right: parent.right
         }
         standardButtons: DialogButtonBox.Ok
-        onAccepted: parent.accepted()
-        onRejected: parent.rejected()
+        onAccepted: dialogAccepted()
+        onRejected: dialogRejected()
     }
-    signal accepted
-    signal rejected
+    signal dialogAccepted
+    signal dialogRejected
 
     function onShow(){
         for(var i = 0;i<opDeps.length;i++){

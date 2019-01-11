@@ -55,14 +55,14 @@ public:
     Transaction(Database* db,QObject* parent = nullptr);
     Transaction(QObject * parent = nullptr):QObject(parent){}
     Q_INVOKABLE void startGetAuthorization(){
-        pamac_transaction_start_get_authorization(transaction.get());
+        pamac_transaction_start_get_authorization(m_transaction.get());
     }
 
     Q_INVOKABLE bool getLock(){
-        return pamac_transaction_get_lock(transaction.get());
+        return pamac_transaction_get_lock(m_transaction.get());
     }
     Q_INVOKABLE bool unlock(){
-        return pamac_transaction_unlock(transaction.get());
+        return pamac_transaction_unlock(m_transaction.get());
     }
     Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
 
@@ -83,10 +83,10 @@ public slots:
         if (m_database == database)
             return;
 
-        if (transaction==nullptr){
-            transaction = std::shared_ptr<PamacTransaction>(pamac_transaction_new(*database),g_object_unref);
+        if (m_transaction==nullptr){
+            m_transaction = std::shared_ptr<PamacTransaction>(pamac_transaction_new(*database),g_object_unref);
         } else{
-            pamac_transaction_set_database(transaction.get(),*database);
+            pamac_transaction_set_database(m_transaction.get(),*database);
         }
         m_database = database;
         init();
@@ -119,7 +119,7 @@ signals:
 
 private:
     void init();
-    std::shared_ptr<PamacTransaction> transaction;
+    std::shared_ptr<PamacTransaction> m_transaction;
     Database* m_database = nullptr;
 
     QString m_action;

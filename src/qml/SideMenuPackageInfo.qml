@@ -5,6 +5,7 @@ ListView {
     boundsBehavior: Flickable.StopAtBounds
     model:["Description","Dependecies","Files"]
     delegate:  MenuItemDelegate{
+        id:packageInfoDelegate
         text:modelData
         onClicked: {
             infoStackLayout.currentIndex = index;

@@ -12,14 +12,17 @@ Page {
         id:packageModel
         packageList: modelData
     }
+
     property var modelData
     PackageTable {
         anchors.fill: parent
+
     }
-    Connections{
-        target: transaction
-        onFinished: {
-            packageModel.packageListChanged();
-        }
-    }
+//    Connections{
+//        target: transaction
+//        onFinished: {
+//            packageModel.packageListChanged();
+//        }
+//    }
+
 }

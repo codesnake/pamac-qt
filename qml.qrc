@@ -23,9 +23,6 @@
         <file>src/qml/TransactionSummaryDialog.qml</file>
         <file>src/qml/UpdatesPage.qml</file>
         <file>src/js/JSUtils.js</file>
-        <file>src/qml/AboutDialogForm.ui.qml</file>
-        <file>src/qml/PagePackageInfoForm.ui.qml</file>
-        <file>src/qml/PreferencesDialogForm.ui.qml</file>
         <file>src/qml/PackageTable.qml</file>
         <file>icons/builtin/16x16/apps/system-software-install.svg</file>
         <file>icons/builtin/16x16/status/package-available-locked.svg</file>

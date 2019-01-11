@@ -5,14 +5,37 @@ import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 
 StackView {
+    id:drawerStack
+    states: [
+        State{
+            name:"opened"
+            PropertyChanges {
+                target: drawerStack
+                width:Math.min(175,parent.width*0.3)
+            }
+        },
+        State{
+            name:"hidden"
+            PropertyChanges {
+                target: drawerStack
+                width:0
+            }
+        }
+    ]
+    transitions: [
+        Transition {
+            from: "*"
+            to: "*"
+            animations:[
+                NumberAnimation{
+                    duration: 200
+                    easing.type: Easing.InOutQuad
+                    properties: "width"
+            }
+            ]
+        }]
+
     anchors.left: parent.left
-    width:Math.min(150,parent.width*0.3)
+    state: "opened"
     height: parent.height
-    Rectangle{
-        anchors.right: parent.right
-        color:systemPallette.highlight
-        height: parent.height
-        width: 1
-        z:10
-    }
 }

@@ -17,7 +17,7 @@ void send_unity_launcherentry_message(const QVariantMap& message){
 }
 
 PamacQt::Transaction::Transaction(Database *db, QObject *parent):QObject(parent),
-    transaction(std::shared_ptr<PamacTransaction>(pamac_transaction_new(*db),g_object_unref)),
+    m_transaction(std::shared_ptr<PamacTransaction>(pamac_transaction_new(*db),g_object_unref)),
     m_database(db)
 {
     init();
@@ -38,7 +38,7 @@ void PamacQt::Transaction::startWritePamacConfig(const QVariantMap &map){
         g_hash_table_insert(tabl,var,Utils::qVariantToGVariant(it.value()));
     }
 
-    pamac_transaction_start_write_pamac_config(transaction.get(),tabl);
+    pamac_transaction_start_write_pamac_config(m_transaction.get(),tabl);
 }
 
 void PamacQt::Transaction::start(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
@@ -53,7 +53,7 @@ void PamacQt::Transaction::start(const QStringList& toInstall, const QStringList
     auto ignore = qStringListToCStringVector(tempIgnore);
     auto overwrite = qStringListToCStringVector(overwriteFiles);
 
-    pamac_transaction_start(transaction.get(),install.data(),int(install.size()),
+    pamac_transaction_start(m_transaction.get(),install.data(),int(install.size()),
                             remove.data(),int(remove.size()),
                             load.data(),int(load.size()),
                             build.data(),int(build.size()),
@@ -70,7 +70,7 @@ void PamacQt::Transaction::startSysupgrade(bool forceRefresh, bool enableDowngra
     auto ignore = qStringListToCStringVector(tempIgnore);
     auto overwrite = qStringListToCStringVector(overwriteFiles);
 
-    pamac_transaction_start_sysupgrade(transaction.get(),forceRefresh,enableDowngrade,
+    pamac_transaction_start_sysupgrade(m_transaction.get(),forceRefresh,enableDowngrade,
                                        ignore.data(),int(ignore.size()),
                                        overwrite.data(),int(overwrite.size()));
     setProperty("started",true);
@@ -78,7 +78,7 @@ void PamacQt::Transaction::startSysupgrade(bool forceRefresh, bool enableDowngra
 void PamacQt::Transaction::init()
 {
     //methods override
-    PAMAC_TRANSACTION_GET_CLASS(transaction.get())->ask_commit=
+    PAMAC_TRANSACTION_GET_CLASS(m_transaction.get())->ask_commit=
             [](PamacTransaction* self, PamacTransactionSummary* summary)->gboolean{
 
         QQuickDialog dlg(QUrl("qrc:/src/qml/TransactionSummaryDialog.qml"));
@@ -90,7 +90,7 @@ void PamacQt::Transaction::init()
 
 
     };
-    PAMAC_TRANSACTION_GET_CLASS(transaction.get())->choose_optdeps=
+    PAMAC_TRANSACTION_GET_CLASS(m_transaction.get())->choose_optdeps=
             [](PamacTransaction* self, const gchar* pkgname, gchar** optdeps, int optdeps_length1)->GList*{
         QQuickDialog dlg(QUrl("qrc:/src/qml/TransactionOptDependsDialog.qml"));
         dlg.setWindowTitle("Choose optional dependecies for"+QString::fromUtf8(pkgname));
@@ -124,35 +124,35 @@ void PamacQt::Transaction::init()
         }
         return result;
     };
-    PAMAC_TRANSACTION_GET_CLASS(transaction.get())->choose_provider=
+    PAMAC_TRANSACTION_GET_CLASS(m_transaction.get())->choose_provider=
             [](PamacTransaction* self, const gchar* depend, gchar** providers, int providers_length1)->gint{
         std::cout<<(depend)<<std::endl;
         return 0;
     };
 
 
-    g_signal_connect(transaction.get(),"get_authorization_finished",
+    g_signal_connect(m_transaction.get(),"get_authorization_finished",
                      reinterpret_cast<GCallback>(+[](GObject* obj,bool authorized,Transaction* t){
                          Q_UNUSED(obj);
                          emit t->getAuthorizationFinished(authorized);
                      }),this);
 
 
-    g_signal_connect(transaction.get(),"finished",
+    g_signal_connect(m_transaction.get(),"finished",
                      reinterpret_cast<GCallback>(+[](GObject* obj,bool success,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Finished with result: "<<success<<std::endl;
                          emit t->finished(success);
                      }),this);
 
-    g_signal_connect(transaction.get(),"emit_action",
+    g_signal_connect(m_transaction.get(),"emit_action",
                      reinterpret_cast<GCallback>(+[](GObject* obj,char* action,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Action: "<<action<<std::endl;
                          emit t->emitAction(QString::fromUtf8(action));
                      }),this);
 
-    g_signal_connect(transaction.get(),"emit_action_progress",
+    g_signal_connect(m_transaction.get(),"emit_action_progress",
                      reinterpret_cast<GCallback>(+[](GObject* obj,char* action,char* status,double progress,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Progress: "<<action<<status<<progress<<std::endl;
@@ -160,7 +160,7 @@ void PamacQt::Transaction::init()
                          emit t->emitActionProgress(QString::fromUtf8(action),QString::fromUtf8(status),progress);
                      }),this);
 
-    g_signal_connect(transaction.get(),"emit_error",
+    g_signal_connect(m_transaction.get(),"emit_error",
                      reinterpret_cast<GCallback>(+[](GObject* obj,char* message,char** details,int size,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Error: "<<message<<std::endl<<"Details:"<<std::endl;
@@ -170,39 +170,39 @@ void PamacQt::Transaction::init()
                          emit t->emitError(QString::fromUtf8(message),
                          Utils::cStringArrayToQStringList(details,size));
                      }),this);
-    g_signal_connect(transaction.get(),"emit_warning",
+    g_signal_connect(m_transaction.get(),"emit_warning",
                      reinterpret_cast<GCallback>(+[](GObject* obj,char* warning,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Warning: "<<warning<<std::endl;
                          emit t->emitWarning(QString::fromUtf8(warning));
                      }),this);
-    g_signal_connect(transaction.get(),"start_preparing",
+    g_signal_connect(m_transaction.get(),"start_preparing",
                      reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Started preparing"<<std::endl;
                          emit t->startPreparing();
                      }),this);
-    g_signal_connect(transaction.get(),"stop_preparing",
+    g_signal_connect(m_transaction.get(),"stop_preparing",
                      reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Stopped preparing"<<std::endl;
                          emit t->stopPreparing();
                      }),this);
 
-    g_signal_connect(transaction.get(),"emit_script_output",
+    g_signal_connect(m_transaction.get(),"emit_script_output",
                      reinterpret_cast<GCallback>(+[](GObject* obj,char* message,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Script: "<<message<<std::endl;
                          emit t->emitScriptOutput(QString::fromUtf8(message));
                      }),this);
 
-    g_signal_connect(transaction.get(),"important_details_outpout",
+    g_signal_connect(m_transaction.get(),"important_details_outpout",
                      reinterpret_cast<GCallback>(+[](GObject* obj,bool message,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"Important details: "<<message<<std::endl;
                          emit t->importantDetailsOutput(message);
                      }),this);
-    g_signal_connect(transaction.get(),"sysupgrade_finished",
+    g_signal_connect(m_transaction.get(),"sysupgrade_finished",
                      reinterpret_cast<GCallback>(+[](GObject* obj,bool success,Transaction* t){
                          Q_UNUSED(obj);
                          std::cout<<"System upgrade finished with rusult: "<<success<<std::endl;

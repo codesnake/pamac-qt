@@ -20,7 +20,9 @@ Pane{
             PropertyChanges {
                 target: searchPane
                 height:0
+                text:""
             }
+
         }
     ]
     transitions: [
@@ -35,30 +37,30 @@ Pane{
         }
     ]
     id:searchPane
-    anchors{
-        top:parent.top
-        right:parent.right
-        left:mainView.left
-    }
+
     
     TextArea{
-       Image{
 
+        Image{
+            anchors.verticalCenter: parent.verticalCenter
             id:searchImage
             source: "image://icons/search"
             anchors.left: parent.left
-            height: parent.height
+            height: parent.height*0.75
             width: height
             sourceSize.width: width
             sourceSize.height: height
         }
+
         focus: true
         id:searchArea
         width: parent.width/2
         leftPadding: searchImage.width + 6
         anchors.centerIn: parent
+
         onTextChanged: {
             if(tempModel===undefined){
+                drawer.state="hidden"
                 tempModel = mainView.modelData;
             }
 
@@ -66,6 +68,7 @@ Pane{
                 mainView.modelData=Database.searchPkgs(text);
             }
             else {
+                drawer.state="opened"
                 mainView.modelData = tempModel;
                 tempModel = undefined;
             }

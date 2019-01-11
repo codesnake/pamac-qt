@@ -2,15 +2,17 @@
 #include <QQmlContext>
 #include <QApplication>
 #include <QQuickStyle>
+#include <QtQuickControls2>
 #include <QQmlApplicationEngine>
+#include <QQuickWindow>
 #include <Database.h>
 #include <QJSValue>
 #include <QIcon>
-#include "PackageModel.h"
-#include "Updates.h"
-#include "Transaction.h"
-#include "XDGIconProvider.h"
-#include "Utils.h"
+#include <PackageModel.h>
+#include <Updates.h>
+#include <Transaction.h>
+#include <XDGIconProvider.h>
+#include <Utils.h>
 
 
 int main(int argc, char *argv[])
@@ -22,9 +24,11 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Artem Grinev");
     app.setApplicationName("PamacQt");
 
+    QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+
     qRegisterMetaType<PamacQt::PackageList>("PackageList");
-    qRegisterMetaType<PamacQt::PackageDetails>("PackageDetails");
-    qRegisterMetaType<PamacQt::Package>("Package");
+    qRegisterMetaType<PamacQt::RepoPackageDetails>("RepoPackageDetails");
+    qRegisterMetaType<PamacQt::RepoPackage>("RepoPackage");
     qRegisterMetaType<PamacQt::Updates>("Updates");
     qRegisterMetaType<PamacQt::Config>("Config");
     qRegisterMetaType<PamacQt::TransactionSummary>("TransactionSummary");
@@ -37,15 +41,14 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonType<PamacQt::Database>("Pamac.Database",1,0,"Database",
                                                 [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
-        Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
         PamacQt::Database *database = new PamacQt::Database("/etc/pamac.conf",engine);
         return database;
     });
 
-    qmlRegisterUncreatableType<PamacQt::PackageDetails>("Pamac.Package",1,0,"PackageDetails","");
-    qmlRegisterUncreatableType<PamacQt::Package>("Pamac.Package",1,0,"Package","");
+    qmlRegisterUncreatableType<PamacQt::RepoPackageDetails>("Pamac.Package",1,0,"RepoPackageDetails","");
+    qmlRegisterUncreatableType<PamacQt::RepoPackage>("Pamac.Package",1,0,"RepoPackage","");
     qmlRegisterType<PamacQt::PackageModel>("Pamac.PackageModel",1,0,"PackageModel");
     qmlRegisterUncreatableType<PamacQt::PackageList>("Pamac.Package",1,0,"PackageList","");
     qmlRegisterUncreatableType<PamacQt::Updates>("Pamac.Database",1,0,"Updates","");
@@ -56,6 +59,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.addImageProvider(QLatin1String("icons"), new XDGIconProvider);
     engine.load(QUrl(QStringLiteral("qrc:/src/qml/MainWindow.qml")));
+
 
 
     if (engine.rootObjects().isEmpty())

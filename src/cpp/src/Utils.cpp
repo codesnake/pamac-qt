@@ -65,3 +65,18 @@ GVariant *PamacQt::Utils::qVariantToGVariant(const QVariant& value)
         return nullptr;
     }
 }
+
+QStringList PamacQt::Utils::gListToQStringList(GList *list,bool freeOriginal)
+{
+    QStringList result;
+    for(auto el = list;el!=nullptr;el=el->next)
+    {
+        result.append(QString::fromUtf8(static_cast<char*>(el->data)));
+    }
+
+    if(freeOriginal){
+        g_list_free_full(list,g_free);
+    }
+
+    return result;
+}
