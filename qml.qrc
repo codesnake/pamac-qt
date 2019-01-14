@@ -38,5 +38,7 @@
         <file>icons/builtin/32x32/apps/system-software-install.svg</file>
         <file>icons/builtin/48x48/apps/system-software-install.svg</file>
         <file>icons/builtin/index.theme</file>
+        <file>src/qml/SideMenuPending.qml</file>
+        <file>src/qml/SideMenuSearch.qml</file>
     </qresource>
 </RCC>

@@ -17,7 +17,6 @@ class Database:public QObject
     Q_OBJECT
     Q_PROPERTY(Config config READ config WRITE setConfig NOTIFY configChanged)
     Q_PROPERTY(bool checkspace READ getCheckspace CONSTANT)
-    Q_PROPERTY(QString history READ history CONSTANT)
 public:
     enum InstalledPackageTypes{
         Installed,
@@ -88,6 +87,16 @@ public:
 
     Q_INVOKABLE void getUpdatesAsync();
 
+    Q_INVOKABLE PackageList getPending(const QStringList& toInstall, const QStringList& toRemove);
+
+    Q_INVOKABLE RepoPackage getInstalledPackage(const QString& name){
+        return RepoPackage(pamac_database_get_installed_pkg(m_db.get(),name.toUtf8()));
+    }
+
+    Q_INVOKABLE RepoPackage getSyncPackage(const QString& name){
+        return RepoPackage(pamac_database_get_sync_pkg(m_db.get(),name.toUtf8()));
+    }
+
     inline operator PamacDatabase*(){return m_db.get();}
 
     Config config() const
@@ -103,10 +112,12 @@ public:
     inline void refresh(){
         pamac_database_refresh(m_db.get());
     }
-    QString history(){
+    Q_INVOKABLE QString getHistory(){
         QFile file("/var/log/pacman.log");
         file.open(QFile::ReadOnly);
-        return QString::fromUtf8(file.readAll());
+        QString log =  QString::fromUtf8(file.readAll());
+        file.close();
+        return log;
     }
 
 public slots:

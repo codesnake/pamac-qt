@@ -1,6 +1,7 @@
 #include "XDGIconProvider.h"
 #include <QIcon>
 #include <QDebug>
+#include <QDirIterator>
 
 XDGIconProvider::XDGIconProvider():QQuickImageProvider (QQuickImageProvider::Pixmap)
 {
@@ -11,12 +12,9 @@ QPixmap XDGIconProvider::requestPixmap(const QString &id, QSize *size, const QSi
 {
     QIcon ico;
     if(id.startsWith("builtin/")){
-        QString theme = QIcon::themeName();
-        QIcon::setThemeName("builtin");
 
-        ico = QIcon::fromTheme(id.right(id.length()-8));
+        ico = QIcon(":/icons/builtin/16x16/status/"+id.right(id.length()-8)+".svg");
 
-        QIcon::setThemeName(theme);
     } else {
         ico = QIcon::fromTheme(id);
     }

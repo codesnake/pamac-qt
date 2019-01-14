@@ -36,12 +36,16 @@ public:
         return m_packageList;
     }
 
+    Q_INVOKABLE void sort(int column,Qt::SortOrder order = Qt::AscendingOrder) override;
+
 public slots:
     inline void setPackageList(PackageList packageList)
     {
         beginResetModel();
         m_packageList = std::move(packageList);
+        sort(1,Qt::DescendingOrder);
         endResetModel();
+        emit packageListChanged(m_packageList);
     }
 
 signals:

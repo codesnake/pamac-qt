@@ -60,7 +60,7 @@ Pane{
 
         onTextChanged: {
             if(tempModel===undefined){
-                drawer.state="hidden"
+                drawer.push("SideMenuSearch.qml")
                 tempModel = mainView.modelData;
             }
 
@@ -68,7 +68,7 @@ Pane{
                 mainView.modelData=Database.searchPkgs(text);
             }
             else {
-                drawer.state="opened"
+                drawer.pop();
                 mainView.modelData = tempModel;
                 tempModel = undefined;
             }

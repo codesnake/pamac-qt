@@ -22,13 +22,15 @@ ToolBar {
         visible: enabled
         onClicked: {
             if (stackView.depth > 1) {
-                stackView.pop()
+                stackView.pop();
+            }
+            else if(searchPane.text.length>0){
+                searchPane.text="";
+                searchPane.state="hidden";
             }
             else if(drawer.depth>1){
                 drawer.pop();
-                mainView.modelData=Database.getInstalledApps()
-            } else if(searchPane.text.length>0){
-                searchPane.text=""
+                mainView.modelData=Database.getInstalledApps();
             }
         }
     }
@@ -99,9 +101,9 @@ ToolBar {
                 }
             }
             Action { text: "View History"
-            onTriggered: {
-                historyDialog.open();
-            }
+                onTriggered: {
+                    historyDialog.open();
+                }
             }
             Action {
                 text: "Install local packages"

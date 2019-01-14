@@ -107,6 +107,7 @@ signals:
     void importantDetailsOutput(bool imporant);
 
     void databaseChanged(Database* database);
+
     void indeterminateChanged(bool indeterminate);
 
     void actionChanged(QString action);

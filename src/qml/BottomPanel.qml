@@ -14,7 +14,7 @@ Pane {
                 top:parent.top
                 right: parent.right
             }
-            color:systemPallette.text
+            color: systemPalette.windowText
         }
     }
 

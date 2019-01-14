@@ -64,7 +64,7 @@ Dialog{
 
             Pane{
                 background: Rectangle{
-                    color: systemPallette.alternateBase
+                    color: systemPalette.alternateBase
                 }
 
                 padding: 6
@@ -193,7 +193,7 @@ Dialog{
                         anchors.left: label4.right
                         anchors.leftMargin: 6
                         background: Rectangle{
-                            color:systemPallette.base
+                            color:systemPalette.base
                         }
 
                         ListView {
@@ -243,7 +243,7 @@ Dialog{
 
             Pane {
                 background: Rectangle{
-                    color: systemPallette.alternateBase
+                    color: systemPalette.alternateBase
                 }
                 id: page
                 Label {
@@ -278,7 +278,7 @@ Dialog{
 
             Pane {
                 background: Rectangle{
-                    color: systemPallette.alternateBase
+                    color: systemPalette.alternateBase
                 }
                 id: page1
                 Rectangle {
@@ -359,7 +359,7 @@ Dialog{
 
             Pane {
                 background: Rectangle{
-                    color: systemPallette.alternateBase
+                    color: systemPalette.alternateBase
                 }
                 id: page2
                 Label {

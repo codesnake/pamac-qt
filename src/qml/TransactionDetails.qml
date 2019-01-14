@@ -9,9 +9,11 @@ Page {
         anchors.fill: parent
         TextArea{
             background: Rectangle{
-                color:systemPalette.alternateBase
+                color:systemPalette.base
             }
-
+            onTextChanged: {
+                Flickable.contentY=Math.min(-area.height,-(Flickable.contentHeight-area.height))
+            }
             readOnly: true
             id:area
             text: transaction.details

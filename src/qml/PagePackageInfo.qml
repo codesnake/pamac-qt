@@ -15,7 +15,7 @@ Page {
 
     SideBar {
         background: Rectangle {
-            color: systemPallette.alternateBase
+            color: systemPalette.alternateBase
         }
 
         id: drawer
@@ -262,7 +262,6 @@ Page {
                         Label {
                             id: label10
                             y: -5
-
                             text: pkg.licenses.join(", ")
                         }
 
@@ -280,10 +279,8 @@ Page {
                             text: {
                                 var re = /.*(<(\S+)>)/;
 
-
                                 var result = re.exec(pkg.packager);
                                 email=result[2];
-
 
                                 return pkg.packager.replace(result[1],"<a href=\"mailto:%1\">%1</a>".arg(result[2]))
                             }
@@ -384,7 +381,7 @@ Page {
                 contentHeight: textArea.implicitHeight
                 TextArea {
                     background: Rectangle{
-                        color: systemPallette.alternateBase
+                        color: systemPalette.alternateBase
                     }
                     readOnly: true
                     id: textArea

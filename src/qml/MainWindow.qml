@@ -1,5 +1,5 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 import QtGraphicalEffects 1.0
@@ -8,6 +8,8 @@ import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
 
 ApplicationWindow {
+
+
 
     function tryLockAndRun(val){
         if(transaction.getLock()){
@@ -42,9 +44,11 @@ ApplicationWindow {
         height: 400
         width: 300
         id:historyDialog
-        TextArea{
+        ScrollView{
             anchors.fill: parent
-            text:Database.history
+            TextArea{
+                readOnly: true
+            }
         }
     }
 
@@ -54,7 +58,7 @@ ApplicationWindow {
         onFinished:{
             if(success){
                 clear();
-                 details = "";
+                details = "";
             }
             transaction.unlock();
         }
@@ -68,7 +72,7 @@ ApplicationWindow {
     height: 550
     objectName: "mainWindow"
     title: qsTr("Package manager")
-    SystemPalette{id:systemPallette}
+    SystemPalette{id:systemPalette}
 
     header: PamacToolBar {
         id: toolBar
@@ -80,14 +84,13 @@ ApplicationWindow {
         height: parent.height-bottomPanel.height
         width: parent.width
         initialItem: Page{
-
             SideBar {
                 height: stackView.height
                 font.bold: true
                 id: drawer
                 initialItem: SideMenuMain{
                     height: parent.height-updatesItem.height
-                    ItemDelegate {
+                    MenuItemDelegate {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         height: 45
@@ -110,7 +113,7 @@ ApplicationWindow {
                     horizontalOffset: 0
                     verticalOffset: -1
                     radius: 6
-                    color: systemPallette.dark
+                    color: systemPalette.dark
                 }
 
                 anchors{

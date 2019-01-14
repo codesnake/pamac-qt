@@ -26,6 +26,7 @@ PackageList Database::getInstalledPackages(Database::InstalledPackageTypes type)
     case Foreign:
         return PackageList(pamac_database_get_foreign_pkgs(m_db.get()));
     }
+    return PackageList();
 }
 
 QStringList Database::getRepos()
@@ -54,12 +55,32 @@ void Database::getUpdatesAsync(){
 
 }
 
+PackageList Database::getPending(const QStringList &toInstall, const QStringList &toRemove)
+{
+    PackageList result;
+    foreach (const auto &element, toInstall) {
+        RepoPackage pkg;
+        if((pkg = getInstalledPackage(element)).name().isEmpty()){
+            pkg = getSyncPackage(element);
+        }
+        result.append(pkg);
+    }
+    foreach(const auto &element,toRemove){
+        RepoPackage pkg;
+        if(!(pkg = getInstalledPackage(element)).name().isEmpty()){
+           result.append(pkg);
+        }
+    }
+    return result;
+}
+
 void Database::init()
 {
     pamac_database_enable_appstream(m_db.get());
 
     g_signal_connect(m_db.get(),"get_updates_progress",
                      reinterpret_cast<GCallback>(+[](GObject* obj,uint percent,Database* t){
+                         Q_UNUSED(obj);
                          emit t->getUpdatesProgress(percent);
                      }),this);
 }

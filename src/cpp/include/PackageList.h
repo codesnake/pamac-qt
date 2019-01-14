@@ -32,7 +32,20 @@ public:
 
     Q_INVOKABLE inline int size() const{return m_list.length();}
 
+
+    QList<RepoPackage>::iterator begin(){
+        return m_list.begin();
+    }
+    QList<RepoPackage>::iterator end(){
+        return m_list.end();
+    }
+
+    void append(const RepoPackage& pkg){
+        m_list.append(pkg);
+    }
+
 private:
+
     QList<RepoPackage> m_list;
 };
 } //namespace PamacQt

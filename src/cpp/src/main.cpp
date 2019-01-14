@@ -13,7 +13,8 @@
 #include <Transaction.h>
 #include <XDGIconProvider.h>
 #include <Utils.h>
-
+#include <QQmlDebuggingEnabler>
+static QQmlDebuggingEnabler enabler;
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +24,8 @@ int main(int argc, char *argv[])
 
     app.setOrganizationName("Artem Grinev");
     app.setApplicationName("PamacQt");
+
+
 
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
 
@@ -35,7 +38,7 @@ int main(int argc, char *argv[])
 
 
     //A (dirty) work around the bug that causes icons not to load in kde: manually set icon theme name
-    {
+    if(QIcon::themeName().isEmpty()){
         QIcon::setThemeName("breeze");
     }
 

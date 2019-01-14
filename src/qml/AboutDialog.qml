@@ -33,12 +33,22 @@ Dialog {
 
         Label {
             id: label
-            text: qsTr("A Qt5 frontend for the libalpm")
+            text: qsTr("A Qt5 frontend for the libpamac")
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 25
             anchors.top: text1.bottom
             anchors.topMargin: 25
             font.pointSize: 11
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Label {
+            id: label1
+            text: qsTr("Artem Grinev (aka LordTermor) for Manjaro Linux")
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 25
+            anchors.top: label.bottom
+            anchors.topMargin: 25
+            font.pointSize: 8
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }

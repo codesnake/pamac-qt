@@ -10,80 +10,16 @@ TableView{
     Connections{
         target: packageModel
         onPackageListChanged:{
-            table.selectedRows=[];
+            contentY=0;
+            clearSelected();
         }
+
+
     }
     property var columnWidths: [50,"exp",45,65,65]
 
-    function columnWidth(column) {
-        return columnWidths[column]==="exp"?
-                    width-width/4:columnWidths[column];
-    }
-    Row{
-        topPadding: -height
-        id: header
-        height: 20
-        width: parent.width
-
-        Repeater {
-            height: parent.height
-            width: parent.width
-            model: ListModel{
-                id:headerModel
-                ListElement{
-                    name:qsTr("State")
-                }
-                ListElement{
-                    name:qsTr("Name")
-                }
-                ListElement{
-                    name:qsTr("Version")
-                }
-                ListElement{
-                    name:qsTr("Repository")
-                }
-                ListElement{
-                    name:qsTr("Size")
-                }
-            }
-            Label {
-                clip: true
-                height: parent.height
-                id:headerBlock
-                text: name
-                width: columnWidth(index)
-                font.pixelSize: Qt.application.font.pixelSize * 1.1
-
-                padding: 3
-                MouseArea{
-                    anchors.right: parent.right
-                    property int mouseglobalX
-                    height: parent.height
-                    width:5
-                    cursorShape: Qt.SizeHorCursor
-                    onPositionChanged: {
-
-                        if(headerBlock.width+mouse.x>0){
-                            if(columnWidths[index]==="exp"){
-                                columnWidths[index]=headerBlock.width;
-                            }
-
-                            columnWidths[index]+=mouse.x;
-                            columnWidthsChanged();
-                        }
-                        table.forceLayout();
-                    }
-                }
-                background:Rectangle{
-                    color: systemPallette.base
-                    border.width: 0.5
-                    border.color: systemPallette.alternateBase
-                }
-            }
 
 
-        }
-    }
     ScrollBar.vertical: ScrollBar{
         visible: true
     }
@@ -113,14 +49,11 @@ TableView{
     }
 
     clip: true
-    anchors.fill: parent
     id:table
     model:packageModel
-    topMargin: header.height
     boundsBehavior: Flickable.StopAtBounds
 
 
-    columnWidthProvider:columnWidth
 
     reuseItems: false
 
@@ -165,7 +98,7 @@ TableView{
         property bool highlighted:table.isSelected(row)
         implicitHeight: 45
 
-        color: highlighted?systemPallette.highlight:systemPallette.base
+        color: highlighted?systemPalette.highlight:systemPalette.base
 
         MouseArea{
             acceptedButtons: Qt.LeftButton | Qt.RightButton

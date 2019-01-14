@@ -17,7 +17,7 @@ Page {
             } else {
                 updatesPackageTable.modelData = undefined;
                 updates=undefined;
-                progress.text = qsTr("No updates available");
+                progress.text = qsTr("System is up to date");
             }
 
         }
@@ -44,6 +44,7 @@ Page {
     Connections{
         target: transaction
         onFinished:{
+            console.log("finished");
             Database.getUpdatesAsync();
         }
     }
