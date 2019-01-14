@@ -13,7 +13,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG(release, debug|release) {
  CONFIG+=qtquickcompiler
 }
-C
+
 CONFIG+=qml_debug
 RESOURCES += qml.qrc
 
