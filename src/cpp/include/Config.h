@@ -36,6 +36,11 @@ public:
     PAMAC_QT_BOOL_PROPERTY_GET_SET(cleanRmOnlyUninstalled,pamac_config_get_clean_rm_only_uninstalled(m_config.get()),
                                    setCleanRmOnlyUninstalled,pamac_config_set_clean_rm_only_uninstalled(m_config.get(),cleanRmOnlyUninstalled))
 
+
+
+    PAMAC_QT_INT_PROPERTY_GET_SET(cleanKeepNumPkgs,pamac_config_get_clean_keep_num_pkgs(m_config.get()),
+                              setCleanKeepNumPkgs,pamac_config_set_clean_keep_num_pkgs(m_config.get(),size_t(cleanKeepNumPkgs)))
+
     operator PamacConfig*(){
         return m_config.get();
     }

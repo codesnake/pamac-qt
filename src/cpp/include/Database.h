@@ -72,6 +72,8 @@ public:
         return PackageList(pamac_database_search_pkgs(m_db.get(),name.toUtf8()));
     }
 
+
+
     Q_INVOKABLE QStringList getMirrorsCountries(){
         QStringList result = Utils::gListToQStringList(pamac_database_get_mirrors_countries(m_db.get()),true);
         result.push_front("Worldwide");

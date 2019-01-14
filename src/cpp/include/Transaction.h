@@ -55,6 +55,7 @@ public:
     Transaction(Database* db,QObject* parent = nullptr);
     Transaction(QObject * parent = nullptr):QObject(parent){}
     Q_INVOKABLE void startGetAuthorization(){
+        qDebug()<<"Cpp callback";
         pamac_transaction_start_get_authorization(m_transaction.get());
     }
 
@@ -70,6 +71,13 @@ public:
     Database* database() const
     {
         return m_database;
+    }
+
+    Q_INVOKABLE void startGenerateMirrorsList(const QString& country = "all"){
+        pamac_transaction_start_generate_mirrors_list(m_transaction.get(),country.toUtf8());
+    }
+    Q_INVOKABLE void cleanCache(int cleanKeepNumPkgs,bool cleanRmOnlyInstalled){
+        pamac_transaction_clean_cache(m_transaction.get(),uint(cleanKeepNumPkgs),cleanRmOnlyInstalled);
     }
 
     Q_INVOKABLE void start(const QStringList& toInstall = QStringList(), const QStringList& toRemove = QStringList(), const QStringList& toLoad = QStringList(),

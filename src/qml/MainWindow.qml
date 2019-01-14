@@ -6,18 +6,51 @@ import QtGraphicalEffects 1.0
 import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
+import "../js/JSUtils.js" as JSUtils
 
 ApplicationWindow {
 
-
-
     function tryLockAndRun(val){
+        console.log(val,arguments)
         if(transaction.getLock()){
-            val.apply(this, arguments)
+            val.apply(arguments);
         } else{
-
+            retryTimer.func = val;
+            retryTimer.args = arguments;
+            retryDialog.open();
+            retryTimer.start();
         }
     }
+
+
+
+    Dialog{
+        title: ""
+        id:retryDialog
+        Timer{
+            repeat: true
+            property var func
+            property var args
+            id:retryTimer
+            running: false
+            onTriggered: {
+                console.log(func,args)
+                if(transaction.getLock()){
+                    retryTimer.stop();
+                    retryDialog.close();
+                    func.apply(mainWindow,args);
+                }
+            }
+        }
+        onVisibleChanged: {
+            retryTimer.stop();
+        }
+        standardButtons: Dialog.NoButton
+        Label{
+            text: "Waiting for another package manager to quit"
+        }
+    }
+
     function clear(){
         toInstall=[];
         toRemove=[];
@@ -55,10 +88,13 @@ ApplicationWindow {
     Transaction{
         id:transaction
         database: Database
+        onStartPreparing: {
+            details = "";
+        }
+
         onFinished:{
             if(success){
                 clear();
-                details = "";
             }
             transaction.unlock();
         }

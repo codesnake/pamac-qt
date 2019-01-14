@@ -81,8 +81,8 @@ ToolBar {
                     toLoad.push(fileUrls[i].toString());
                 }
 
-                if(transaction.getLock())
-                    transaction.start([],[],toLoad,[],[],[]);
+                tryLockAndRun(function(){transaction.start([],[],toLoad,[],[],[])});
+
             }
         }
         Menu {
@@ -95,9 +95,8 @@ ToolBar {
             Action {
                 text: "Refresh databases"
                 onTriggered: {
-                    if(transaction.getLock()){
-                        transaction.startSysupgrade(true,false,[],[]);
-                    }
+                    tryLockAndRun(function(){transaction.startSysupgrade(true,false,[],[])});
+
                 }
             }
             Action { text: "View History"
@@ -114,13 +113,14 @@ ToolBar {
             Action {
                 text: "Preferences"
                 onTriggered: {
-                    if(transaction.getLock()){
+                    tryLockAndRun(function(){
                         JSUtils.connectOnce(transaction.getAuthorizationFinished,function(bool){
                             if(bool)
                                 preferencesDialog.open();
                         });
+                        console.log("call back");
                         transaction.startGetAuthorization();
-                    }
+                    });
                 }
             }
             Action {

@@ -15,8 +15,8 @@ namespace Utils {
     }
 
 #define PAMAC_QT_STRING_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
-    Q_PROPERTY(QString name READ name WRITE setName)\
-    QString name() const\
+    Q_PROPERTY(QString getName READ getName WRITE setName)\
+    QString getName() const\
 {\
     return QString::fromUtf8(method);\
     }\
@@ -38,6 +38,15 @@ namespace Utils {
 {\
     return int(method);\
     }
+#define PAMAC_QT_INT_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
+    Q_PROPERTY(int getName READ getName WRITE setName)\
+    int getName() const\
+{\
+    return int(getMethod);\
+}\
+    void setName(int getName){\
+    setMethod;\
+}
 #define PAMAC_QT_STRINGLIST_PROPERTY_GET(name,method)\
     Q_PROPERTY(QStringList name READ name CONSTANT)\
     QStringList name() const\

@@ -22,8 +22,9 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    app.setOrganizationName("Artem Grinev");
-    app.setApplicationName("PamacQt");
+    QApplication::setOrganizationName("Artem Grinev");
+   QApplication::setApplicationName("PamacQt");
+    QApplication::setWindowIcon(QIcon::fromTheme("package-x-generic"));
 
 
 
@@ -41,6 +42,7 @@ int main(int argc, char *argv[])
     if(QIcon::themeName().isEmpty()){
         QIcon::setThemeName("breeze");
     }
+
 
     qmlRegisterSingletonType<PamacQt::Database>("Pamac.Database",1,0,"Database",
                                                 [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
@@ -65,10 +67,11 @@ int main(int argc, char *argv[])
 
 
 
-    if (engine.rootObjects().isEmpty())
+    if (engine.rootObjects().isEmpty()){
         return -1;
+    }
 
 
-    return app.exec();
+    return QApplication::exec();
 
 }

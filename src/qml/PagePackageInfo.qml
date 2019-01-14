@@ -41,7 +41,8 @@ Page {
             anchors.topMargin: 20
             asynchronous: true
 
-            source: pkg.iconUrl !== "" ? "file://" + pkg.iconUrl : "image://icons/package-x-generic"
+            // @disable-check M126
+            source: pkg.iconUrl != "" ? "file://" + pkg.iconUrl : "image://icons/package-x-generic"
         }
 
         Label {

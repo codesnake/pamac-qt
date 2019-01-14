@@ -16,6 +16,7 @@ TableView{
 
 
     }
+
     property var columnWidths: [50,"exp",45,65,65]
 
 
@@ -27,7 +28,6 @@ TableView{
     ScrollBar.horizontal: ScrollBar{
         visible: true
     }
-
     property var selectedRows: []
 
     function select(row){
@@ -120,6 +120,7 @@ TableView{
 
         Loader{
             anchors.fill: parent
+            anchors.leftMargin: 2
 
             property list<Component> columns:[
 

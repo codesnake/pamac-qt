@@ -264,6 +264,9 @@ Dialog{
                     anchors.topMargin: 0
                     anchors.right: parent.right
                     anchors.rightMargin: 0
+                    onCurrentTextChanged:{
+                        button.highlighted=true;
+                    }
                 }
 
                 Button {
@@ -272,7 +275,9 @@ Dialog{
                     y: 58
                     text: qsTr("Rerfresh mirror list")
                     anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    onClicked: {
+                        transaction.startGenerateMirrorsList(comboBox.currentText=="Worldwide"?"all":comboBox.currentText)
+                    }
                 }
             }
 
@@ -294,7 +299,7 @@ Dialog{
                     clip:true
                     Label {
                         id: label6
-                        text: qsTr("AUR is a community maintened repository so it presents potential risks and problems.\nAll AUR users should be familiar with the build process.")
+                        text: qsTr("AUR is a community maintened repository so it presents potential risks and problems.\nAll AUR users should be familiar with the build process.\n")
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         padding: 6
@@ -304,19 +309,19 @@ Dialog{
 
                 Label {
                     id: label7
-                    height: checkBox5.height
-                    text: qsTr("Enable AUR support")
+                    height: aurEnabledCheckBox.height
+                    text: qsTr("Enable AUR support (NOT IMPLEMENTED YET)")
                     verticalAlignment: Text.AlignVCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 6
-                    anchors.top: checkBox5.top
+                    anchors.top: aurEnabledCheckBox.top
                     anchors.topMargin: 0
                 }
 
                 PreferencesCheckBox {
                     enabled: false //aur is not implemented
                     checked: config.enableAur
-                    id: checkBox5
+                    id: aurEnabledCheckBox
                     x: 465
                     anchors.right: parent.right
                     anchors.rightMargin: 6
@@ -326,6 +331,7 @@ Dialog{
                 }
 
                 PreferencesCheckBox {
+                    enabled: aurEnabledCheckBox.enabled
                     id: checkBox6
                     text: qsTr("Check for updates from AUR")
                     anchors.top: label7.bottom
@@ -336,6 +342,7 @@ Dialog{
                 }
 
                 Label {
+                    enabled: aurEnabledCheckBox.enabled
                     id: label8
                     height: comboBox1.height
                     text: qsTr("Build directory:")
@@ -347,6 +354,7 @@ Dialog{
                 }
 
                 ComboBox {
+                    enabled: aurEnabledCheckBox.enabled
                     id: comboBox1
                     x: 500
                     displayText: "(None)"
@@ -371,9 +379,16 @@ Dialog{
                     anchors.topMargin: 0
                     anchors.left: parent.left
                     anchors.leftMargin: 6
+
                 }
 
                 SpinBox {
+                    onValueChanged: {
+                        var pref = {};
+                        pref["KeepNumPackages"]=value;
+                        transaction.startWritePamacConfig(pref);
+                    }
+                    value: config.cleanKeepNumPkgs
                     id: spinBox1
                     x: 493
                     anchors.right: parent.right

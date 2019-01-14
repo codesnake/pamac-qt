@@ -7,12 +7,15 @@ Page {
     ScrollView{
         id:scrollView
         anchors.fill: parent
+
         TextArea{
             background: Rectangle{
                 color:systemPalette.base
             }
+
             onTextChanged: {
-                Flickable.contentY=Math.min(-area.height,-(Flickable.contentHeight-area.height))
+                if((flickable.height-area.height)>0)
+                flickable.contentY=(flickable.height-area.height)
             }
             readOnly: true
             id:area
