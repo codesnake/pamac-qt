@@ -30,7 +30,7 @@ ToolBar {
             }
             else if(drawer.depth>1){
                 drawer.pop();
-                mainView.modelData=Database.getInstalledApps();
+                mainView.packageListFuture = Database.getInstalledAppsAsync();
             }
         }
     }
@@ -118,7 +118,6 @@ ToolBar {
                             if(bool)
                                 preferencesDialog.open();
                         });
-                        console.log("call back");
                         transaction.startGetAuthorization();
                     });
                 }

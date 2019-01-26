@@ -6,7 +6,7 @@
         <file>src/qml/MenuItemDelegate.qml</file>
         <file>src/qml/PagePackageInfo.qml</file>
         <file>src/qml/PagePackageTable.qml</file>
-        <file>src/qml/PamacToolBar.qml</file>
+        <file>src/qml/ToolBar.qml</file>
         <file>src/qml/PreferencesCheckBox.qml</file>
         <file>src/qml/PreferencesDialog.qml</file>
         <file>src/qml/SearchPane.qml</file>

@@ -19,5 +19,5 @@ public:
     }
 private:
     QQuickWidget nestedWidget;
-    void showEvent(QShowEvent*);
+    void showEvent(QShowEvent*) override;
 };

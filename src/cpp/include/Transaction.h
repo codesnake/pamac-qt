@@ -4,38 +4,37 @@
 #include <memory>
 #include <cstring>
 #include "Database.h"
-#include "PackageList.h"
 namespace PamacQt{
 class Database;
 class TransactionSummary{
     Q_GADGET
-    Q_PROPERTY(PackageList toInstall READ toInstall CONSTANT)
-    Q_PROPERTY(PackageList toRemove READ toRemove CONSTANT)
-    Q_PROPERTY(PackageList toReinstall READ toReinstall CONSTANT)
-    Q_PROPERTY(PackageList toBuild READ toBuild CONSTANT)
-    Q_PROPERTY(PackageList toUpgrade READ toUpgrade CONSTANT)
+    Q_PROPERTY(RepoPackageList toInstall READ toInstall CONSTANT)
+    Q_PROPERTY(RepoPackageList toRemove READ toRemove CONSTANT)
+    Q_PROPERTY(RepoPackageList toReinstall READ toReinstall CONSTANT)
+    Q_PROPERTY(RepoPackageList toBuild READ toBuild CONSTANT)
+    Q_PROPERTY(RepoPackageList toUpgrade READ toUpgrade CONSTANT)
 
 public:
     TransactionSummary(PamacTransactionSummary* s):summary(std::shared_ptr<PamacTransactionSummary>(s,g_object_unref)){}
     TransactionSummary()=default;
-    PackageList toInstall() const{
-        return PackageList(pamac_transaction_summary_get_to_install(summary.get()));
+    RepoPackageList toInstall() const{
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_install(summary.get()));
     }
-    PackageList toRemove() const
+    RepoPackageList toRemove() const
     {
-        return PackageList(pamac_transaction_summary_get_to_remove(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_remove(summary.get()));
     }
-    PackageList toReinstall() const
+    RepoPackageList toReinstall() const
     {
-        return PackageList(pamac_transaction_summary_get_to_reinstall(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_reinstall(summary.get()));
     }
-    PackageList toBuild() const
+    RepoPackageList toBuild() const
     {
-        return PackageList(pamac_transaction_summary_get_to_build(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_build(summary.get()));
     }
-    PackageList toUpgrade() const
+    RepoPackageList toUpgrade() const
     {
-        return PackageList(pamac_transaction_summary_get_to_upgrade(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_upgrade(summary.get()));
     }
 private:
     std::shared_ptr<PamacTransactionSummary> summary;
@@ -55,7 +54,6 @@ public:
     Transaction(Database* db,QObject* parent = nullptr);
     Transaction(QObject * parent = nullptr):QObject(parent){}
     Q_INVOKABLE void startGetAuthorization(){
-        qDebug()<<"Cpp callback";
         pamac_transaction_start_get_authorization(m_transaction.get());
     }
 

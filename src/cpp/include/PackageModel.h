@@ -1,13 +1,15 @@
 #pragma once
 #include "PackageList.h"
+#include "RepoPackage.h"
 #include <QObject>
 #include <QAbstractTableModel>
-
+#include <QJSValue>
 namespace PamacQt {
 class PackageModel : public QAbstractTableModel
 {
     Q_OBJECT
-    Q_PROPERTY(PackageList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
+    Q_PROPERTY(RepoPackageList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
+
 public:
     enum PackageRole {
         NameRole = Qt::UserRole + 1,
@@ -20,7 +22,7 @@ public:
         AppNameRole
     };
 
-    PackageModel(PackageList& packageList, QObject *parent = Q_NULLPTR):QAbstractTableModel (parent),m_packageList(packageList){}
+    PackageModel(RepoPackageList& packageList, QObject *parent = Q_NULLPTR):QAbstractTableModel (parent),m_packageList(packageList){}
     PackageModel(QObject *parent = Q_NULLPTR):QAbstractTableModel(parent){}
 
     QHash<int, QByteArray>  roleNames() const override;
@@ -31,7 +33,7 @@ public:
         Q_UNUSED(parent)
         return 5;
     }
-    inline PackageList packageList() const
+    inline RepoPackageList packageList() const
     {
         return m_packageList;
     }
@@ -39,7 +41,7 @@ public:
     Q_INVOKABLE void sort(int column,Qt::SortOrder order = Qt::AscendingOrder) override;
 
 public slots:
-    inline void setPackageList(PackageList packageList)
+    inline void setPackageList(RepoPackageList packageList)
     {
         beginResetModel();
         m_packageList = std::move(packageList);
@@ -49,9 +51,10 @@ public slots:
     }
 
 signals:
-    void packageListChanged(PackageList packageList);
+
+    void packageListChanged(RepoPackageList packageList);
 
 private:
-    PackageList m_packageList;
+    RepoPackageList m_packageList;
 };
 } //namespace PamacQt

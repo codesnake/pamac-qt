@@ -1,55 +1,55 @@
 #pragma once
-#include "glib.h"
-#include <QStringList>
+#include "pamac.h"
 #include <vector>
 #include <QVariantList>
+#include <QStringList>
 
 namespace PamacQt {
 namespace Utils {
 
 #define PAMAC_QT_STRING_PROPERTY_GET(name,method)\
     Q_PROPERTY(QString name READ name CONSTANT)\
-    QString name() const\
+    inline QString name() const\
 {\
     return QString::fromUtf8(method);\
     }
 
 #define PAMAC_QT_STRING_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(QString getName READ getName WRITE setName)\
-    QString getName() const\
+    inline QString getName() const\
 {\
     return QString::fromUtf8(method);\
     }\
-    void setName(const QString& str)\
+    inline void setName(const QString& str)\
 {\
     setMethod(str.toUtf8());\
     }
 
 #define PAMAC_QT_URL_PROPERTY_GET(name,method)\
     Q_PROPERTY(QUrl name READ name CONSTANT)\
-    QUrl name() const\
+    inline QUrl name() const\
 {\
     return QUrl(method);\
     }
 
 #define PAMAC_QT_INT_PROPERTY_GET(name,method)\
     Q_PROPERTY(int name READ name CONSTANT)\
-    int name() const\
+    inline int name() const\
 {\
     return int(method);\
     }
 #define PAMAC_QT_INT_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(int getName READ getName WRITE setName)\
-    int getName() const\
+    inline int getName() const\
 {\
     return int(getMethod);\
 }\
-    void setName(int getName){\
+    inline void setName(int getName){\
     setMethod;\
 }
 #define PAMAC_QT_STRINGLIST_PROPERTY_GET(name,method)\
     Q_PROPERTY(QStringList name READ name CONSTANT)\
-    QStringList name() const\
+    inline QStringList name() const\
 {\
     QStringList result;\
     auto tmp = method;\
@@ -62,14 +62,15 @@ namespace Utils {
 
 #define PAMAC_QT_BOOL_PROPERTY_GET_SET(name,method,setName,setMethod)\
     Q_PROPERTY(bool name READ name WRITE setName)\
-    bool name() const\
+    inline bool name() const\
 {\
     return method;\
     }\
-    void setName(bool name)\
+    inline void setName(bool name)\
 {\
     setMethod;\
     }
+
 
 
 std::vector<char*> qStringListToCStringVector(const QStringList&);
@@ -77,5 +78,22 @@ QStringList cStringArrayToQStringList(char** arr,int size);
 GList* qVariantListToGList(const QVariantList& lst);
 GVariant* qVariantToGVariant(const QVariant&);
 QStringList gListToQStringList(GList* lst,bool freeOriginal = false);
+
+template <typename T>
+QList<T> gListToQList(GList* list,std::function<T(void*)> wrapFunction,GDestroyNotify freeFunc = nullptr)
+{
+    QList<T> result;
+    for(auto el = list;el!=nullptr;el=el->next)
+    {
+        result.append(wrapFunction(el->data));
+    }
+
+    if(freeFunc){
+        g_list_free_full(list,freeFunc);
+    }
+
+    return result;
+}
+
 } // namespace Utils
 } // namespace PamacQt

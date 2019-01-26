@@ -5,7 +5,6 @@
 #include <QMetaType>
 #include <memory>
 #include "Utils.h"
-
 namespace PamacQt {
 class RepoPackage
 {

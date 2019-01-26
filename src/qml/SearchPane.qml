@@ -5,6 +5,10 @@ import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
 Pane{
+    function append(text){
+        searchArea.append(text);
+    }
+
     property alias text: searchArea.text
     property alias searchFocus:searchArea.focus
     states:[
@@ -59,17 +63,19 @@ Pane{
         anchors.centerIn: parent
 
         onTextChanged: {
+
+
             if(tempModel===undefined){
                 drawer.push("SideMenuSearch.qml")
-                tempModel = mainView.modelData;
+                tempModel = mainView.packageList;
             }
 
             if(text.length>0){
-                mainView.modelData=Database.searchPkgs(text);
+                mainView.packageListFuture=Database.searchPkgsAsync(text);
             }
             else {
                 drawer.pop();
-                mainView.modelData = tempModel;
+                mainView.packageList = tempModel;
                 tempModel = undefined;
             }
 

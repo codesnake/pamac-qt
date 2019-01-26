@@ -60,7 +60,7 @@ TableView{
     delegate:Rectangle{
 
         id:packageDelegate
-        function packageActionFunc(){
+        function actionFunc(name){
             if(toInstall.indexOf(name)!=-1){
                 toInstall.splice(toInstall.indexOf(name),1);
                 toInstallChanged();
@@ -77,6 +77,19 @@ TableView{
                 toInstallChanged();
             }
         }
+
+        function packageActionFunc(){
+            if(selectedRows.indexOf(index)!=-1){
+                for(var el in selectedRows){
+                    var name = packageModel.packageList.at(selectedRows[el]).name;
+                    actionFunc(name);
+                }
+            }
+            else{
+                actionFunc(model.name);
+            }
+
+        }
         Menu {
             y: itemMouseArea.mouseY
             x: itemMouseArea.mouseX
@@ -88,7 +101,7 @@ TableView{
                 onTriggered: packageDelegate.packageActionFunc()
             }
             Action {
-                text: "Details"
+                text: qsTr("Details")
                 onTriggered: {
                     stackView.push("PagePackageInfo.qml",{"pkg":Database.getPkgDetails(name,appName)})
                 }
@@ -104,8 +117,9 @@ TableView{
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             id:itemMouseArea
             onClicked: {
-
-                table.clearSelected();
+                if(!(mouse.modifiers & Qt.ControlModifier)){
+                    table.clearSelected();
+                }
                 table.select(row);
                 if(mouse.button & Qt.RightButton){
                     contextMenu.open();

@@ -1,6 +1,6 @@
+#include <glib.h>
 #include "Utils.h"
 #include <cstring>
-
 std::vector<char *> PamacQt::Utils::qStringListToCStringVector(const QStringList &inList)
 {
     std::vector<char*> cstringVector;
@@ -80,3 +80,6 @@ QStringList PamacQt::Utils::gListToQStringList(GList *list,bool freeOriginal)
 
     return result;
 }
+
+
+

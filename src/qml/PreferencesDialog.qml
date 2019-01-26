@@ -210,30 +210,63 @@ Dialog{
                                 bottom: ignorePkgsButtonBox.top
                             }
 
-                            delegate: Text{
+                            delegate: ItemDelegate{
+                                onClicked: {
+                                    listView.currentIndex=index;
+                                }
+                                highlighted: listView.currentIndex==index
                                 width:parent.width
                                 text: modelData
-
-
                             }
 
                             model:Database.getIgnorePkgs()
                         }
-                        Rectangle{
+                        Pane{
+                            Dialog{
+                                id:inputDialog
+                                visible: false
+                                TextArea{
+                                    placeholderText: qsTr("Enter package name")
+                                    anchors.fill: parent
+                                    id:inputPackageText
+                                }
+                                onAccepted: {
+
+                                     var list = Database.getIgnorePkgs();
+                                    list.push(inputPackageText.text);
+
+                                    var string = list.join(" ");
+
+                                    var obj = {"IgnorePkg":string};
+                                    transaction.startWritePamacConfig(obj);
+                                }
+                            }
+
                             id:ignorePkgsButtonBox
                             anchors{
                                 left: parent.left
                                 right: parent.right
                                 bottom: parent.bottom
                             }
-                            height: 20;
+                            height: childrenRect.height
                             Row{
-                                anchors.fill: parent
                                Button{
                                    icon.name: "list-add"
+                                   onClicked: {
+                                       inputDialog.open();
+                                   }
                                }
                                Button{
                                    icon.name: "list-remove"
+                                   onClicked: {
+                                      var list = Database.getIgnorePkgs();
+                                       list.splice(listView.currentIndex,1);
+
+                                      var string = list.join(" ");
+
+                                      var obj = {"IgnorePkg":string};
+                                      transaction.startWritePamacConfig(obj);
+                                   }
                                }
                             }
                         }
@@ -384,8 +417,10 @@ Dialog{
 
                 SpinBox {
                     onValueChanged: {
-                        var pref = {};
-                        pref["KeepNumPackages"]=value;
+                        if(config.cleanKeepNumPkgs==value)
+                            return;
+
+                        var pref = {"KeepNumPackages":value};
                         transaction.startWritePamacConfig(pref);
                     }
                     value: config.cleanKeepNumPkgs
@@ -416,6 +451,9 @@ Dialog{
                     anchors.rightMargin: 6
                     anchors.top: checkBox7.bottom
                     anchors.topMargin: 6
+                    onClicked: {
+                        transaction.cleanCache(config.cleanKeepNumPkgs,config.cleanRmOnlyUninstalled);
+                    }
                 }
             }
         }

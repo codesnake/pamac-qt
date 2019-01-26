@@ -99,27 +99,28 @@ Pane {
 
         Button{
             enabled: stackView.currentItem.objectName!="transactionDetailsPage" && transaction.started
-            text:"Details"
+            text:qsTr("Details")
             onClicked: {
                 stackView.push("TransactionDetails.qml");
             }
         }
         Button{
             enabled: !transaction.started
-            text:"Apply"
+            text:qsTr("Apply")
             onClicked: {
-                if(transaction.getLock()){
+                tryLockAndRun(function(){
                     if(!sysUpgrade)
                         transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
                     else
                         transaction.startSysupgrade(true,false,[],[]);
-                }
-
+                })
             }
+
         }
+
         Button{
             enabled: !transaction.started
-            text:"Cancel"
+            text:qsTr("Cancel")
             onClicked: {
                 if(sysUpgrade){
                     stackView.pop();

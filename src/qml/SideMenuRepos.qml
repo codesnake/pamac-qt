@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.12
 import Pamac.Database 1.0
 
 ListView {
@@ -10,10 +10,10 @@ ListView {
         text: modelData
         onClicked: {
             currentIndex=index;
-            mainView.modelData = Database.getRepoPackages(modelData);
+            mainView.packageListFuture = Database.getRepoPackagesAsync(modelData);
         }
     }
-    Component.onCompleted: {
-        mainView.modelData = Database.getRepoPackages(model[0]);
+    StackView.onActivated: {
+        mainView.packageListFuture = Database.getRepoPackagesAsync(model[0]);
     }
 }

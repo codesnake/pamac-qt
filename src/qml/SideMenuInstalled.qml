@@ -1,24 +1,25 @@
-import QtQuick 2.0
+import QtQuick 2.11
+import QtQuick.Controls 2.12
 import Pamac.Database 1.0
 ListView{
     boundsBehavior: Flickable.StopAtBounds
     model:ListModel{
         ListElement{
-            name:"Installed"
+            name:qsTr("Installed")
             type: Database.Installed
         }
         ListElement{
-            name:"Explicitly installed"
+            name:qsTr("Explicitly installed")
             type: Database.Explicitly
 
         }
         ListElement{
-            name:"Orphans"
+            name:qsTr("Orphans")
             type: Database.Orphans
 
         }
         ListElement{
-            name:"Foreign"
+            name:qsTr("Foreign")
             type: Database.Foreign
 
         }
@@ -27,10 +28,10 @@ ListView{
         text: name
         onClicked:{
             currentIndex=index
-            mainView.modelData = Database.getInstalledPackages(type);
+            mainView.packageListFuture = Database.getInstalledPackagesAsync(type);
         }
     }
-    Component.onCompleted: {
-        mainView.modelData = Database.getInstalledPackages(Database.Installed);
+    StackView.onActivated: {
+        mainView.packageListFuture = Database.getInstalledPackagesAsync(model.get(0).type);
     }
 }

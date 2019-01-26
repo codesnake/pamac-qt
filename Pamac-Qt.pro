@@ -13,7 +13,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG(release, debug|release) {
  CONFIG+=qtquickcompiler
 }
-C
+
 CONFIG+=qml_debug
 RESOURCES += qml.qrc
 
@@ -42,23 +42,25 @@ QMAKE_CXXFLAGS += -std=c++17
 HEADERS += \
     src/cpp/include/Config.h \
     src/cpp/include/Database.h \
-    src/cpp/include/Package.h \
     src/cpp/include/PackageList.h \
     src/cpp/include/PackageModel.h \
     src/cpp/include/QQuickDialog.h \
     src/cpp/include/Transaction.h \
     src/cpp/include/Updates.h \
     src/cpp/include/Utils.h \
-    src/cpp/include/XDGIconProvider.h
+    src/cpp/include/XDGIconProvider.h \
+    src/cpp/include/AURPackage.h \
+    src/cpp/include/RepoPackage.h \
+    src/cpp/include/AsyncHelpers.h
 
 SOURCES += \
-    src/cpp/src/Config.cpp \
     src/cpp/src/Database.cpp \
     src/cpp/src/main.cpp \
     src/cpp/src/PackageModel.cpp \
     src/cpp/src/QQuickDialog.cpp \
     src/cpp/src/Transaction.cpp \
     src/cpp/src/Utils.cpp \
-    src/cpp/src/XDGIconProvider.cpp
+    src/cpp/src/XDGIconProvider.cpp \
+    src/cpp/src/AsyncHelpers.cpp
 
 

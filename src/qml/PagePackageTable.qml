@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.4
 import Pamac.PackageModel 1.0
 import Pamac.Database 1.0
+import Pamac.Async 1.0
 import QtQuick.Shapes 1.11
 Page {
     function columnWidth(column) {
@@ -12,16 +13,33 @@ Page {
     background: Rectangle{
         color:systemPalette.base
     }
-
+    property alias packageListFuture:packageModel.packageListFuture
+    Connections{
+        target: transaction
+        onFinished:{
+            packageFutureWatcher.r=!packageFutureWatcher.r;
+        }
+    }
     PackageModel{
+        property FutureWatcher watcher:
+            FutureWatcher{
+            id:packageFutureWatcher
+            property bool r : true
+
+            future: {r; return packageModel.packageListFuture}
+            onFinished: {
+                packageModel.packageList=result;
+            }
+        }
+        property var packageListFuture
         id:packageModel
-        packageList: modelData
         onPackageListChanged: {
+            packageFutureWatcher.reset();
             headerRepeater.sortColumn=1;
         }
     }
 
-    property var modelData
+    property alias packageList:packageModel.packageList
     Rectangle{
         color: systemPalette.mid
         height: 20
@@ -61,7 +79,7 @@ Page {
                 }
                 ItemDelegate {
                     layer.enabled: true
-                            layer.samples: 4
+                    layer.samples: 4
                     rightPadding: 0
                     clip: true
                     height: parent.height
@@ -95,7 +113,6 @@ Page {
                         }
 
                         ShapePath {
-                            id: tri_sp
                             strokeColor: "transparent"
                             fillColor: systemPalette.text
 

@@ -3,30 +3,37 @@
 namespace PamacQt {
 Database::Database(PamacDatabase *db, QObject *parent):
     QObject(parent),
-    m_db(std::shared_ptr<PamacDatabase>(db,g_object_unref)){
+    m_db(std::shared_ptr<PamacDatabase>(db,g_object_unref)),
+    pool(new QThreadPool(this)){
     init();
 }
 
 Database::Database(const QString& configFile, QObject *parent):
-    QObject(parent){
+    QObject(parent),
+    pool(new QThreadPool(this)){
     m_config = Config(configFile);
     m_db = std::shared_ptr<PamacDatabase>(pamac_database_new(m_config),g_object_unref);
     init();
 }
 
-PackageList Database::getInstalledPackages(Database::InstalledPackageTypes type)
+RepoPackageList Database::getInstalledPackages(Database::InstalledPackageTypes type)
 {
+    RepoPackageList lst;
     switch (type) {
     case Installed:
-        return PackageList(pamac_database_get_installed_pkgs(m_db.get()));
+        lst = RepoPackageList::fromGList(pamac_database_get_installed_pkgs(m_db.get()));
+        break;
     case Explicitly:
-        return PackageList(pamac_database_get_explicitly_installed_pkgs(m_db.get()));
+        lst = RepoPackageList::fromGList(pamac_database_get_explicitly_installed_pkgs(m_db.get()));
+        break;
     case Orphans:
-        return PackageList(pamac_database_get_orphans(m_db.get()));
+        lst = RepoPackageList::fromGList(pamac_database_get_orphans(m_db.get()));
+        break;
     case Foreign:
-        return PackageList(pamac_database_get_foreign_pkgs(m_db.get()));
+        lst =  RepoPackageList::fromGList(pamac_database_get_foreign_pkgs(m_db.get()));
+        break;
     }
-    return PackageList();
+    return lst;
 }
 
 QStringList Database::getRepos()
@@ -55,9 +62,9 @@ void Database::getUpdatesAsync(){
 
 }
 
-PackageList Database::getPending(const QStringList &toInstall, const QStringList &toRemove)
+RepoPackageList Database::getPending(const QStringList &toInstall, const QStringList &toRemove)
 {
-    PackageList result;
+    RepoPackageList result;
     foreach (const auto &element, toInstall) {
         RepoPackage pkg;
         if((pkg = getInstalledPackage(element)).name().isEmpty()){
@@ -68,7 +75,7 @@ PackageList Database::getPending(const QStringList &toInstall, const QStringList
     foreach(const auto &element,toRemove){
         RepoPackage pkg;
         if(!(pkg = getInstalledPackage(element)).name().isEmpty()){
-           result.append(pkg);
+            result.append(pkg);
         }
     }
     return result;

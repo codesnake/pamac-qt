@@ -1,5 +1,5 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.12
 import Pamac.Database 1.0
 
 ListView{
@@ -7,19 +7,19 @@ ListView{
 
     model:ListModel{
         ListElement{
-            name:"Categories"
+            name:qsTr("Categories")
             url:"SideMenuCategories.qml"
         }
         ListElement{
-            name:"Groups"
+            name:qsTr("Groups")
             url:"SideMenuGroups.qml"
         }
         ListElement{
-            name:"Repos"
+            name:qsTr("Repos")
             url:"SideMenuRepos.qml"
         }
         ListElement{
-            name:"Installed"
+            name:qsTr("Installed")
             url:"SideMenuInstalled.qml"
         }
     }
@@ -36,5 +36,8 @@ ListView{
         onClicked:{
             drawer.push("SideMenuPending.qml");
         }
+    }
+    StackView.onActivated: {
+        mainView.packageListFuture = Database.getInstalledAppsAsync();
     }
 }

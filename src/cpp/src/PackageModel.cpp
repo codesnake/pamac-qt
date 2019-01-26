@@ -1,5 +1,6 @@
 #include "PackageModel.h"
 #include <QLocale>
+#include <QModelIndex>
 QHash<int, QByteArray> PamacQt::PackageModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NameRole] = "name";

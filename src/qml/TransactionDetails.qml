@@ -13,13 +13,20 @@ Page {
                 color:systemPalette.base
             }
 
-            onTextChanged: {
-                if((flickable.height-area.height)>0)
-                flickable.contentY=(flickable.height-area.height)
-            }
             readOnly: true
             id:area
-            text: transaction.details
+            font.pointSize: 10
+
+            Connections{
+                target: transaction
+                onDetailsChanged:{
+                    area.clear();
+                    area.append(transaction.details);
+                }
+            }
         }
+    }
+    Component.onCompleted: {
+        area.append(transaction.details);
     }
 }

@@ -58,10 +58,10 @@ ListView {
         text:readableName
         onClicked: {
             currentIndex=index;
-            mainView.modelData = Database.getCategoryPackages(categoryName);
+            mainView.packageListFuture = Database.getCategoryPackagesAsync(categoryName);
         }
     }
-    Component.onCompleted: {
-        mainView.modelData = Database.getCategoryPackages(model.get(0).categoryName);
+    StackView.onActivated: {
+        mainView.packageListFuture = Database.getCategoryPackagesAsync(model.get(0).categoryName);
     }
 }

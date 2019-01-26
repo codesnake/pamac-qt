@@ -24,18 +24,11 @@ PamacQt::Transaction::Transaction(Database *db, QObject *parent):QObject(parent)
 }
 
 void PamacQt::Transaction::startWritePamacConfig(const QVariantMap &map){
-    GHashTable* tabl = g_hash_table_new(g_direct_hash,
-                                        g_direct_equal);
+    GHashTable* tabl = g_hash_table_new(g_str_hash,
+                                        g_str_equal);
 
     for(QVariantMap::const_iterator it = map.constBegin(), total = map.constEnd();it!=total;++it){
-
-        size_t length = ulong(it.key().toUtf8().length());
-        char* var = new char[length+1];
-        std::memcpy(var,it.key().toUtf8(),length);
-        var[length]='\0';
-
-
-        g_hash_table_insert(tabl,var,Utils::qVariantToGVariant(it.value()));
+        g_hash_table_insert(tabl,it.key().toUtf8().data(),Utils::qVariantToGVariant(it.value()));
     }
 
     pamac_transaction_start_write_pamac_config(m_transaction.get(),tabl);
@@ -218,7 +211,10 @@ void PamacQt::Transaction::init()
         this->setProperty("progress",progress);
 
         QString details = this->property("details").toString();
-        details.append(action+" "+status+"\n");
+        if(details.endsWith(action+"\n")){
+            return;
+        }
+        details.append(action+"\n");
         this->setProperty("details",details);
 
     });
@@ -240,7 +236,9 @@ void PamacQt::Transaction::init()
     });
 
     connect(this,&Transaction::startedChanged,[=](bool started){
-        send_unity_launcherentry_message({{"progress-visible",started},
+        send_unity_launcherentry_message({{"count-visible",started},
+                                          {"count",started?1:0},
+                                          {"progress-visible",started},
                                           {"progress",0}});
     });
 

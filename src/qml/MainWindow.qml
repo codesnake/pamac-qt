@@ -6,12 +6,12 @@ import QtGraphicalEffects 1.0
 import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
+import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
 
 ApplicationWindow {
 
     function tryLockAndRun(val){
-        console.log(val,arguments)
         if(transaction.getLock()){
             val.apply(arguments);
         } else{
@@ -25,6 +25,7 @@ ApplicationWindow {
 
 
     Dialog{
+
         title: ""
         id:retryDialog
         Timer{
@@ -34,7 +35,6 @@ ApplicationWindow {
             id:retryTimer
             running: false
             onTriggered: {
-                console.log(func,args)
                 if(transaction.getLock()){
                     retryTimer.stop();
                     retryDialog.close();
@@ -43,7 +43,9 @@ ApplicationWindow {
             }
         }
         onVisibleChanged: {
-            retryTimer.stop();
+            if(!visible){
+                retryTimer.stop();
+            }
         }
         standardButtons: Dialog.NoButton
         Label{
@@ -89,7 +91,9 @@ ApplicationWindow {
         id:transaction
         database: Database
         onStartPreparing: {
-            details = "";
+            if(started){
+                details = "";
+            }
         }
 
         onFinished:{
@@ -110,11 +114,21 @@ ApplicationWindow {
     title: qsTr("Package manager")
     SystemPalette{id:systemPalette}
 
-    header: PamacToolBar {
+    header: PamacQt.ToolBar {
         id: toolBar
     }
 
     StackView{
+
+        focus: true
+        Keys.enabled: true
+        Keys.onPressed: {
+            if(event.text!==""){
+                searchPane.state="opened";
+                searchPane.forceActiveFocus();
+                searchPane.append(event.text);
+            }
+        }
 
         id:stackView
         height: parent.height-bottomPanel.height
@@ -173,7 +187,6 @@ ApplicationWindow {
 
                     id: mainView
 
-                    modelData: Database.getInstalledApps()
 
                     anchors{
                         left: parent.left
@@ -183,13 +196,7 @@ ApplicationWindow {
                     }
 
                     clip:true
-                    focus: true
-                    Keys.onPressed: {
-                        if(event.text!==""){
-                            searchPane.state="opened";
-                            searchPane.text=event.text;
-                        }
-                    }
+
                 }
             }
         }
@@ -209,7 +216,9 @@ ApplicationWindow {
                sysUpgrade) ?"opened":"hidden"
     }
 
+
 }
+
 
 
 /*##^## Designer {

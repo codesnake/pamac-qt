@@ -11,11 +11,8 @@ Page {
         onUpdatesReady:{
             updates = upds;
             var upList = upds.getReposUpdates();
-            if(upList.length>0){
-                updatesPackageTable.modelData = upList;
-                updatesPackageTable.visible= true;
-            } else {
-                updatesPackageTable.modelData = undefined;
+            updatesPackageTable.packageList = upList;
+            if(upList.length===0){
                 updates=undefined;
                 progress.text = qsTr("System is up to date");
             }
@@ -35,7 +32,7 @@ Page {
 
     PagePackageTable{
         id:updatesPackageTable
-        visible: false
+        visible: packageList.length>0
         anchors.fill: parent
     }
     Component.onCompleted: {
