@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
         QIcon::setThemeName("breeze");
     }
 
+    QQuickStyle::setFallbackStyle("fusion");
+    QQuickStyle::setStyle("org.kde.desktop");
 
     qmlRegisterSingletonType<PamacQt::Database>("Pamac.Database",1,0,"Database",
                                                 [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
