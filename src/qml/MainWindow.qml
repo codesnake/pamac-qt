@@ -141,16 +141,27 @@ ApplicationWindow {
                 initialItem: SideMenuMain{
                     height: parent.height-updatesItem.height
                     MenuItemDelegate {
+                        property int updatesCount:-1
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         height: 45
                         leftPadding: 15
                         id:updatesItem
-                        text: qsTr("Updates")
+                        text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
+
                         width: parent.width
 
                         onClicked: {
                             stackView.push("UpdatesPage.qml");
+                        }
+                        Component.onCompleted: {
+                            Database.getUpdatesAsync();
+                        }
+                        Connections{
+                            target: Database
+                            onUpdatesReady: {
+                                updatesItem.updatesCount = upds.getReposUpdates().size
+                            }
                         }
                     }
                 }
