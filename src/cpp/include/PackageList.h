@@ -33,7 +33,9 @@ RepoPackageList() = default;
     {
         return m_list->at(index);
     }
-
+Q_INVOKABLE QString packageType(){
+        return "Repo";
+    }
     static RepoPackageList fromGList(GList* list,GDestroyNotify freeFunc = nullptr)
     {
         RepoPackageList result;
@@ -85,7 +87,9 @@ public:
     {
         return m_list[index];
     }
-
+    Q_INVOKABLE QString packageType(){
+            return "AUR";
+        }
     static  AURPackageList fromGList(GList* list,GDestroyNotify freeFunc = nullptr)
     {
         AURPackageList result;

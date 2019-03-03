@@ -9,6 +9,7 @@
 #include <Database.h>
 #include <QIcon>
 #include <PackageModel.h>
+#include <AURPackageModel.h>
 #include <Updates.h>
 #include <Transaction.h>
 #include <XDGIconProvider.h>
@@ -60,11 +61,12 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<QmlFuture>("Pamac.Async",1,0,"Future","");
     qmlRegisterType<QmlFutureWatcher>("Pamac.Async",1,0,"FutureWatcher");
 
-    qmlRegisterUncreatableType<PamacQt::RepoPackageList>("Pamac.AUR.Package",1,0,"AURPackageList","");
+    qmlRegisterUncreatableType<PamacQt::AURPackageList>("Pamac.AUR.Package",1,0,"AURPackageList","");
     qmlRegisterUncreatableType<PamacQt::RepoPackageDetails>("Pamac.Package",1,0,"RepoPackageDetails","");
     qmlRegisterUncreatableType<PamacQt::RepoPackage>("Pamac.Package",1,0,"RepoPackage","");
     qmlRegisterUncreatableType<PamacQt::RepoPackageList>("Pamac.Package",1,0,"RepoPackageList","");
     qmlRegisterType<PamacQt::PackageModel>("Pamac.PackageModel",1,0,"PackageModel");
+    qmlRegisterType<PamacQt::AURPackageModel>("Pamac.AUR.PackageModel",1,0,"AURPackageModel");
     qmlRegisterUncreatableType<PamacQt::Updates>("Pamac.Database",1,0,"Updates","");
     qmlRegisterType<PamacQt::Transaction>("Pamac.Transaction",1,0,"Transaction");
     qmlRegisterUncreatableType<PamacQt::Config>("Pamac.Config",1,0,"Config","");

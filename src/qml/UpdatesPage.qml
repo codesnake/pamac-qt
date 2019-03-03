@@ -22,14 +22,27 @@ Page {
             progress.text = qsTr("Checking for updates ")+percent+"%";
         }
     }
-    Label{
-        id:progress
+    Column{
+        width: implicitWidth
+        height: implicitHeight
+        spacing: 1
         anchors.centerIn: parent
-        text:qsTr("Checking for updates")
-        font.weight: Font.Bold
-        font.pointSize: 12
-    }
+        BusyIndicator{
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: updates===undefined
+            height: width
+            width: progress.paintedWidth*0.5
+            running: true
+        }
 
+        Label{
+            visible: updates===undefined
+            id:progress
+            text:qsTr("Checking for updates")
+            font.weight: Font.Bold
+            font.pointSize: 12
+        }
+    }
     PagePackageTable{
         id:updatesPackageTable
         visible: packageList.length>0
@@ -41,7 +54,6 @@ Page {
     Connections{
         target: transaction
         onFinished:{
-            console.log("finished");
             Database.getUpdatesAsync();
         }
     }

@@ -352,7 +352,6 @@ Dialog{
                 }
 
                 PreferencesCheckBox {
-                    enabled: false //aur is not implemented
                     checked: config.enableAur
                     id: aurEnabledCheckBox
                     x: 465

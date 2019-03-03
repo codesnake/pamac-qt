@@ -47,6 +47,12 @@ namespace Utils {
     inline void setName(int getName){\
     setMethod;\
 }
+#define PAMAC_QT_DOUBLE_PROPERTY_GET(name,method)\
+    Q_PROPERTY(double name READ name CONSTANT)\
+    inline double name() const\
+{\
+    return double(method);\
+    }
 #define PAMAC_QT_STRINGLIST_PROPERTY_GET(name,method)\
     Q_PROPERTY(QStringList name READ name CONSTANT)\
     inline QStringList name() const\

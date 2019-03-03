@@ -21,3 +21,9 @@ function readableFileSize(bytes, si) {
     } while(Math.abs(bytes) >= thresh && u < units.length - 1);
     return bytes.toFixed(1)+' '+units[u];
 }
+function readFile(fileUrl) {
+    var request = new XMLHttpRequest();
+    request.open("GET", fileUrl, false);
+    request.send(null);
+    return request.responseText;
+}

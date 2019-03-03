@@ -141,6 +141,7 @@ ApplicationWindow {
                 initialItem: SideMenuMain{
                     height: parent.height-updatesItem.height
                     MenuItemDelegate {
+                        highlighted: false
                         property int updatesCount:-1
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left

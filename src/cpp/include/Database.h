@@ -13,18 +13,35 @@
 #include "Config.h"
 #include "Utils.h"
 #include "AsyncHelpers.h"
+#include "AURPackage.h"
 
 #define PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(method)\
     [](GObject* parent,GAsyncResult* result,void* futurePtr){\
-                auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);\
-                if(future->isRunning()){\
-                future->setFuture(QVariant::fromValue(RepoPackageList::fromGList(method(reinterpret_cast<PamacDatabase*>(parent),result))));\
-                } else {\
-                    delete future;\
-                }\
-            }
-
-
+    auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);\
+    if(future->isRunning()){\
+    future->setFuture(QVariant::fromValue(RepoPackageList::fromGList(method(reinterpret_cast<PamacDatabase*>(parent),result))));\
+    } else {\
+    delete future;\
+    }\
+    }
+#define PAMAC_QT_AUR_PACKAGELIST_ASYNC_CALLBACK(method)\
+    [](GObject* parent,GAsyncResult* result,void* futurePtr){\
+    auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);\
+    if(future->isRunning()){\
+    future->setFuture(QVariant::fromValue(AURPackageList::fromGList(method(reinterpret_cast<PamacDatabase*>(parent),result))));\
+    } else {\
+    delete future;\
+    }\
+    }
+#define PAMAC_QT_AUR_PACKAGE_DETAILS_ASYNC_CALLBACK(method)\
+    [](GObject* parent,GAsyncResult* result,void* futurePtr){\
+    auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);\
+    if(future->isRunning()){\
+    future->setFuture(QVariant::fromValue(AURPackageDetails(method(reinterpret_cast<PamacDatabase*>(parent),result))));\
+    } else {\
+    delete future;\
+    }\
+    }
 namespace PamacQt {
 class Database:public QObject
 {
@@ -56,6 +73,31 @@ public:
     {
         return RepoPackageDetails(pamac_database_get_pkg_details(m_db.get(),pkgname.toUtf8(),app_name.toUtf8(),useSyncDB));
     }
+    inline Q_INVOKABLE QmlFuture getAURPkgDetails(const QString &pkgname)
+    {
+        auto future = new QmlFutureImpl;
+        pamac_database_get_aur_pkg_details(m_db.get(),pkgname.toUtf8(),PAMAC_QT_AUR_PACKAGE_DETAILS_ASYNC_CALLBACK(pamac_database_get_aur_pkg_details_finish),future);
+        return QmlFuture(future);
+
+    }
+inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwrite = true){
+    auto future = new QmlFutureImpl;
+    pamac_database_clone_build_files(m_db.get(),pkgname.toUtf8(),overwrite,
+                                     [](GObject* parent,GAsyncResult* result,void* futurePtr){
+        auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
+
+        auto folder = pamac_database_clone_build_files_finish(reinterpret_cast<PamacDatabase*>(parent),result);
+
+        if(future->isRunning()){
+            future->setFuture(QVariant(QString::fromUtf8(g_file_get_path(folder))));
+        }   else {
+            delete future;
+        }
+
+    }
+        ,future);
+    return QmlFuture(future);
+}
 
     inline Q_INVOKABLE RepoPackageList getInstalledApps()
     {
@@ -82,6 +124,15 @@ public:
     {
         return Utils::gListToQStringList(pamac_database_get_ignorepkgs(m_db.get()),true);
     }
+    inline Q_INVOKABLE QmlFuture searchPkgsInAurAsync(const QString &name)
+    {
+
+        auto future = new QmlFutureImpl;
+
+        pamac_database_search_in_aur(m_db.get(),name.toUtf8(),PAMAC_QT_AUR_PACKAGELIST_ASYNC_CALLBACK(pamac_database_search_in_aur_finish),future);
+        return QmlFuture(future);
+    }
+
     inline Q_INVOKABLE QmlFuture getCategoryPackagesAsync(const QString &category)
     {
         auto future = new QmlFutureImpl;

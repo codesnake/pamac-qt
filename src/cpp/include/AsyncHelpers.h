@@ -45,7 +45,7 @@ public:
     explicit QmlFutureWatcher(QQuickItem* parent = nullptr):
         QQuickItem (parent)
     {
-
+        connect(this,&QmlFutureWatcher::finished,this,&QmlFutureWatcher::reset);QApplication::restoreOverrideCursor();
     }
     QmlFuture future() const
     {

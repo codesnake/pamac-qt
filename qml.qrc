@@ -40,5 +40,11 @@
         <file>icons/builtin/index.theme</file>
         <file>src/qml/SideMenuPending.qml</file>
         <file>src/qml/SideMenuSearch.qml</file>
+        <file>src/qml/RepoPackageDelegate.qml</file>
+        <file>src/qml/AURPackageDelegate.qml</file>
+        <file>src/qml/PageAURPackageTable.qml</file>
+        <file>src/qml/PageRepoPackageTable.qml</file>
+        <file>src/qml/PageAURPackageInfo.qml</file>
+        <file>src/qml/SideMenuAURPackageInfo.qml</file>
     </qresource>
 </RCC>

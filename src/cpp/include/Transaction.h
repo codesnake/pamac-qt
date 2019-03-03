@@ -1,5 +1,6 @@
 #pragma once
 #include <pamac.h>
+#include <QFileInfo>
 #include <QObject>
 #include <memory>
 #include <cstring>
@@ -42,6 +43,7 @@ private:
 };
 class Transaction : public QObject
 {
+
     Q_OBJECT
     Q_PROPERTY(Database* database READ database WRITE setDatabase NOTIFY databaseChanged)
     Q_PROPERTY(bool indeterminate MEMBER m_indeterminate NOTIFY indeterminateChanged)
@@ -57,14 +59,42 @@ public:
         pamac_transaction_start_get_authorization(m_transaction.get());
     }
 
-    Q_INVOKABLE bool getLock(){
+    inline Q_INVOKABLE bool getLock(){
         return pamac_transaction_get_lock(m_transaction.get());
     }
-    Q_INVOKABLE bool unlock(){
+    inline Q_INVOKABLE bool unlock(){
         return pamac_transaction_unlock(m_transaction.get());
     }
     Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
 
+    inline Q_INVOKABLE QmlFuture getBuildFiles(const QString& pkgname){
+        auto future = new QmlFutureImpl;
+        pamac_transaction_get_build_files(m_transaction.get(),pkgname.toUtf8(),
+                                          [](GObject* parent,GAsyncResult* res,gpointer futurePtr){
+            auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
+            if(future->isRunning()){
+
+                auto transaction = reinterpret_cast<PamacTransaction*>(parent);
+                int length = 0;
+                gchar** result = pamac_transaction_get_build_files_finish(transaction,res,&length);
+                QStringList resList;
+
+                for(int i =0;i<length;i++){
+                    QFileInfo file(QString::fromUtf8(result[i]));
+                    resList.append(file.fileName());
+                    g_free(result[i]);
+                }
+
+                g_free(result);
+                future->setFuture(QVariant::fromValue(resList));
+            }
+            else {
+                delete future;
+            }
+        },future);
+        return QmlFuture(future);
+
+    }
 
     Database* database() const
     {
@@ -86,8 +116,9 @@ public slots:
 
     void setDatabase(Database* database)
     {
-        if (m_database == database)
+        if (m_database == database) {
             return;
+}
 
         if (m_transaction==nullptr){
             m_transaction = std::shared_ptr<PamacTransaction>(pamac_transaction_new(*database),g_object_unref);

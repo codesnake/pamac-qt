@@ -42,7 +42,43 @@ Pane{
     ]
     id:searchPane
 
-    
+    function search()
+    {
+
+
+        if(tempModel===undefined){
+            drawer.push("SideMenuSearch.qml")
+            tempModel = mainView.packageList;
+        }
+
+        if(text.length>0){
+            if(drawer.currentItem.currentIndex===Database.Repos){
+                mainView.packageListFuture=Database.searchPkgsAsync(text);
+            } else if(drawer.currentItem.currentIndex===Database.AUR){
+                mainView.packageListFuture=Database.searchPkgsInAurAsync(text);
+            }
+        }
+        else {
+            drawer.pop();
+            mainView.packageList = tempModel;
+            tempModel = undefined;
+        }
+
+
+    }
+Connections{
+    target: drawer.currentItem
+    onCurrentIndexChanged: {
+        if(text.length>0){
+            if(drawer.currentItem.currentIndex===Database.Repos){
+                mainView.packageListFuture=Database.searchPkgsAsync(text);
+            } else if(drawer.currentItem.currentIndex===Database.AUR){
+                mainView.packageListFuture=Database.searchPkgsInAurAsync(text);
+            }
+        }
+    }
+}
+
     TextArea{
 
         Image{
@@ -62,25 +98,7 @@ Pane{
         leftPadding: searchImage.width + 6
         anchors.centerIn: parent
 
-        onTextChanged: {
-
-
-            if(tempModel===undefined){
-                drawer.push("SideMenuSearch.qml")
-                tempModel = mainView.packageList;
-            }
-
-            if(text.length>0){
-                mainView.packageListFuture=Database.searchPkgsAsync(text);
-            }
-            else {
-                drawer.pop();
-                mainView.packageList = tempModel;
-                tempModel = undefined;
-            }
-
-
-        }
+        onTextChanged:search()
     }
     property var tempModel
 }

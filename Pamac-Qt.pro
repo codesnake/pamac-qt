@@ -34,7 +34,7 @@ desktop.files += data/pamac-qt.desktop
 INSTALLS += desktop
 
 
-LIBS+=/usr/lib/libpamac.so /usr/lib/libgobject-2.0.so /usr/lib/libglib-2.0.so
+LIBS+=/usr/lib/libpamac.so /usr/lib/libgobject-2.0.so /usr/lib/libglib-2.0.so /usr/lib/libgio-2.0.so
 INCLUDEPATH += "/usr/lib/glib-2.0/include" /usr/include/glib-2.0/ ./src/cpp/include/
 
 QMAKE_CXXFLAGS += -std=c++17
@@ -51,7 +51,8 @@ HEADERS += \
     src/cpp/include/XDGIconProvider.h \
     src/cpp/include/AURPackage.h \
     src/cpp/include/RepoPackage.h \
-    src/cpp/include/AsyncHelpers.h
+    src/cpp/include/AsyncHelpers.h \
+    src/cpp/include/AURPackageModel.h
 
 SOURCES += \
     src/cpp/src/Database.cpp \
@@ -61,6 +62,7 @@ SOURCES += \
     src/cpp/src/Transaction.cpp \
     src/cpp/src/Utils.cpp \
     src/cpp/src/XDGIconProvider.cpp \
-    src/cpp/src/AsyncHelpers.cpp
+    src/cpp/src/AsyncHelpers.cpp \
+    src/cpp/src/AURPackageModel.cpp
 
 
