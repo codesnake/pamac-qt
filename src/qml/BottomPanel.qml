@@ -21,8 +21,8 @@ Pane {
     padding: 3
     property bool sysUpgrade: stackView.currentItem.objectName == "updatesPage"
                               && stackView.currentItem.updates!==undefined
-                              && stackView.currentItem.updates.getReposUpdates().length!==0
-                              && StackView.currentItem.updates.getAurUpdates().length!==0
+                              && (stackView.currentItem.updates.getReposUpdates().length!==0
+                              || StackView.currentItem.updates.getAurUpdates().length!==0)
 
     property int totalPending: toInstall.length+toRemove.length+toLoad.length+toBuild.length
 
