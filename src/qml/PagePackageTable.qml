@@ -7,6 +7,7 @@ import Pamac.AUR.Package 1.0
 import Pamac.Async 1.0
 import QtQuick.Shapes 1.11
 Loader{
+    property string title
     id:tableLoader
 
     property var packageListFuture

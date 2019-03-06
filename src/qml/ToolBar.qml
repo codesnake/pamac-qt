@@ -6,129 +6,83 @@ import Pamac.PackageModel 1.0
 import QtQuick.Dialogs 1.2
 import "../js/JSUtils.js" as JSUtils
 ToolBar {
-
+    height: 40
     id: toolBar
     padding: 5
     contentHeight: toolButton.implicitHeight
     width:parent.width
+    clip: true
     ToolButton {
+        states: [
+            State {
+                name: "visible"
+                PropertyChanges {
+                    target: toolButton
+                    anchors.leftMargin: 0
+                }
+                PropertyChanges {
+                    target: toolButton
+                    opacity:1.0
+                }
+            },
+            State {
+                name: "hidden"
+                PropertyChanges {
+                    target: toolButton
+                    anchors.leftMargin: -20
+                }
+                PropertyChanges {
+                    target: toolButton
+                    opacity:0.0
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                PropertyAnimation{
+                    property:"anchors.leftMargin"
+                }
+
+                PropertyAnimation{
+                    property: "opacity"
+                }
+
+            }
+        ]
         anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
         flat:true
         id: toolButton
         width: height
         icon.name: "go-previous"
         font.pixelSize: Qt.application.font.pixelSize * 1.4
-        enabled: stackView.depth > 1 || drawer.depth > 1 || searchPane.text.length>0
+        enabled: stackView.depth > 1
         visible: enabled
+        state:visible?"visible":"hidden"
         onClicked: {
             if (stackView.depth > 1) {
                 stackView.pop();
             }
-            else if(searchPane.text.length>0){
-                searchPane.text="";
-                searchPane.state="hidden";
-            }
-            else if(drawer.depth>1){
-                drawer.pop();
-                mainView.packageListFuture = Database.getInstalledAppsAsync();
-            }
         }
     }
-    
-    
+
+
+
     Label {
         text: stackView.currentItem.title!==undefined?stackView.currentItem.title:""
-        anchors.centerIn: parent
-    }
-
-    ToolButton {
-        visible: stackView.currentItem.objectName==""
-        id: toolButton2
-        icon.name: "search"
-        anchors.right: toolButton1.left
-        anchors.rightMargin: 0
-        checkable: true
-        checked: searchPane.state=="opened"
-        onClicked: {
-            if(searchPane.state!="opened"){
-                searchPane.state="opened";
-                searchPane.forceActiveFocus();
-            }
-            else{
-                searchPane.text = "";
-                searchPane.state="hidden";
-            }
-        }
-    }
-
-    ToolButton {
-        checkable: true;
-        id: toolButton1
-        anchors.right: parent.right
-        width: height
-        flat: true
-        icon.name: "application-menu"
-        font.pixelSize: Qt.application.font.pixelSize * 1.4
+        font.pointSize: 12
+        anchors.left: toolButton.right
         anchors.verticalCenter: parent.verticalCenter
-
-        FileDialog{
-            id:fileDialog
-            title: qsTr("Install Local Packages")
-            folder: shortcuts.home
-            nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
-            onAccepted: {
-                for(var i =0;i<fileUrls.length;i++){
-                    toLoad.push(fileUrls[i].toString());
-                }
-
-                tryLockAndRun(function(){transaction.start([],[],toLoad,[],[],[])});
-
-            }
-        }
-        Menu {
-            onClosed: toolButton1.checked=false
-
-
-            visible: toolButton1.checked
-            y: toolButton1.height
-            id: contextMenu
-            Action {
-                text: "Refresh databases"
-                onTriggered: {
-                    tryLockAndRun(function(){transaction.startSysupgrade(true,false,[],[])});
-
-                }
-            }
-            Action { text: "View History"
-                onTriggered: {
-                    historyDialog.open();
-                }
-            }
-            Action {
-                text: "Install local packages"
-                onTriggered: {
-                    fileDialog.visible = true;
-                }
-            }
-            Action {
-                text: "Preferences"
-                onTriggered: {
-                    tryLockAndRun(function(){
-                        JSUtils.connectOnce(transaction.getAuthorizationFinished,function(bool){
-                            if(bool)
-                                preferencesDialog.open();
-                        });
-                        transaction.startGetAuthorization();
-                    });
-                }
-            }
-            Action {
-                text: "About"
-                onTriggered: {
-                    aboutDialog.open();
-                }
-            }
-        }
     }
+    Button{
+        text: qsTr("Select all")
+        anchors.right: parent.right
+        enabled: stackView.depth == 1
+        visible: enabled
+        anchors.verticalCenter: parent.verticalCenter
+        onClicked: mainView.item.selectAll()
+    }
+
+
 
 }

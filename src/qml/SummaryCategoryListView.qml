@@ -39,7 +39,8 @@ ListView{
                 text:repo
             }
             Label{
-                text:size.toString()
+                text:downloadSize?downloadSize.toString():0
+                visible: downloadSize>0
             }
             
         }

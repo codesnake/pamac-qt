@@ -138,6 +138,9 @@ Page {
             }
         }
     }
+    function selectAll(){
+        table.selectAll();
+    }
     PackageTable {
         columnWidthProvider:columnWidth
         

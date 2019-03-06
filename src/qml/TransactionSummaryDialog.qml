@@ -54,6 +54,7 @@ Page{
                 text: qsTr("To Build:")
                 packageList: summary.toBuild
 
+
             }
         }
     }

@@ -29,9 +29,11 @@ ListView{
         onClicked:{
             currentIndex=index
             mainView.packageListFuture = Database.getInstalledPackagesAsync(type);
+            mainView.title=name
         }
     }
     StackView.onActivated: {
         mainView.packageListFuture = Database.getInstalledPackagesAsync(model.get(0).type);
+        mainView.title=model.get(0).name
     }
 }

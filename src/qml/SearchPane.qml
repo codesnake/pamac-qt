@@ -5,30 +5,14 @@ import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
 Pane{
+    padding:0
     function append(text){
         searchArea.append(text);
     }
 
     property alias text: searchArea.text
     property alias searchFocus:searchArea.focus
-    states:[
-        State{
-            name:"opened"
-            PropertyChanges {
-                target: searchPane
-                height:searchArea.height+10
-            }
-        },
-        State{
-            name:"hidden"
-            PropertyChanges {
-                target: searchPane
-                height:0
-                text:""
-            }
 
-        }
-    ]
     transitions: [
         Transition {
             from: "*"
@@ -44,8 +28,6 @@ Pane{
 
     function search()
     {
-
-
         if(tempModel===undefined){
             drawer.push("SideMenuSearch.qml")
             tempModel = mainView.packageList;
@@ -66,39 +48,31 @@ Pane{
 
 
     }
-Connections{
-    target: drawer.currentItem
-    onCurrentIndexChanged: {
-        if(text.length>0){
-            if(drawer.currentItem.currentIndex===Database.Repos){
-                mainView.packageListFuture=Database.searchPkgsAsync(text);
-            } else if(drawer.currentItem.currentIndex===Database.AUR){
-                mainView.packageListFuture=Database.searchPkgsInAurAsync(text);
+    Connections{
+        target: drawer.currentItem
+        onCurrentIndexChanged: {
+            if(text.length>0){
+                if(drawer.currentItem.currentIndex===Database.Repos){
+                    mainView.packageListFuture=Database.searchPkgsAsync(text);
+                } else if(drawer.currentItem.currentIndex===Database.AUR){
+                    mainView.packageListFuture=Database.searchPkgsInAurAsync(text);
+                }
             }
         }
     }
-}
 
     TextArea{
-
-        Image{
-            anchors.verticalCenter: parent.verticalCenter
-            id:searchImage
-            source: "image://icons/search"
-            anchors.left: parent.left
-            height: parent.height*0.75
-            width: height
-            sourceSize.width: width
-            sourceSize.height: height
-        }
-
+        placeholderText: qsTr("Search...")
         focus: true
         id:searchArea
-        width: parent.width/2
+        width: parent.width
         leftPadding: searchImage.width + 6
         anchors.centerIn: parent
 
-        onTextChanged:search()
+        onTextChanged:{
+            mainView.title = qsTr("Search Results for ")+searchPane.text;
+            search();
+        }
     }
     property var tempModel
 }

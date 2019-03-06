@@ -81,6 +81,7 @@ RepoPackageList Database::getPending(const QStringList &toInstall, const QString
     return result;
 }
 
+
 void Database::init()
 {
     pamac_database_enable_appstream(m_db.get());

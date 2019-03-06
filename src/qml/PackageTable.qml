@@ -41,6 +41,13 @@ TableView{
             selectedRowsChanged();
         }
     }
+    function selectAll(){
+        for(var i =0;i<model.rowCount();i++){
+            selectedRows.push(i);
+        }
+        selectedRowsChanged();
+    }
+
     function isSelected(row){
         return selectedRows.indexOf(row)>-1
     }

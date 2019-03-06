@@ -343,7 +343,7 @@ Dialog{
                 Label {
                     id: label7
                     height: aurEnabledCheckBox.height
-                    text: qsTr("Enable AUR support (NOT IMPLEMENTED YET)")
+                    text: qsTr("Enable AUR support")
                     verticalAlignment: Text.AlignVCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 6

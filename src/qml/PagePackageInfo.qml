@@ -22,7 +22,7 @@ Page {
         initialItem: SideMenuPackageInfo {
         }
     }
-    title: pkg.appName
+    title: pkg.appName?pkg.appName:pkg.name
     property var pkg
     id: rectangle
     state: pkg.installedVersion ? "installedState" : ""
@@ -49,7 +49,7 @@ Page {
             id: label
             height: 17
             text: pkg.appName ? pkg.appName + " (" + pkg.name + ") "
-                                + pkg.installedVersion : pkg.name
+                                + pkg.installedVersion : pkg.name + " " + pkg.installedVersion
             font.pixelSize: 14
             anchors.top: parent.top
             anchors.topMargin: 20

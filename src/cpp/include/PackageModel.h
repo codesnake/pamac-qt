@@ -27,7 +27,7 @@ public:
 
     QHash<int, QByteArray>  roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override{ Q_UNUSED(parent);return int(m_packageList.size());}
+    Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const override{ Q_UNUSED(parent);return int(m_packageList.size());}
     int columnCount(const QModelIndex &parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)

@@ -13,9 +13,11 @@ ListView {
         onClicked: {
             currentIndex=index;
             mainView.packageListFuture = Database.getGroupPackagesAsync(modelData);
+            mainView.title=modelData
         }
     }
     StackView.onActivated: {
         mainView.packageListFuture = Database.getGroupPackagesAsync(model[0]);
+        mainView.title=model[0]
     }
 }

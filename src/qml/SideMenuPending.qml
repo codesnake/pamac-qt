@@ -17,18 +17,17 @@ ListView{
     }
     delegate:MenuItemDelegate {
         text: name
+        height:(!Database.config.enableAur && index==Database.AUR)?-spacing:35
         onClicked:{
             currentIndex=index
-            mainView.modelData = Database.getPending(toInstall,toRemove);
+            if(index==Database.Repos){
+                mainView.packageList= Database.getPending(toInstall,toRemove);
+            } else{
+                mainView.packageList = undefined
+            }
         }
     }
     StackView.onActivated: {
         mainView.packageList = Database.getPending(toInstall,toRemove);
-        if(!Database.config.enableAur){
-            drawer.state="hidden";
-        }
-    }
-    Component.onDestruction: {
-        drawer.state="opened";
     }
 }

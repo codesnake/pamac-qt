@@ -49,7 +49,7 @@ ApplicationWindow {
         }
         standardButtons: Dialog.NoButton
         Label{
-            text: "Waiting for another package manager to quit"
+            text: qsTr("Waiting for another package manager to quit")
         }
     }
 
@@ -114,103 +114,236 @@ ApplicationWindow {
     title: qsTr("Package manager")
     SystemPalette{id:systemPalette}
 
-    header: PamacQt.ToolBar {
-        id: toolBar
-    }
 
-    StackView{
+    Page{
+        id:sidePanel
+        anchors.top: parent.top
+        anchors.left:parent.left
+        anchors.bottom:bottomPanel.top
+        height: parent.height
+        header:ToolBar{
+            height: toolBar.height
+            z:10
+            ToolButton {
+                checkable: true;
+                id: toolButton1
+                anchors.left: parent.left
+                width: height
+                flat: true
+                icon.name: "application-menu"
+                font.pixelSize: Qt.application.font.pixelSize * 1.4
+                anchors.verticalCenter: parent.verticalCenter
 
-        focus: true
-        Keys.enabled: true
-        Keys.onPressed: {
-            if(event.text!==""){
-                searchPane.state="opened";
-                searchPane.forceActiveFocus();
-                searchPane.append(event.text);
+                FileDialog{
+                    id:fileDialog
+                    title: qsTr("Install Local Packages")
+                    folder: shortcuts.home
+                    nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
+                    onAccepted: {
+                        for(var i =0;i<fileUrls.length;i++){
+                            toLoad.push(fileUrls[i].toString());
+                        }
+
+                        tryLockAndRun(function(){transaction.start([],[],toLoad,[],[],[])});
+
+                    }
+                }
+                Menu {
+                    onClosed: toolButton1.checked=false
+
+
+                    visible: toolButton1.checked
+                    y: toolButton1.height
+                    id: contextMenu
+                    Action {
+                        text: "Refresh databases"
+                        onTriggered: {
+                            tryLockAndRun(function(){transaction.startSysupgrade(true,false,[],[])});
+
+                        }
+                    }
+                    Action { text: "View History"
+                        onTriggered: {
+                            historyDialog.open();
+                        }
+                    }
+                    Action {
+                        text: "Install local packages"
+                        onTriggered: {
+                            fileDialog.visible = true;
+                        }
+                    }
+                    Action {
+                        text: "Preferences"
+                        onTriggered: {
+                            tryLockAndRun(function(){
+                                JSUtils.connectOnce(transaction.getAuthorizationFinished,function(bool){
+                                    if(bool)
+                                        preferencesDialog.open();
+                                });
+                                transaction.startGetAuthorization();
+                            });
+                        }
+                    }
+                    Action {
+                        text: "About"
+                        onTriggered: {
+                            aboutDialog.open();
+                        }
+                    }
+                }
+            }
+            SearchPane {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: toolButton1.right
+                anchors.right: parent.right
+                height: parent.height-5
+                id: searchPane
+
             }
         }
+        states: [
+            State{
+                name:"opened"
+                PropertyChanges {
+                    target: sidePanel
+                    width:Math.min(175,parent.width*0.3)
+                }
+            },
+            State{
+                name:"hidden"
+                PropertyChanges {
+                    target: drawerStack
+                    width:0
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                from: "*"
+                to: "*"
+                animations:[
+                    NumberAnimation{
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                        properties: "width"
+                    }
+                ]
+            }]
+        state: "opened"
 
-        id:stackView
-        height: parent.height-bottomPanel.height
-        width: parent.width
-        initialItem: Page{
-            SideBar {
-                height: stackView.height
-                font.bold: true
-                id: drawer
-                initialItem: SideMenuMain{
-                    height: parent.height-updatesItem.height
-                    MenuItemDelegate {
-                        highlighted: false
-                        property int updatesCount:-1
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-                        height: 45
-                        leftPadding: 15
-                        id:updatesItem
-                        text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
+        MenuItemDelegate{
 
-                        width: parent.width
+            leftPadding: 30
+            id:backMenuItem
+            anchors.top: parent.top
+            anchors.topMargin: drawer.depth > 1?0:-height
+            anchors.left: parent.left
+            width: drawer.width
+            text: qsTr("Back")
+            Image {
+                width: height
+                height: parent.height-20
+                anchors.left: parent.left
+                anchors.leftMargin: 15
+                anchors.verticalCenter: parent.verticalCenter
+                source: "image://icon/go-previous"
+            }
+            Behavior on anchors.topMargin {
+                NumberAnimation{
+                }
+            }
 
-                        onClicked: {
+            onClicked: {
+                if(drawer.currentItem.objectName=="sideMenuSearch"){
+                    searchPane.text = "";
+                } else{
+                    drawer.pop();
+                }
+            }
+        }
+        SideBar {
+
+            clip: true
+            anchors.top: backMenuItem.bottom
+            anchors.bottom: parent.bottom
+            id: drawer
+            width: parent.width
+            initialItem: SideMenuMain{
+                height: parent.height-updatesItem.height
+                MenuItemDelegate {
+                    highlighted: false
+                    property int updatesCount:-1
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    id:updatesItem
+                    text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
+
+                    width: parent.width
+
+                    onClicked: {
+
+                        if(stackView.currentItem.objectName=="updatesPage"){
+                            stackView.currentItem.reset();
+                        } else{
                             stackView.push("UpdatesPage.qml");
                         }
-                        Component.onCompleted: {
-                            Database.getUpdatesAsync();
+                    }
+                    Component.onCompleted: {
+                        Database.getUpdatesAsync();
+                    }
+                    Connections{
+                        target: Database
+                        onUpdatesReady: {
+                            updatesItem.updatesCount = upds.getReposUpdates().size
                         }
-                        Connections{
-                            target: Database
-                            onUpdatesReady: {
-                                updatesItem.updatesCount = upds.getReposUpdates().size
-                            }
-                        }
                     }
-                }
-
-            }
-            Item {
-                layer.enabled: true
-                layer.effect: DropShadow {
-                    transparentBorder: true
-                    horizontalOffset: 0
-                    verticalOffset: -1
-                    radius: 6
-                    color: systemPalette.dark
-                }
-
-                anchors{
-                    right:parent.right
-                    top:parent.top
-                    bottom:parent.bottom
-                }
-                width: mainWindow.width-drawer.width
-
-                SearchPane {
-                    anchors{
-                        top:parent.top
-                        right:parent.right
-                        left:parent.left
-                    }
-                    state: "hidden"
-                    id: searchPane
-
-                }
-                PagePackageTable {
-
-                    id: mainView
-
-
-                    anchors{
-                        left: parent.left
-                        right: parent.right
-                        bottom:parent.bottom
-                        top:searchPane.bottom
-                    }
-
-                    clip:true
-
                 }
             }
+
+        }
+    }
+
+    Page{
+
+
+        anchors{
+            right:parent.right
+            top:parent.top
+            bottom: parent.bottom
+        }
+        width: mainWindow.width-drawer.width
+        header:PamacQt.ToolBar {
+            id: toolBar
+            height: 40
+
+        }
+        StackView{
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                horizontalOffset: 0
+                verticalOffset: -1
+                radius: 6
+                color: systemPalette.dark
+            }
+
+            id:stackView
+            height: parent.height-bottomPanel.height
+            width: parent.width
+            clip: true
+            initialItem: PagePackageTable {
+
+                id: mainView
+                clip:true
+                onPackageListChanged: {
+                    if(stackView.depth>1){
+                        stackView.pop(this);
+                    }
+                }
+            }
+
+
         }
     }
     BottomPanel{

@@ -6,12 +6,18 @@ import Pamac.PackageModel 1.0
 
 StackView {
     id:drawerStack
-    states: [
-        State{
-            name:"opened"
+
+    width: 170
+    anchors.left: parent.left
+    height: parent.height
+
+    states:[
+        State {
+            name: "opened"
             PropertyChanges {
                 target: drawerStack
-                width:Math.min(175,parent.width*0.3)
+                width:170
+
             }
         },
         State{
@@ -19,23 +25,15 @@ StackView {
             PropertyChanges {
                 target: drawerStack
                 width:0
+
             }
         }
-    ]
-    transitions: [
-        Transition {
-            from: "*"
-            to: "*"
-            animations:[
-                NumberAnimation{
-                    duration: 200
-                    easing.type: Easing.InOutQuad
-                    properties: "width"
-            }
-            ]
-        }]
 
-    anchors.left: parent.left
-    state: "opened"
-    height: parent.height
+    ]
+    transitions: Transition {
+        PropertyAnimation{
+            property:"width"
+        }
+
+    }
 }

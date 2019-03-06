@@ -26,10 +26,10 @@ Rectangle{
     }
     
     function packageActionFunc(){
-        // @disable-check M126
-        if(selectedRows.indexOf(index)!=-1){
-            for(var el in selectedRows){
-                var name = packageModel.packageList.at(selectedRows[el]).name;
+
+        if(table.selectedRows.indexOf(index)!=-1){
+            for(var el in table.selectedRows){
+                var name = packageModel.packageList.at(table.selectedRows[el]).name;
                 actionFunc(name);
             }
         }

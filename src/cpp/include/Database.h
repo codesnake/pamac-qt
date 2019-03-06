@@ -213,6 +213,7 @@ inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwri
     Q_INVOKABLE void getUpdatesAsync();
 
     Q_INVOKABLE RepoPackageList getPending(const QStringList& toInstall, const QStringList& toRemove);
+//    Q_INVOKABLE AURPackageList getPending(const QStringList& toBuild);
 
     Q_INVOKABLE RepoPackage getInstalledPackage(const QString& name){
         return RepoPackage(pamac_database_get_installed_pkg(m_db.get(),name.toUtf8()));
@@ -221,7 +222,19 @@ inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwri
     Q_INVOKABLE RepoPackage getSyncPackage(const QString& name){
         return RepoPackage(pamac_database_get_sync_pkg(m_db.get(),name.toUtf8()));
     }
+Q_INVOKABLE QmlFuture getAurPackage(const QString& name){
+        auto future = new QmlFutureImpl;
+        pamac_database_get_aur_pkg(m_db.get(),name.toUtf8(),[](GObject* object,GAsyncResult* result,gpointer futurePtr){
+            auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
+            if(future->isRunning()) {
+                future->setFuture(QVariant::fromValue(AURPackage(pamac_database_get_aur_pkg_finish(reinterpret_cast<PamacDatabase*>(object),result))));
+            } else {
+                delete future;
+}
+        },future);
 
+        return QmlFuture(future);
+    }
     inline operator PamacDatabase*(){return m_db.get();}
 
 

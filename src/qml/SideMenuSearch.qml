@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.12
 import Pamac.Database 1.0
 ListView{
-
+objectName: "sideMenuSearch"
     boundsBehavior: Flickable.StopAtBounds
     model:ListModel{
         ListElement{
@@ -19,6 +19,8 @@ ListView{
 
     delegate:MenuItemDelegate {
         text: name
+
+        height:(!Database.config.enableAur && index==Database.AUR)?-spacing:35
         onClicked:{
             currentIndex=index
 
@@ -26,14 +28,10 @@ ListView{
     }
     StackView.onActivated: {
 
-        if(!Database.config.enableAur){
-            drawer.state="hidden";
-        }
-
-
     }
 
     Component.onDestruction: {
         drawer.state="opened";
     }
+
 }

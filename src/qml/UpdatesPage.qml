@@ -1,21 +1,53 @@
 import QtQuick 2.0
-import QtQuick.Controls 2.4
+import QtQuick.Controls 2.12
+import QtGraphicalEffects 1.0
 import Pamac.Database 1.0
 import Pamac.Package 1.0
 Page {
+    SideBar{
+        state:Database.config.checkAurUpdates?"opened":"hidden"
+        id:updatesDrawer
+        anchors.left: parent.left
+        height: parent.height
+        width: 170
+        initialItem: ListView{
+            id:updatesDrawerListView
+            currentIndex: 0
+            boundsBehavior: Flickable.StopAtBounds
+            model:ListModel{
+                ListElement{
+                    name:"Repository"
+                    type: Database.Repos
+                }
+                ListElement{
+                    name:"AUR"
+                    type: Database.AUR
+
+                }
+
+            }
+
+            delegate:MenuItemDelegate {
+                highlighted:updatesDrawerListView.currentIndex==index
+                text: name
+                onClicked:{
+                    updatesDrawerListView.currentIndex=index
+
+                }
+            }
+        }
+    }
+
     title: "Updates"
     objectName: "updatesPage"
     property var updates
+
     Connections{
         target: Database
         onUpdatesReady:{
             updates = upds;
             var upList = upds.getReposUpdates();
-            updatesPackageTable.packageList = upList;
-            if(upList.length===0){
-                updates=undefined;
-                progress.text = qsTr("System is up to date");
-            }
+            progress.text = qsTr("System is up to date");
 
         }
         onGetUpdatesProgress:{
@@ -29,14 +61,18 @@ Page {
         anchors.centerIn: parent
         BusyIndicator{
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: updates===undefined
-            height: width
+            enabled: updates==undefined
+            height: enabled?width:0
             width: progress.paintedWidth*0.5
             running: true
+            Behavior on height{
+                NumberAnimation{}
+            }
         }
 
         Label{
-            visible: updates===undefined
+
+
             id:progress
             text:qsTr("Checking for updates")
             font.weight: Font.Bold
@@ -44,13 +80,38 @@ Page {
         }
     }
     PagePackageTable{
+        layer.enabled: true
+        layer.effect: DropShadow {
+            transparentBorder: true
+            horizontalOffset: 0
+            verticalOffset: -1
+            radius: 6
+            color: systemPalette.dark
+        }
+        packageList: updatesDrawerListView.currentIndex==Database.Repos?updates.getReposUpdates():updates.getAurUpdates()
         id:updatesPackageTable
         visible: packageList.length>0
-        anchors.fill: parent
+        anchors{
+            left: updatesDrawer.right
+            right: parent.right
+            top:parent.top
+            bottom: parent.bottom
+        }
     }
     Component.onCompleted: {
+        drawer.state = "hidden";
+        reset();
+    }
+
+    StackView.onDeactivating: {
+        drawer.state = "opened";
+    }
+
+    function reset(){
+        updates=undefined
         Database.getUpdatesAsync()
     }
+
     Connections{
         target: transaction
         onFinished:{

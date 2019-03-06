@@ -11,9 +11,12 @@ ListView {
         onClicked: {
             currentIndex=index;
             mainView.packageListFuture = Database.getRepoPackagesAsync(modelData);
+            mainView.title=modelData
         }
     }
     StackView.onActivated: {
         mainView.packageListFuture = Database.getRepoPackagesAsync(model[0]);
+        mainView.title=model[0];
+
     }
 }

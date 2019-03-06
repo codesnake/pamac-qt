@@ -39,5 +39,7 @@ ListView{
     }
     StackView.onActivated: {
         mainView.packageListFuture = Database.getInstalledAppsAsync();
+        mainView.title='Installed Apps';
     }
+
 }
