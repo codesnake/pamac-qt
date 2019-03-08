@@ -29,10 +29,7 @@ Pane{
     function search()
     {
 
-        if(tempModel===undefined){
-            drawer.push("SideMenuSearch.qml")
-            tempModel = mainView.packageList;
-        }
+
 
         mainView.title = qsTr("Search Results for ")+searchPane.text;
         switch(drawer.currentItem.currentIndex){
@@ -75,6 +72,10 @@ Pane{
         anchors.centerIn: parent
 
         onTextChanged: {
+            if(tempModel===undefined){
+                drawer.push("SideMenuSearch.qml")
+                tempModel = mainView.packageList;
+            }
             if(text.length!=0){
                 if(timer.running){
                     timer.restart();
