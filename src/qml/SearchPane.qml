@@ -28,12 +28,14 @@ Pane{
 
     function search()
     {
+
         if(tempModel===undefined){
             drawer.push("SideMenuSearch.qml")
             tempModel = mainView.packageList;
         }
 
         if(text.length>0){
+            mainView.title = qsTr("Search Results for ")+searchPane.text;
             if(drawer.currentItem.currentIndex===Database.Repos){
                 mainView.packageListFuture=Database.searchPkgsAsync(text);
             } else if(drawer.currentItem.currentIndex===Database.AUR){
@@ -41,6 +43,7 @@ Pane{
             }
         }
         else {
+            mainView.title = "";
             drawer.pop();
             mainView.packageList = tempModel;
             tempModel = undefined;
@@ -61,7 +64,11 @@ Pane{
         }
     }
 
-    TextArea{
+    TextField{
+        validator: RegExpValidator{
+            regExp: /^[^ ][\w\W ]*[^ ]/
+        }
+
         placeholderText: qsTr("Search...")
         focus: true
         id:searchArea
@@ -69,8 +76,7 @@ Pane{
         leftPadding: searchImage.width + 6
         anchors.centerIn: parent
 
-        onTextChanged:{
-            mainView.title = qsTr("Search Results for ")+searchPane.text;
+        onTextChanged: {
             search();
         }
     }

@@ -16,7 +16,7 @@ ListView {
             mainView.title=modelData
         }
     }
-    StackView.onActivated: {
+    StackView.onActivating: {
         mainView.packageListFuture = Database.getGroupPackagesAsync(model[currentIndex]);
         mainView.title=model[currentIndex]
     }

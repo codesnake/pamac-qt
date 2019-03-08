@@ -214,7 +214,7 @@ ApplicationWindow {
             State{
                 name:"hidden"
                 PropertyChanges {
-                    target: drawerStack
+                    target: sidePanel
                     width:0
                 }
             }
@@ -235,7 +235,7 @@ ApplicationWindow {
 
         MenuItemDelegate{
 
-            leftPadding: 30
+            leftPadding: backButtonIcon.x+backButtonIcon.width
             id:backMenuItem
             anchors.top: parent.top
             anchors.topMargin: drawer.depth > 1?0:-height
@@ -243,8 +243,9 @@ ApplicationWindow {
             width: drawer.width
             text: qsTr("Back")
             Image {
+                id:backButtonIcon
                 width: height
-                height: parent.height-20
+                height: parent.height/2
                 anchors.left: parent.left
                 anchors.leftMargin: 15
                 anchors.verticalCenter: parent.verticalCenter

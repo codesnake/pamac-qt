@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationName("Artem Grinev");
     QApplication::setApplicationName("PamacQt");
     QApplication::setWindowIcon(QIcon::fromTheme("package-x-generic"));
+    QIcon::fromTheme("go-previous");
 
 
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);

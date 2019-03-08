@@ -37,9 +37,12 @@ ListView{
             drawer.push("SideMenuPending.qml");
         }
     }
-    StackView.onActivated: {
+    StackView.onActivating: {
         mainView.packageListFuture = Database.getInstalledAppsAsync();
         mainView.title='Installed Apps';
     }
-
+Component.onCompleted: {
+    mainView.packageListFuture = Database.getInstalledAppsAsync();
+    mainView.title=qsTr('Installed Apps');
+}
 }

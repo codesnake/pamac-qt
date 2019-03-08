@@ -14,7 +14,7 @@ ListView {
             mainView.title=modelData
         }
     }
-    StackView.onActivated: {
+    StackView.onActivating: {
         mainView.packageListFuture = Database.getRepoPackagesAsync(model[currentIndex]);
         mainView.title=model[currentIndex];
 

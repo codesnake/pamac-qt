@@ -26,12 +26,4 @@ objectName: "sideMenuSearch"
 
         }
     }
-    StackView.onActivated: {
-
-    }
-
-    Component.onDestruction: {
-        drawer.state="opened";
-    }
-
 }

@@ -27,7 +27,7 @@ ListView{
             }
         }
     }
-    StackView.onActivated: {
+    StackView.onActivating: {
         if(currentIndex==Database.Repos){
             mainView.packageList= Database.getPending(toInstall,toRemove);
         } else{

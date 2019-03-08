@@ -11,29 +11,4 @@ StackView {
     anchors.left: parent.left
     height: parent.height
 
-    states:[
-        State {
-            name: "opened"
-            PropertyChanges {
-                target: drawerStack
-                width:170
-
-            }
-        },
-        State{
-            name:"hidden"
-            PropertyChanges {
-                target: drawerStack
-                width:0
-
-            }
-        }
-
-    ]
-    transitions: Transition {
-        PropertyAnimation{
-            property:"width"
-        }
-
-    }
 }

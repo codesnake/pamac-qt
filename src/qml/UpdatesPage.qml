@@ -98,13 +98,13 @@ Page {
             bottom: parent.bottom
         }
     }
-    Component.onCompleted: {
-        drawer.state = "hidden";
+    StackView.onActivating: {
+        sidePanel.state = "hidden";
         reset();
     }
 
     StackView.onDeactivating: {
-        drawer.state = "opened";
+        sidePanel.state = "opened";
     }
 
     function reset(){
