@@ -27,7 +27,7 @@ Rectangle{
     function packageActionFunc(){
         if(table.selectedRows.indexOf(index)!=-1){
             for(var el in table.selectedRows){
-                var name = packageModel.packageList.at(selectedRows[el]).name;
+                var name = packageModel.packageList.at(table.selectedRows[el]).name;
                 actionFunc(name);
             }
         }
