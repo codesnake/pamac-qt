@@ -122,6 +122,7 @@ ApplicationWindow {
         anchors.bottom:bottomPanel.top
         height: parent.height
         header:ToolBar{
+            padding: 5
             height: toolBar.height
             z:10
             ToolButton {
