@@ -15,8 +15,8 @@ ListView {
         }
     }
     StackView.onActivated: {
-        mainView.packageListFuture = Database.getRepoPackagesAsync(model[0]);
-        mainView.title=model[0];
+        mainView.packageListFuture = Database.getRepoPackagesAsync(model[currentIndex]);
+        mainView.title=model[currentIndex];
 
     }
 }

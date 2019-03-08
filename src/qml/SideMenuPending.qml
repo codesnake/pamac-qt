@@ -28,6 +28,10 @@ ListView{
         }
     }
     StackView.onActivated: {
-        mainView.packageList = Database.getPending(toInstall,toRemove);
+        if(currentIndex==Database.Repos){
+            mainView.packageList= Database.getPending(toInstall,toRemove);
+        } else{
+            mainView.packageList = undefined
+        }
     }
 }

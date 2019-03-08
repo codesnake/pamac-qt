@@ -63,7 +63,7 @@ ListView {
         }
     }
     StackView.onActivated: {
-        mainView.packageListFuture = Database.getCategoryPackagesAsync(model.get(0).categoryName);
-        mainView.title = model.get(0).readableName
+        mainView.packageListFuture = Database.getCategoryPackagesAsync(model.get(currentIndex).categoryName);
+        mainView.title = model.get(currentIndex).readableName
     }
 }
