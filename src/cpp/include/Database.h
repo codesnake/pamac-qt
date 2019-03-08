@@ -93,7 +93,7 @@ inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwri
         }   else {
             delete future;
         }
-
+        g_object_unref(folder);
     }
         ,future);
     return QmlFuture(future);
