@@ -355,12 +355,7 @@ ApplicationWindow {
             left:parent.left
             right:parent.right
         }
-        state:(transaction.started ||
-               toInstall.length>0 ||
-               toRemove.length>0 ||
-               toBuild.length>0 ||
-               toLoad.length>0 ||
-               sysUpgrade) ?"opened":"hidden"
+
     }
 
 

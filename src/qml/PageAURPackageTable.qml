@@ -1,11 +1,11 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.4
-import Pamac.PackageModel 1.0
 import Pamac.Database 1.0
 import Pamac.AUR.PackageModel 1.0
 import Pamac.Async 1.0
 import QtQuick.Shapes 1.11
 Page {
+    contentHeight: table.contentHeight+header.height
     function columnWidth(column) {
         return columnWidths[column]==="exp"?
                     width-width/4:columnWidths[column];

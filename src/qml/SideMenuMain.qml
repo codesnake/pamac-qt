@@ -30,13 +30,6 @@ ListView{
             drawer.push(url);
         }
     }
-    footer: MenuItemDelegate{
-        enabled: toInstall.length>0 || toRemove.length>0
-        text: "Pending"
-        onClicked:{
-            drawer.push("SideMenuPending.qml");
-        }
-    }
     StackView.onActivating: {
         mainView.packageListFuture = Database.getInstalledAppsAsync();
         mainView.title='Installed Apps';

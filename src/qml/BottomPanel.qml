@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
+import Pamac.Database 1.0
 import "../js/JSUtils.js" as Utils
 
 Pane {
@@ -17,12 +18,23 @@ Pane {
             color: systemPalette.windowText
         }
     }
+    state:{
+        if((transaction.details!=="" || totalPending!=0) && detailsButton.checked){
+            return "expanded";
+        }
 
+        return (transaction.started ||
+                toInstall.length>0 ||
+                toRemove.length>0 ||
+                toBuild.length>0 ||
+                toLoad.length>0 ||
+                sysUpgrade) ?"opened":"hidden"
+    }
     padding: 3
     property bool sysUpgrade: stackView.currentItem.objectName == "updatesPage"
                               && stackView.currentItem.updates!==undefined
                               && (stackView.currentItem.updates.getReposUpdates().length!==0
-                              || stackView.currentItem.updates.getAurUpdates().length!==0)
+                                  || stackView.currentItem.updates.getAurUpdates().length!==0)
 
     property int totalPending: toInstall.length+toRemove.length+toLoad.length+toBuild.length
 
@@ -46,6 +58,15 @@ Pane {
 
     states:[
         State{
+            name:"expanded"
+            PropertyChanges{
+                target: bottomPanel
+                height:parent.height
+            }
+        },
+
+        State{
+
             name:"opened"
             PropertyChanges {
                 target: bottomPanel
@@ -101,11 +122,10 @@ Pane {
         }
 
         Button{
-            enabled: stackView.currentItem.objectName!="transactionDetailsPage" && transaction.started
-            text:qsTr("Details")
-            onClicked: {
-                stackView.push("TransactionDetails.qml");
-            }
+            checkable: true
+            id:detailsButton
+            enabled: transaction.details!=="" || totalPending!=0
+            text:transaction.details!==""?qsTr("Details"):qsTr("Pending")
         }
         Button{
             enabled: !transaction.started
@@ -136,8 +156,48 @@ Pane {
             }
         }
     }
+    Loader{
+        anchors{
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+            top:row.bottom
+        }
 
+        property list<Component> pages:[
+            Component{
+                id:pendingComponent
+                Flickable{
+                    PagePackageTable{
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: item.contentHeight
+                        packageList: Database.getPending(toInstall,toRemove)
+                    }
+                }
+            },
+            Component{
+                id:detailsComponent
+                TransactionDetails{
+                }
+            }
+
+        ]
+
+        sourceComponent:transaction.details!==""?detailsComponent:pendingComponent
+    }
+    onTotalPendingChanged: {
+        if(transaction.details.length!=0){
+            if(totalPending!=0){
+                transaction.details = "";
+            }
+        }
+        else if(totalPending==0){
+            detailsButton.checked=false;
+        }
+    }
 }
+
 
 /*##^## Designer {
     D{i:0;autoSize:true;height:480;width:640}
