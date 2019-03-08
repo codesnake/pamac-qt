@@ -5,6 +5,22 @@ import Pamac.Database 1.0
 import Pamac.Package 1.0
 Page {
     SideBar{
+        states: [
+            State{
+                name:"opened"
+                PropertyChanges {
+                    target: updatesDrawer
+                    width:Math.min(175,parent.width*0.3)
+                }
+            },
+            State{
+                name:"hidden"
+                PropertyChanges {
+                    target: updatesDrawer
+                    width:0
+                }
+            }
+        ]
         state:Database.config.checkAurUpdates?"opened":"hidden"
         id:updatesDrawer
         anchors.left: parent.left
