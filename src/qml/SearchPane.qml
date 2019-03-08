@@ -34,20 +34,16 @@ Pane{
             tempModel = mainView.packageList;
         }
 
-        if(text.length>0){
-            mainView.title = qsTr("Search Results for ")+searchPane.text;
-            if(drawer.currentItem.currentIndex===Database.Repos){
-                mainView.packageListFuture=Database.searchPkgsAsync(text);
-            } else if(drawer.currentItem.currentIndex===Database.AUR){
-                mainView.packageListFuture=Database.searchPkgsInAurAsync(text);
-            }
+        mainView.title = qsTr("Search Results for ")+searchPane.text;
+        switch(drawer.currentItem.currentIndex){
+        case Database.Repos:
+            mainView.packageListFuture=Database.searchPkgsAsync(text);
+            break;
+        case Database.AUR:
+            mainView.packageListFuture=Database.searchPkgsInAurAsync(text);
+            break;
         }
-        else {
-            mainView.title = "";
-            drawer.pop();
-            mainView.packageList = tempModel;
-            tempModel = undefined;
-        }
+
 
 
     }
@@ -55,16 +51,18 @@ Pane{
         target: drawer.currentItem
         onCurrentIndexChanged: {
             if(text.length>0){
-                if(drawer.currentItem.currentIndex===Database.Repos){
-                    mainView.packageListFuture=Database.searchPkgsAsync(text);
-                } else if(drawer.currentItem.currentIndex===Database.AUR){
-                    mainView.packageListFuture=Database.searchPkgsInAurAsync(text);
-                }
+                search();
             }
         }
     }
 
+
     TextField{
+        property Timer timer: Timer{
+            interval: 700
+            onTriggered: search()
+        }
+
         validator: RegExpValidator{
             regExp: /^[^ ][\w\W ]*[^ ]/
         }
@@ -77,7 +75,21 @@ Pane{
         anchors.centerIn: parent
 
         onTextChanged: {
-            search();
+            if(text.length!=0){
+                if(timer.running){
+                    timer.restart();
+                } else{
+                    timer.start();
+                }
+            }
+            else {
+                timer.stop();
+                mainView.title = "";
+                drawer.pop();
+                mainView.packageList = tempModel;
+                tempModel = undefined;
+            }
+
         }
     }
     property var tempModel
