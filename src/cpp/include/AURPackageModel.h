@@ -42,7 +42,7 @@ public slots:
     {
         beginResetModel();
         m_packageList = std::move(packageList);
-        sort(1,Qt::DescendingOrder);
+        sort(3,Qt::AscendingOrder);
         endResetModel();
         emit packageListChanged(m_packageList);
     }

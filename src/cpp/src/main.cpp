@@ -31,6 +31,22 @@ int main(int argc, char *argv[])
     QApplication::setWindowIcon(QIcon::fromTheme("package-x-generic"));
     QIcon::fromTheme("go-previous");
 
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.setApplicationDescription("Pamac Qt - a Qt5 graphical front end to libpamac");
+
+    QCommandLineOption updatesOption({"u", "updates"},
+                                     QCoreApplication::translate("main", "Open \"Updates\" page"));
+    QCommandLineOption installOption({"i", "install"},
+                                     QCoreApplication::translate("main", "Install a local <package>."),"package");
+    parser.addOption(installOption);
+    parser.addOption(updatesOption);
+
+    parser.process(app);
+    QString installFileName = parser.value(installOption);
+
+
+
 
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
 
@@ -75,8 +91,14 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.addImageProvider(QLatin1String("icons"), new XDGIconProvider);
-    engine.load(QUrl(QStringLiteral("qrc:/src/qml/MainWindow.qml")));
-
+    if(QFileInfo::exists(installFileName)){
+        engine.load(QUrl(QStringLiteral("qrc:/src/qml/OpenWithDialog.qml")));
+    } else{
+        engine.load(QUrl(QStringLiteral("qrc:/src/qml/MainWindow.qml")));
+        if(parser.isSet(updatesOption)){
+            QMetaObject::invokeMethod(engine.rootObjects().at(0),"showUpdates");
+        }
+    }
 
 
     if (engine.rootObjects().isEmpty()){

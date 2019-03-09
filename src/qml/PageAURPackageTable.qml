@@ -25,7 +25,7 @@ Page {
         id:packageModel
         onPackageListChanged: {
             packageFutureWatcher.reset();
-            headerRepeater.sortColumn=1;
+            headerRepeater.sortColumn=3;
         }
     }
 
@@ -45,8 +45,8 @@ Page {
             width: parent.width
             Repeater {
                 id:headerRepeater
-                property int sortColumn:1
-                property int sortOrder: Qt.DescendingOrder
+                property int sortColumn:3
+                property int sortOrder: Qt.AscendingOrder
                 height: parent.height
                 width: parent.width
                 model: ListModel{

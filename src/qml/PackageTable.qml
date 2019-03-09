@@ -13,8 +13,6 @@ TableView{
             contentY=0;
             clearSelected();
         }
-
-
     }
 
     property var columnWidths: [50,"exp",45,65,65]

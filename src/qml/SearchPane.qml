@@ -26,11 +26,16 @@ Pane{
     ]
     id:searchPane
 
+    Keys.onPressed: {
+        if(event.text.length!==0){
+        text = event.text;
+        searchArea.forceActiveFocus();
+        }
+
+    }
+
     function search()
     {
-
-
-
         mainView.title = qsTr("Search Results for ")+searchPane.text;
         switch(drawer.currentItem.currentIndex){
         case Database.Repos:

@@ -213,7 +213,6 @@ inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwri
     Q_INVOKABLE void getUpdatesAsync();
 
     Q_INVOKABLE RepoPackageList getPending(const QStringList& toInstall, const QStringList& toRemove);
-//    Q_INVOKABLE AURPackageList getPending(const QStringList& toBuild);
 
     Q_INVOKABLE RepoPackage getInstalledPackage(const QString& name){
         return RepoPackage(pamac_database_get_installed_pkg(m_db.get(),name.toUtf8()));

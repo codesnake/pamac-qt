@@ -46,5 +46,6 @@
         <file>src/qml/PageRepoPackageTable.qml</file>
         <file>src/qml/PageAURPackageInfo.qml</file>
         <file>src/qml/SideMenuAURPackageInfo.qml</file>
+        <file>src/qml/OpenWithDialog.qml</file>
     </qresource>
 </RCC>

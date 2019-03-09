@@ -394,6 +394,7 @@ Page {
                     }
                 }
                 TabBar{
+                    clip: true
                     height: contentHeight
                     id:buildFileTabBar
                     anchors.top: parent.top
