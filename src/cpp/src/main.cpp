@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<PamacQt::RepoPackageList>("RepoPackageList");
     qRegisterMetaType<PamacQt::AURPackageList>("AURPackageList");
+    qRegisterMetaType<PamacQt::AURPackage>("AURPackage");
     qRegisterMetaType<PamacQt::RepoPackageDetails>("RepoPackageDetails");
     qRegisterMetaType<PamacQt::RepoPackage>("RepoPackage");
     qRegisterMetaType<PamacQt::Updates>("Updates");
@@ -79,6 +80,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<QmlFutureWatcher>("Pamac.Async",1,0,"FutureWatcher");
 
     qmlRegisterUncreatableType<PamacQt::AURPackageList>("Pamac.AUR.Package",1,0,"AURPackageList","");
+    qmlRegisterUncreatableType<PamacQt::AURPackage>("Pamac.AUR.Package",1,0,"AURPackage","");
     qmlRegisterUncreatableType<PamacQt::RepoPackageDetails>("Pamac.Package",1,0,"RepoPackageDetails","");
     qmlRegisterUncreatableType<PamacQt::RepoPackage>("Pamac.Package",1,0,"RepoPackage","");
     qmlRegisterUncreatableType<PamacQt::RepoPackageList>("Pamac.Package",1,0,"RepoPackageList","");
