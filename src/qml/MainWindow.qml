@@ -79,16 +79,8 @@ ApplicationWindow {
         }
     }
 
-    Dialog{
-        height: 400
-        width: 300
-        id:historyDialog
-        ScrollView{
-            anchors.fill: parent
-            TextArea{
-                readOnly: true
-            }
-        }
+    HistoryDialog {
+        id: historyDialog
     }
 
     Transaction{

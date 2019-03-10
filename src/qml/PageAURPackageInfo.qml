@@ -120,32 +120,6 @@ Page {
             }
         }
 
-        Button {
-            enabled: !transaction.started && !button.checked
-            id: button1
-            height: 30
-            text: qsTr("Reinstall")
-            anchors.horizontalCenter: button.horizontalCenter
-            anchors.top: button.bottom
-            anchors.topMargin: 10
-            visible: false
-            checkable: true
-
-            checked: toBuild.indexOf(pkg.name) > -1
-                     && rectangle.state == "installedState"
-
-            onClicked: {
-                if(button1.checked){
-                    toBuild.push(pkg.name);
-                    toBuildChanged();
-                }
-                else {
-                    toBuild.splice(toBuild.indexOf(pkg.name),1);
-                    toBuildChanged();
-                }
-            }
-        }
-
         StackLayout {
             id: infoStackLayout
             width: parent.width - 10

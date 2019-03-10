@@ -9,11 +9,13 @@
 #include <QFile>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QFutureWatcher>
+#include <QRegularExpression>
 #include "Updates.h"
 #include "Config.h"
 #include "Utils.h"
 #include "AsyncHelpers.h"
 #include "AURPackage.h"
+#include "HistoryItemModel.h"
 
 #define PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(method)\
     [](GObject* parent,GAsyncResult* result,void* futurePtr){\
@@ -80,24 +82,24 @@ public:
         return QmlFuture(future);
 
     }
-inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwrite = true){
-    auto future = new QmlFutureImpl;
-    pamac_database_clone_build_files(m_db.get(),pkgname.toUtf8(),overwrite,
-                                     [](GObject* parent,GAsyncResult* result,void* futurePtr){
-        auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
+    inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwrite = true){
+        auto future = new QmlFutureImpl;
+        pamac_database_clone_build_files(m_db.get(),pkgname.toUtf8(),overwrite,
+                                         [](GObject* parent,GAsyncResult* result,void* futurePtr){
+            auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
 
-        auto folder = pamac_database_clone_build_files_finish(reinterpret_cast<PamacDatabase*>(parent),result);
+            auto folder = pamac_database_clone_build_files_finish(reinterpret_cast<PamacDatabase*>(parent),result);
 
-        if(future->isRunning()){
-            future->setFuture(QVariant(QString::fromUtf8(g_file_get_path(folder))));
-        }   else {
-            delete future;
+            if(future->isRunning()){
+                future->setFuture(QVariant(QString::fromUtf8(g_file_get_path(folder))));
+            }   else {
+                delete future;
+            }
+            g_object_unref(folder);
         }
-        g_object_unref(folder);
-    }
         ,future);
-    return QmlFuture(future);
-}
+        return QmlFuture(future);
+    }
 
     inline Q_INVOKABLE RepoPackageList getInstalledApps()
     {
@@ -221,7 +223,7 @@ inline Q_INVOKABLE QmlFuture cloneBuildFiles(const QString& pkgname,bool overwri
     Q_INVOKABLE RepoPackage getSyncPackage(const QString& name){
         return RepoPackage(pamac_database_get_sync_pkg(m_db.get(),name.toUtf8()));
     }
-Q_INVOKABLE QmlFuture getAurPackage(const QString& name){
+    Q_INVOKABLE QmlFuture getAurPackage(const QString& name){
         auto future = new QmlFutureImpl;
         pamac_database_get_aur_pkg(m_db.get(),name.toUtf8(),[](GObject* object,GAsyncResult* result,gpointer futurePtr){
             auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
@@ -229,7 +231,7 @@ Q_INVOKABLE QmlFuture getAurPackage(const QString& name){
                 future->setFuture(QVariant::fromValue(AURPackage(pamac_database_get_aur_pkg_finish(reinterpret_cast<PamacDatabase*>(object),result))));
             } else {
                 delete future;
-}
+            }
         },future);
 
         return QmlFuture(future);
@@ -246,12 +248,19 @@ Q_INVOKABLE QmlFuture getAurPackage(const QString& name){
     inline void refresh(){
         pamac_database_refresh(m_db.get());
     }
-    Q_INVOKABLE QString getHistory(){
+    Q_INVOKABLE QList<HistoryItem> getHistory(){
         QFile file("/var/log/pacman.log");
         file.open(QFile::ReadOnly);
-        QString log =  QString::fromUtf8(file.readAll());
+        QStringList list;
+        while(!file.atEnd()){
+            QString line = QString::fromUtf8(file.readLine());
+            if(line.contains("[ALPM]")){
+                list.append(line);
+            }
+        }
         file.close();
-        return log;
+
+        return HistoryItem::fromStringList(list);
     }
 
 

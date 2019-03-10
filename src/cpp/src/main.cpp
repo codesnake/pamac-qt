@@ -14,6 +14,7 @@
 #include <Transaction.h>
 #include <XDGIconProvider.h>
 #include "AsyncHelpers.h"
+#include "HistoryItemModel.h"
 #ifdef QT_DEBUG
 #include <QQmlDebuggingEnabler>
 static QQmlDebuggingEnabler enabler;
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationName("Artem Grinev");
     QApplication::setApplicationName("PamacQt");
     QApplication::setWindowIcon(QIcon::fromTheme("package-x-generic"));
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QIcon::fromTheme("go-previous");
 
     QCommandLineParser parser;
@@ -43,12 +45,10 @@ int main(int argc, char *argv[])
     parser.addOption(updatesOption);
 
     parser.process(app);
-    QString installFileName = parser.value(installOption);
-
-
-
+    const QString& installFileName = parser.value(installOption);
 
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+
 
     qRegisterMetaType<PamacQt::RepoPackageList>("RepoPackageList");
     qRegisterMetaType<PamacQt::AURPackageList>("AURPackageList");
@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<PamacQt::Config>("Config");
     qRegisterMetaType<PamacQt::TransactionSummary>("TransactionSummary");
     qRegisterMetaType<QmlFuture>("Future");
+    qRegisterMetaType<QList<PamacQt::HistoryItem>>("QList<HistoryItem>");
 
     //A (dirty) work around the bug that causes icons not to load in kde: manually set icon theme name
     if(QIcon::themeName().isEmpty()){
@@ -79,6 +80,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<QmlFuture>("Pamac.Async",1,0,"Future","");
     qmlRegisterType<QmlFutureWatcher>("Pamac.Async",1,0,"FutureWatcher");
 
+    qmlRegisterType<PamacQt::HistoryItemModel>("Pamac.History",1,0,"HistoryModel");
     qmlRegisterUncreatableType<PamacQt::AURPackageList>("Pamac.AUR.Package",1,0,"AURPackageList","");
     qmlRegisterUncreatableType<PamacQt::AURPackage>("Pamac.AUR.Package",1,0,"AURPackage","");
     qmlRegisterUncreatableType<PamacQt::RepoPackageDetails>("Pamac.Package",1,0,"RepoPackageDetails","");

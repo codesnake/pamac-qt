@@ -47,5 +47,6 @@
         <file>src/qml/PageAURPackageInfo.qml</file>
         <file>src/qml/SideMenuAURPackageInfo.qml</file>
         <file>src/qml/OpenWithDialog.qml</file>
+        <file>src/qml/HistoryDialog.qml</file>
     </qresource>
 </RCC>

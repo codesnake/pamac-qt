@@ -224,7 +224,7 @@ Page {
                         Label {
                             id: label5
                             x: 30
-                            text: qsTr("Packager:")
+                            text: label12.text!==""?qsTr("Packager:"):undefined
                             font.weight: Font.Bold
                         }
 

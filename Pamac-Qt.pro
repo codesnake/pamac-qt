@@ -52,7 +52,8 @@ HEADERS += \
     src/cpp/include/AURPackage.h \
     src/cpp/include/RepoPackage.h \
     src/cpp/include/AsyncHelpers.h \
-    src/cpp/include/AURPackageModel.h
+    src/cpp/include/AURPackageModel.h \
+    src/cpp/include/HistoryItemModel.h
 
 SOURCES += \
     src/cpp/src/Database.cpp \
@@ -63,6 +64,7 @@ SOURCES += \
     src/cpp/src/Utils.cpp \
     src/cpp/src/XDGIconProvider.cpp \
     src/cpp/src/AsyncHelpers.cpp \
-    src/cpp/src/AURPackageModel.cpp
+    src/cpp/src/AURPackageModel.cpp \
+    src/cpp/src/HistoryItemModel.cpp
 
 
