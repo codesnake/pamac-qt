@@ -75,6 +75,7 @@ ToolBar {
         anchors.verticalCenter: parent.verticalCenter
     }
     Button{
+        flat:true
         text: qsTr("Select all")
         anchors.right: parent.right
         enabled: stackView.depth == 1
