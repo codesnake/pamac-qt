@@ -29,7 +29,6 @@ struct HistoryItem{
     }
     static Type typeFromString(const QString& s){
         QString lowS = s.toLower();
-        qDebug()<<lowS;
         if(lowS=="installed"){
             return ALPMInstalled;
         }
