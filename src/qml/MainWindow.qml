@@ -98,6 +98,9 @@ ApplicationWindow {
             }
             transaction.unlock();
         }
+        Component.onDestruction: {
+            transaction.quitDaemon();
+        }
     }
 
     id: mainWindow
@@ -358,6 +361,7 @@ ApplicationWindow {
 
         }
     }
+
 }
 
 

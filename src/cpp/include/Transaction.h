@@ -107,6 +107,9 @@ public:
     Q_INVOKABLE void cleanCache(int cleanKeepNumPkgs,bool cleanRmOnlyInstalled){
         pamac_transaction_clean_cache(m_transaction.get(),uint(cleanKeepNumPkgs),cleanRmOnlyInstalled);
     }
+    Q_INVOKABLE void quitDaemon(){
+        pamac_transaction_quit_daemon(m_transaction.get());
+    }
 
     Q_INVOKABLE void start(const QStringList& toInstall = QStringList(), const QStringList& toRemove = QStringList(), const QStringList& toLoad = QStringList(),
                            const QStringList& toBuild = QStringList(), const QStringList& tempIgnore = QStringList(), const QStringList& overwriteFiles = QStringList());
@@ -118,7 +121,7 @@ public slots:
     {
         if (m_database == database) {
             return;
-}
+        }
 
         if (m_transaction==nullptr){
             m_transaction = std::shared_ptr<PamacTransaction>(pamac_transaction_new(*database),g_object_unref);
