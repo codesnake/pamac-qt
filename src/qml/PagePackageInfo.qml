@@ -24,7 +24,7 @@ Page {
     }
     title: pkg.appName?pkg.appName:pkg.name
     property var pkg
-    id: rectangle
+    id: page
     state: pkg.installedVersion ? "installedState" : ""
     Item {
         id: item1
@@ -82,13 +82,13 @@ Page {
             text: qsTr("Install")
             checkable: true
 
-            checked: rectangle.state == "installedState" ? toRemove.indexOf( pkg.name) > -1 : toInstall.indexOf(pkg.name) > -1
+            checked: page.state == "installedState" ? toRemove.indexOf( pkg.name) > -1 : toInstall.indexOf(pkg.name) > -1
             anchors.right: parent.right
             anchors.rightMargin: 20
             anchors.top: parent.top
             anchors.topMargin: 20
             onClicked: {
-                if(state!="installedState"){
+                if(page.state!="installedState"){
                     if(button.checked){
                         toInstall.push(pkg.name);
                         toInstallChanged();
@@ -123,7 +123,7 @@ Page {
             checkable: true
 
             checked: toInstall.indexOf(pkg.name) > -1
-                     && rectangle.state == "installedState"
+                     && page.state == "installedState"
 
             onClicked: {
                 if(button1.checked){
