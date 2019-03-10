@@ -122,10 +122,34 @@ Pane {
         }
 
         Button{
+            Layout.preferredWidth:  detailsButtonLabel.paintedWidth+detailsButtonIcon.width+padding*2
+padding: 5
             checkable: true
             id:detailsButton
             enabled: transaction.details!=="" || totalPending!=0
-            text:transaction.details!==""?qsTr("Details"):qsTr("Pending")
+            Row{
+                enabled: parent.enabled
+height: parent.height
+                anchors.centerIn: parent
+                Image {
+                    enabled: parent.enabled
+                    rotation: bottomPanel.state=="expanded"?270:90
+                    id:detailsButtonIcon
+                    width: height
+                    height: parent.height/2
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: "image://icon/go-previous"
+                    Behavior on rotation {
+                        NumberAnimation{duration: 400}
+                    }
+                }
+                Label{
+                    enabled: parent.enabled
+                    anchors.verticalCenter: parent.verticalCenter
+                    id:detailsButtonLabel
+                    text:transaction.details!==""?qsTr("Details"):qsTr("Pending")
+                }
+            }
         }
         Button{
             enabled: !transaction.started
