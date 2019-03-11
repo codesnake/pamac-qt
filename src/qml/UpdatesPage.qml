@@ -31,14 +31,16 @@ Page {
             currentIndex: 0
             boundsBehavior: Flickable.StopAtBounds
             model:ListModel{
+                id:drawerListViewModel
                 ListElement{
                     name:"Repository"
                     type: Database.Repos
+                    enable:false
                 }
                 ListElement{
                     name:"AUR"
                     type: Database.AUR
-
+                    enable:false
                 }
 
             }
@@ -46,6 +48,7 @@ Page {
             delegate:MenuItemDelegate {
                 highlighted:updatesDrawerListView.currentIndex==index
                 text: name
+                enabled: enable
                 onClicked:{
                     updatesDrawerListView.currentIndex=index
 
@@ -63,6 +66,10 @@ Page {
         onUpdatesReady:{
             updates = upds;
             var upList = upds.getReposUpdates();
+            drawerListViewModel.setProperty(0,"enable",upList.length>0);
+            drawerListViewModel.setProperty(1,"enable",updates.getAurUpdates().length>0);
+            if(upList.length===0)
+                updatesDrawerListView.currentIndex=1
             progress.text = qsTr("System is up to date");
 
         }
