@@ -27,7 +27,10 @@ Pane{
     id:searchPane
 
     Keys.onPressed: {
-        if(event.text.length!==0){
+        if(event.text.length!==0 &&
+                event.key!==Qt.Key_Backspace &&
+                event.key!==Qt.Key_Space &&
+                event.key!==Qt.Key_Tab){
         text = event.text;
         searchArea.forceActiveFocus();
         }
