@@ -10,7 +10,6 @@ import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
 
 ApplicationWindow {
-
     function showUpdates(){
         stackView.push("UpdatesPage.qml");
     }
@@ -27,6 +26,10 @@ ApplicationWindow {
     }
 
 
+    onClosing: {
+        if(transaction.started)
+            close.accepted = false
+    }
 
     Dialog{
 
