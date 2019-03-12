@@ -27,9 +27,11 @@ Pane{
     id:searchPane
 
     Keys.onPressed: {
-        if(/^[^\W][\w ]*$/.test(event.text) &&
+        if(/^[^\s][\w\S]*$/.test(event.text) &&
                 (event.modifiers===Qt.NoModifier ||
-                 event.modifiers===Qt.ShiftModifier)){
+                 event.modifiers===Qt.ShiftModifier)
+                && event.key!==Qt.Key_Backspace
+                && event.key!==Qt.Key_Delete){
             text = event.text;
             searchArea.forceActiveFocus();
         }
@@ -69,7 +71,7 @@ Pane{
 
         validator: RegExpValidator{
             id:validator
-            regExp: /^[^\W][\w ]+$/
+            regExp: /^[^\s][\w\S]+$/
         }
 
         placeholderText: qsTr("Search...")
