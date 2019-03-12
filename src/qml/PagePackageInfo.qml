@@ -191,9 +191,27 @@ Page {
                         anchors.left: parent.left
                         anchors.leftMargin: 0
                         id: grid
-                        flow: Grid.TopToBottom
+                        flow: Grid.LeftToRight
                         spacing: 5
-                        rows: 5
+                        rows: {
+                            let i = 3;
+
+                            if(pkg.url!==undefined){
+                                i++;
+                            }
+                            if(pkg.licenses!==undefined){
+                                i++
+                            }
+                            if(pkg.packager!=="Unknown Packager"){
+                                i++
+                            }
+                            if(pkg.repo!==""){
+                                i++
+                            }
+
+                            return i;
+                        }
+
                         columns: 2
                         height: implicitHeight
 
@@ -203,52 +221,7 @@ Page {
                             text: qsTr("URL:")
                             font.weight: Font.Bold
                             font.bold: true
-                        }
-
-                        Label {
-                            id: label3
-                            x: 30
-                            text: qsTr("Licenses:")
-                            font.bold: true
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label4
-                            x: 30
-                            text: qsTr("Repository:")
-                            font.bold: true
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label5
-                            x: 30
-                            text: label12.text!==""?qsTr("Packager:"):undefined
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label6
-                            x: 30
-                            text: qsTr("Build date:")
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label7
-                            x: 30
-                            text: qsTr("Install date:")
-                            visible: false
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label8
-                            x: 30
-                            text: qsTr("Install reason:")
-                            visible: false
-                            font.weight: Font.Bold
+                            visible: pkg.url.toString()!==""
                         }
 
                         Label {
@@ -261,17 +234,38 @@ Page {
                         }
 
                         Label {
+                            visible: pkg.licenses.join(", ")!==""
+                            id: label3
+                            x: 30
+                            text: qsTr("Licenses:")
+                            font.bold: true
+                            font.weight: Font.Bold
+                        }
+                        Label {
                             id: label10
                             y: -5
                             text: pkg.licenses.join(", ")
                         }
-
+                        Label {
+                            visible: pkg.repo!==""
+                            id: label4
+                            x: 30
+                            text: qsTr("Repository:")
+                            font.bold: true
+                            font.weight: Font.Bold
+                        }
                         Label {
                             id: label11
                             y: -5
                             text: pkg.repo
                         }
-
+                        Label {
+                            visible:pkg.packager!=="Unknown Packager"
+                            id: label5
+                            x: 30
+                            text: qsTr("Packager:")
+                            font.weight: Font.Bold
+                        }
                         Label {
                             property var email
                             id: label12
@@ -281,6 +275,10 @@ Page {
                                 var re = /.*(<(\S+)>)/;
 
                                 var result = re.exec(pkg.packager);
+                                if(result==null){
+                                    return;
+                                }
+
                                 email=result[2];
 
                                 return pkg.packager.replace(result[1],"<a href=\"mailto:%1\">%1</a>".arg(result[2]))
@@ -290,18 +288,36 @@ Page {
                         }
 
                         Label {
+                            id: label6
+                            x: 30
+                            text: qsTr("Build date:")
+                            font.weight: Font.Bold
+                        }
+                        Label {
                             id: label13
                             y: -5
                             text: pkg.buildDate
                         }
-
+                        Label {
+                            id: label7
+                            x: 30
+                            text: qsTr("Install date:")
+                            visible: false
+                            font.weight: Font.Bold
+                        }
                         Label {
                             id: label14
                             y: -5
                             text: pkg.installDate
                             visible: false
                         }
-
+                        Label {
+                            id: label8
+                            x: 30
+                            text: qsTr("Install reason:")
+                            visible: false
+                            font.weight: Font.Bold
+                        }
                         Label {
                             id: label15
                             y: 13

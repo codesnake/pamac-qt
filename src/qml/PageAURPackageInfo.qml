@@ -37,7 +37,6 @@ Page {
     title: pkg.name
     property var pkg
     id: aurPackageInfo
-    state: pkg.installedVersion ? "installedState" : ""
     Item {
         id: item1
         width: parent.width - drawer.width
@@ -153,71 +152,19 @@ Page {
                         anchors.left: parent.left
                         anchors.leftMargin: 0
                         id: grid
-                        flow: Grid.TopToBottom
                         spacing: 5
                         rows: 6
                         columns: 2
                         height: implicitHeight
 
                         Label {
+                            visible: pkg.url.toString()!==""
                             id: label2
                             x: 30
                             text: qsTr("URL:")
                             font.weight: Font.Bold
                             font.bold: true
                         }
-
-                        Label {
-                            id: label3
-                            x: 30
-                            text: qsTr("Licenses:")
-                            font.bold: true
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label4
-                            x: 30
-                            text: qsTr("Maintainer:")
-                            font.bold: true
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label5
-                            x: 30
-                            text: qsTr("First Submitted:")
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label6
-                            x: 30
-                            text: qsTr("Last Updated:")
-                            font.weight: Font.Bold
-                        }
-                        Label {
-                            id: label18
-                            x: 30
-                            text: qsTr("Popularity:")
-                            font.weight: Font.Bold
-                        }
-                        Label {
-                            id: label7
-                            x: 30
-                            text: qsTr("Install date:")
-                            visible: false
-                            font.weight: Font.Bold
-                        }
-
-                        Label {
-                            id: label8
-                            x: 30
-                            text: qsTr("Install reason:")
-                            visible: false
-                            font.weight: Font.Bold
-                        }
-
                         Label {
                             id: label9
                             y: -5
@@ -226,51 +173,70 @@ Page {
                             onLinkActivated: Qt.openUrlExternally(link)
 
                         }
-
+                        Label {
+                            visible:  pkg.licenses.join(", ")!==""
+                            id: label3
+                            x: 30
+                            text: qsTr("Licenses:")
+                            font.bold: true
+                            font.weight: Font.Bold
+                        }
                         Label {
                             id: label10
                             y: -5
                             text: pkg.licenses.join(", ")
                         }
-
+                        Label {
+                            visible: pkg.maintainer!==""
+                            id: label4
+                            x: 30
+                            text: qsTr("Maintainer:")
+                            font.bold: true
+                            font.weight: Font.Bold
+                        }
                         Label {
                             id: label11
                             y: -5
                             text: pkg.maintainer
                         }
 
+
+                        Label {
+                            visible: pkg.firstSubmitted!==""
+                            id: label5
+                            x: 30
+                            text: qsTr("First Submitted:")
+                            font.weight: Font.Bold
+                        }
                         Label {
                             id: label12
                             y: -5
 
                             text: pkg.firstSubmitted
                             textFormat: Text.RichText
-                            onLinkActivated: Qt.openUrlExternally("mailto:"+email)
                         }
-
+                        Label {
+                            id: label6
+                            x: 30
+                            text: qsTr("Last Modified:")
+                            font.weight: Font.Bold
+                        }
                         Label {
                             id: label13
                             y: -5
                             text: pkg.lastModified
+                        }
+                        Label {
+                            id: label18
+                            x: 30
+                            text: qsTr("Popularity:")
+                            font.weight: Font.Bold
                         }
 
                         Label {
                             id: label17
                             y: -5
                             text: pkg.popularity.toString()
-                        }
-                        Label {
-                            id: label14
-                            y: -5
-                            text: pkg.installDate
-                            visible: false
-                        }
-
-                        Label {
-                            id: label15
-                            y: 13
-                            text: pkg.installReason
-                            visible: false
                         }
                     }
                 }
@@ -409,57 +375,6 @@ Page {
             }
         }
     }
-    states: [
-        State {
-            name: "installedState"
-
-            PropertyChanges {
-                target: button1
-                text: qsTr("Reinstall")
-                visible: true
-            }
-
-            PropertyChanges {
-                target: button
-                text: qsTr("Remove")
-            }
-
-            PropertyChanges {
-                target: label15
-                visible: true
-            }
-
-            PropertyChanges {
-                target: label8
-                visible: true
-            }
-
-            PropertyChanges {
-                target: label14
-                visible: true
-            }
-
-            PropertyChanges {
-                target: label7
-                visible: true
-            }
-
-            PropertyChanges {
-                target: grid
-                rows: 8
-            }
-
-            PropertyChanges {
-                target: infoStackLayout
-                currentIndex: 0
-            }
-
-            PropertyChanges {
-                target: grid1
-                rows: 2
-            }
-        }
-    ]
 }
 
 /*##^## Designer {
