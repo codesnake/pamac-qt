@@ -20,6 +20,9 @@
 static QQmlDebuggingEnabler enabler;
 #endif
 
+#define _STR(X) #X
+#define STR(X) _STR(X)
+
 
 int main(int argc, char *argv[])
 {
@@ -28,10 +31,10 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QApplication::setOrganizationName("Artem Grinev");
-    QApplication::setApplicationName("PamacQt");
-    QApplication::setWindowIcon(QIcon::fromTheme("package-x-generic"));
+    QApplication::setApplicationName("Pamac-Qt");
+    QApplication::setApplicationVersion(QString((VERSION)));
+    QApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    QIcon::fromTheme("go-previous");
 
     QCommandLineParser parser;
     parser.addHelpOption();
@@ -61,6 +64,9 @@ int main(int argc, char *argv[])
     qRegisterMetaType<QmlFuture>("Future");
     qRegisterMetaType<QList<PamacQt::HistoryItem>>("QList<HistoryItem>");
 
+    //Workaround
+    QIcon::fromTheme("go-previous");
+    QIcon::fromTheme("package-x-generic");
     //A (dirty) work around the bug that causes icons not to load in kde: manually set icon theme name
     if(QIcon::themeName().isEmpty()){
         QIcon::setThemeName("breeze");

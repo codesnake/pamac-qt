@@ -6,8 +6,8 @@ Dialog {
     id: dialog
     title: "About"
     standardButtons: Dialog.Ok
-    height: 300
     width: 300
+    height: 350
     Item {
         anchors.fill: parent
         id: item1
@@ -18,7 +18,7 @@ Dialog {
             anchors.top: parent.top
             anchors.topMargin: 25
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "image://icons/package-x-generic"
+            source: "image://icons/system-software-install"
         }
 
         Label {
@@ -33,9 +33,7 @@ Dialog {
 
         Label {
             id: label
-            text: qsTr("A Qt5 frontend for the libpamac")
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 25
+            text: qsTr("A Qt5 frontend to the libpamac")
             anchors.top: text1.bottom
             anchors.topMargin: 25
             font.pointSize: 11
@@ -44,9 +42,18 @@ Dialog {
         Label {
             id: label1
             text: qsTr("Artem Grinev (aka LordTermor) for Manjaro Linux")
+            anchors.top: label.bottom
+            anchors.topMargin: 25
+            font.pointSize: 8
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Label {
+            wrapMode: Text.WordWrap
+            id: label2
+            text: qsTr("Version: ")+ Qt.application.version
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 25
-            anchors.top: label.bottom
+            anchors.top: label1.bottom
             anchors.topMargin: 25
             font.pointSize: 8
             anchors.horizontalCenter: parent.horizontalCenter
