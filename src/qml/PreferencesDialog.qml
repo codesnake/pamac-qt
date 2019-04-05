@@ -306,7 +306,7 @@ Dialog{
                     id: button
                     x: 528
                     y: 58
-                    text: qsTr("Rerfresh mirror list")
+                    text: qsTr("Refresh mirror list")
                     anchors.right: parent.right
                     onClicked: {
                         transaction.startGenerateMirrorsList(comboBox.currentText=="Worldwide"?"all":comboBox.currentText)
