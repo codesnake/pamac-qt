@@ -19,53 +19,66 @@ Dialog{
 
         id: item1
         anchors.fill: parent
+        Pane{
 
-        TabBar {
-            id: tabBar
-            currentIndex: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
+            padding: 3
+            id:tabDrawer
             anchors.left: parent.left
-            anchors.leftMargin: 0
-            anchors.top: parent.top
-            anchors.topMargin: 0
-
-            TabButton {
-                id: tabButton
-                text: qsTr("General")
+            anchors.bottom: parent.bottom
+            anchors.top:parent.top
+            width: 130
+            background: Rectangle{
+                color:systemPalette.alternateBase
+                border.color: systemPalette.mid
+                border.width: 1
             }
+            ListView{
+                currentIndex: 0
+                id:tabBar
+                boundsBehavior: Flickable.StopAtBounds
+                ScrollBar.vertical: ScrollBar{
+                    visible: true
+                }
 
-            TabButton {
-                id: tabButton1
-                text: qsTr("Official repositories")
-            }
-
-            TabButton {
-                id: tabButton2
-                text: qsTr("AUR")
-            }
-
-            TabButton {
-                id: tabButton3
-                text: qsTr("Cache")
+                anchors.fill: parent
+                model:ListModel{
+                    ListElement{
+                        itemText:qsTr("General")
+                    }
+                    ListElement{
+                        itemText:qsTr("Official repositories")
+                    }
+                    ListElement{
+                        itemText:qsTr("AUR")
+                    }
+                    ListElement{
+                        itemText:qsTr("Cache")
+                    }
+                }
+                delegate: MenuItemDelegate{
+                    backgroundColor: systemPalette.alternateBase
+                    highlighted: tabBar.currentIndex==index
+                    text: itemText
+                    width: parent.width
+                    onClicked: {
+                        tabBar.currentIndex=index
+                    }
+                }
             }
         }
 
         StackLayout {
             id: stackLayout
             currentIndex: tabBar.currentIndex
-            anchors.left: parent.left
+            anchors.left: tabDrawer.right
             anchors.right: parent.right
             anchors.bottom: parent.bottom
+            anchors.top: parent.top
             anchors.bottomMargin: 0
-            anchors.top: tabBar.bottom
-            anchors.topMargin: 0
+
 
 
             Pane{
-                background: Rectangle{
-                    color: systemPalette.alternateBase
-                }
 
                 padding: 6
 
@@ -232,7 +245,7 @@ Dialog{
                                 }
                                 onAccepted: {
 
-                                     var list = Database.getIgnorePkgs();
+                                    var list = Database.getIgnorePkgs();
                                     list.push(inputPackageText.text);
 
                                     var string = list.join(" ");
@@ -250,24 +263,24 @@ Dialog{
                             }
                             height: childrenRect.height
                             Row{
-                               Button{
-                                   icon.name: "list-add"
-                                   onClicked: {
-                                       inputDialog.open();
-                                   }
-                               }
-                               Button{
-                                   icon.name: "list-remove"
-                                   onClicked: {
-                                      var list = Database.getIgnorePkgs();
-                                       list.splice(listView.currentIndex,1);
+                                Button{
+                                    icon.name: "list-add"
+                                    onClicked: {
+                                        inputDialog.open();
+                                    }
+                                }
+                                Button{
+                                    icon.name: "list-remove"
+                                    onClicked: {
+                                        var list = Database.getIgnorePkgs();
+                                        list.splice(listView.currentIndex,1);
 
-                                      var string = list.join(" ");
+                                        var string = list.join(" ");
 
-                                      var obj = {"IgnorePkg":string};
-                                      transaction.startWritePamacConfig(obj);
-                                   }
-                               }
+                                        var obj = {"IgnorePkg":string};
+                                        transaction.startWritePamacConfig(obj);
+                                    }
+                                }
                             }
                         }
                     }
@@ -275,9 +288,7 @@ Dialog{
             }
 
             Pane {
-                background: Rectangle{
-                    color: systemPalette.alternateBase
-                }
+
                 id: page
                 Label {
                     id: label5
@@ -398,9 +409,7 @@ Dialog{
             }
 
             Pane {
-                background: Rectangle{
-                    color: systemPalette.alternateBase
-                }
+
                 id: page2
                 Label {
                     id: label9
