@@ -26,12 +26,70 @@ PamacQt::Transaction::Transaction(Database *db, QObject *parent):QObject(parent)
 void PamacQt::Transaction::startWritePamacConfig(const QVariantMap &map){
     GHashTable* tabl = g_hash_table_new(g_str_hash,
                                         g_str_equal);
+    auto keys = Utils::qStringListToCStringVector(map.keys());
+    for(auto& el :keys){
+        auto value = map[el];
+        if(value.type()==QVariant::Int){
+            value.convert(QVariant::ULongLong);
+        }
 
-    for(QVariantMap::const_iterator it = map.constBegin(), total = map.constEnd();it!=total;++it){
-        g_hash_table_insert(tabl,it.key().toUtf8().data(),Utils::qVariantToGVariant(it.value()));
+        g_hash_table_insert(tabl,el,Utils::qVariantToGVariant(value));
     }
 
     pamac_transaction_start_write_pamac_config(m_transaction.get(),tabl);
+    for(auto &el :keys){
+        delete el;
+    }
+
+}
+
+void PamacQt::Transaction::startWriteAlpmConfig(const QVariantMap &map){
+    GHashTable* tabl = g_hash_table_new(g_str_hash,
+                                        g_str_equal);
+    auto keys = Utils::qStringListToCStringVector(map.keys());
+    for(auto& el :keys){
+        auto value = map[el];
+        if(value.type()==QVariant::Int){
+            value.convert(QVariant::ULongLong);
+        }
+
+        g_hash_table_insert(tabl,el,Utils::qVariantToGVariant(value));
+    }
+
+    pamac_transaction_start_write_alpm_config(m_transaction.get(),tabl);
+    for(auto &el :keys){
+        delete el;
+    }
+
+}
+
+QmlFuture PamacQt::Transaction::getBuildFiles(const QString &pkgname){
+    auto future = new QmlFutureImpl;
+    pamac_transaction_get_build_files(m_transaction.get(),pkgname.toUtf8(),
+                                      [](GObject* parent,GAsyncResult* res,gpointer futurePtr){
+        auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
+        if(future->isRunning()){
+
+            auto transaction = reinterpret_cast<PamacTransaction*>(parent);
+            int length = 0;
+            gchar** result = pamac_transaction_get_build_files_finish(transaction,res,&length);
+            QStringList resList;
+
+            for(int i =0;i<length;i++){
+                QFileInfo file(QString::fromUtf8(result[i]));
+                resList.append(file.fileName());
+                g_free(result[i]);
+            }
+
+            g_free(result);
+            future->setFuture(QVariant::fromValue(resList));
+        }
+        else {
+            delete future;
+        }
+    },future);
+    return QmlFuture(future);
+
 }
 
 void PamacQt::Transaction::start(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
@@ -67,6 +125,23 @@ void PamacQt::Transaction::startSysupgrade(bool forceRefresh, bool enableDowngra
                                        ignore.data(),int(ignore.size()),
                                        overwrite.data(),int(overwrite.size()));
     setProperty("started",true);
+}
+
+void PamacQt::Transaction::setDatabase(PamacQt::Database *database)
+{
+    if (m_database == database) {
+        return;
+    }
+
+    if (m_transaction==nullptr){
+        m_transaction = std::shared_ptr<PamacTransaction>(pamac_transaction_new(*database),g_object_unref);
+    } else{
+        pamac_transaction_set_database(m_transaction.get(),*database);
+    }
+    m_database = database;
+    init();
+
+    emit databaseChanged(m_database);
 }
 void PamacQt::Transaction::init()
 {
@@ -201,6 +276,23 @@ void PamacQt::Transaction::init()
                          std::cout<<"System upgrade finished with rusult: "<<success<<std::endl;
                          emit t->finished(success);
                      }),this);
+
+    g_signal_connect(m_transaction.get(),"write_alpm_config_finished",
+                     reinterpret_cast<GCallback>(+[](GObject* obj,bool checkspace,Transaction* t){
+                         Q_UNUSED(obj);
+                         emit t->writeAlpmConfigFinished();
+                     }),this);
+
+    g_signal_connect(m_transaction.get(),"write_pamac_config_finished",
+                     reinterpret_cast<GCallback>(+[](GObject* obj,bool recurse, uint64_t refresh_period, bool no_update_hide_icon,
+                                                 bool enable_aur, char* aur_build_dir, bool check_aur_updates,
+                                                 bool check_aur_vcs_updates, bool download_updates
+                                                 ,Transaction* t){
+                         Q_UNUSED(obj);
+                         emit t->writePamacConfigFinished();
+                     }),this);
+
+
 
 
     connect(this,&Transaction::startPreparing,[=](){this->setProperty("indeterminate",true);});

@@ -66,35 +66,9 @@ public:
         return pamac_transaction_unlock(m_transaction.get());
     }
     Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
+    Q_INVOKABLE void startWriteAlpmConfig(const QVariantMap &map);
 
-    inline Q_INVOKABLE QmlFuture getBuildFiles(const QString& pkgname){
-        auto future = new QmlFutureImpl;
-        pamac_transaction_get_build_files(m_transaction.get(),pkgname.toUtf8(),
-                                          [](GObject* parent,GAsyncResult* res,gpointer futurePtr){
-            auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
-            if(future->isRunning()){
-
-                auto transaction = reinterpret_cast<PamacTransaction*>(parent);
-                int length = 0;
-                gchar** result = pamac_transaction_get_build_files_finish(transaction,res,&length);
-                QStringList resList;
-
-                for(int i =0;i<length;i++){
-                    QFileInfo file(QString::fromUtf8(result[i]));
-                    resList.append(file.fileName());
-                    g_free(result[i]);
-                }
-
-                g_free(result);
-                future->setFuture(QVariant::fromValue(resList));
-            }
-            else {
-                delete future;
-            }
-        },future);
-        return QmlFuture(future);
-
-    }
+    Q_INVOKABLE QmlFuture getBuildFiles(const QString& pkgname);
 
     Database* database() const
     {
@@ -114,25 +88,11 @@ public:
     Q_INVOKABLE void start(const QStringList& toInstall = QStringList(), const QStringList& toRemove = QStringList(), const QStringList& toLoad = QStringList(),
                            const QStringList& toBuild = QStringList(), const QStringList& tempIgnore = QStringList(), const QStringList& overwriteFiles = QStringList());
     Q_INVOKABLE void startSysupgrade(bool forceRefresh,bool enableDowngrade,const QStringList& tempIgnore = QStringList(),const QStringList& overwriteFiles = QStringList());
+
 public slots:
 
 
-    void setDatabase(Database* database)
-    {
-        if (m_database == database) {
-            return;
-        }
-
-        if (m_transaction==nullptr){
-            m_transaction = std::shared_ptr<PamacTransaction>(pamac_transaction_new(*database),g_object_unref);
-        } else{
-            pamac_transaction_set_database(m_transaction.get(),*database);
-        }
-        m_database = database;
-        init();
-
-        emit databaseChanged(m_database);
-    }
+    void setDatabase(Database* database);
 
 signals:
     void getAuthorizationFinished(bool authorized);
@@ -145,6 +105,8 @@ signals:
     void stopPreparing();
     void emitScriptOutput(const QString& message);
     void importantDetailsOutput(bool imporant);
+    void writeAlpmConfigFinished();
+    void writePamacConfigFinished();
 
     void databaseChanged(Database* database);
 

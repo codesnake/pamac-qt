@@ -120,8 +120,43 @@ Dialog{
                         id: checkBox1
                         tristate: false
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        onClicked: {
+                            var pref = {};
+                            pref[settingName]=checked;
+                            transaction.startWriteAlpmConfig(pref);
+                        }
                     }
 
+
+                    Label {
+                        id: labelParallelDownloads
+                        height: spinBox.height
+                        text: qsTr("Maximum parallel downloads:")
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    SpinBox {
+                        id: spinBoxParallelDownloads
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        value: config.maxParallelDownloads
+                        onValueChanged: {
+                            var obj = {}
+                            obj = {"MaxParallelDownloads":value}
+                            transaction.startWritePamacConfig(obj);
+                        }
+                    }
+
+                    Label {
+                        id: labelDowngrade
+                        text: qsTr("Enable downgrade")
+                    }
+
+                    PreferencesCheckBox {
+                        checked: config.enableDowngrade
+                        id: checkBoxDowngrade
+
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        settingName: "EnableDowngrade"
+                    }
                     Label {
                         id: label2
                         text: qsTr("Check for updates")
@@ -161,7 +196,14 @@ Dialog{
                         anchors.right: parent.right
                         anchors.rightMargin: 0
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        value:config.refreshPeriod
+                        onValueChanged: {
+                            var obj = {}
+                            obj = {"RefreshPeriod":value}
+                            transaction.startWritePamacConfig(obj);
+                        }
                     }
+
 
                     PreferencesCheckBox {
                         checked: config.downloadUpdates
@@ -212,7 +254,6 @@ Dialog{
                         }
 
                         ListView {
-                            property bool r: false
                             ScrollBar.vertical: ScrollBar{
                                 visible: true
                             }
@@ -235,7 +276,13 @@ Dialog{
                                 text: modelData
                             }
 
-                            model:{r;Database.getIgnorePkgs()}
+                            model:Database.getIgnorePkgs()
+                            Connections{
+                                target: transaction
+                                onWriteAlpmConfigFinished:{
+                                    listView.model=Database.getIgnorePkgs();
+                                }
+                            }
                         }
                         Pane{
                             padding: 0
@@ -259,8 +306,7 @@ Dialog{
                                     var string = list.join(" ");
 
                                     var obj = {"IgnorePkg":string};
-                                    transaction.startWritePamacConfig(obj);
-                                    listView.r=!listView.r;
+                                    transaction.startWriteAlpmConfig(obj);
                                 }
                             }
 
@@ -286,7 +332,7 @@ Dialog{
                                         var string = list.join(" ");
 
                                         var obj = {"IgnorePkg":string};
-                                        transaction.startWritePamacConfig(obj);
+                                        transaction.startWriteAlpmConfig(obj);
                                     }
                                 }
                             }
@@ -382,6 +428,7 @@ Dialog{
 
                 PreferencesCheckBox {
                     enabled: aurEnabledCheckBox.enabled
+                    checked: config.checkAurUpdates
                     id: checkBox6
                     text: qsTr("Check for updates from AUR")
                     anchors.top: label7.bottom
@@ -389,6 +436,17 @@ Dialog{
                     anchors.left: parent.left
                     anchors.leftMargin: 30
                     settingName: "CheckAURUpdates"
+                }
+                PreferencesCheckBox {
+                    enabled: aurEnabledCheckBox.enabled
+                    checked: config.checkAurVCSUpdates
+                    id: checkBoxVCSUpdates
+                    text: qsTr("Check for development packages updates")
+                    anchors.top: checkBox6.bottom
+                    anchors.topMargin: 0
+                    anchors.left: parent.left
+                    anchors.leftMargin: 30
+                    settingName: "CheckAURVCSUpdates"
                 }
 
                 Label {
@@ -408,7 +466,7 @@ Dialog{
                     id: comboBox1
                     x: 500
                     displayText: "(None)"
-                    anchors.top: checkBox6.bottom
+                    anchors.top: checkBoxVCSUpdates.bottom
                     anchors.topMargin: 6
                     anchors.right: parent.right
                     anchors.rightMargin: 6

@@ -47,6 +47,15 @@ namespace Utils {
     inline void setName(int getName){\
     setMethod;\
 }
+#define PAMAC_QT_UINT_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
+    Q_PROPERTY(int getName READ getName WRITE setName)\
+    inline uint getName() const\
+{\
+    return uint(getMethod);\
+}\
+    inline void setName(uint getName){\
+    setMethod;\
+}
 #define PAMAC_QT_DOUBLE_PROPERTY_GET(name,method)\
     Q_PROPERTY(double name READ name CONSTANT)\
     inline double name() const\

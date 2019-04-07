@@ -35,8 +35,17 @@ public:
                                    setDownloadUpdates,pamac_config_set_download_updates(m_config.get(),downloadUpdates))
     PAMAC_QT_BOOL_PROPERTY_GET_SET(cleanRmOnlyUninstalled,pamac_config_get_clean_rm_only_uninstalled(m_config.get()),
                                    setCleanRmOnlyUninstalled,pamac_config_set_clean_rm_only_uninstalled(m_config.get(),cleanRmOnlyUninstalled))
+    PAMAC_QT_INT_PROPERTY_GET_SET(maxParallelDownloads,pamac_config_get_max_parallel_downloads(m_config.get()),
+                                   setMaxParallelDownloads,pamac_config_set_max_parallel_downloads(m_config.get(),uint(maxParallelDownloads)))
 
+    PAMAC_QT_BOOL_PROPERTY_GET_SET(checkAurVCSUpdates,pamac_config_get_check_aur_vcs_updates(m_config.get()),
+                                   setCheckAurVCSUpdates,pamac_config_set_check_aur_vcs_updates(m_config.get(),checkAurVCSUpdates))
 
+    PAMAC_QT_BOOL_PROPERTY_GET_SET(enableDowngrade,pamac_config_get_enable_downgrade(m_config.get()),
+                                   setEnableDowngrade,pamac_config_set_enable_downgrade(m_config.get(),enableDowngrade))
+
+    PAMAC_QT_INT_PROPERTY_GET_SET(refreshPeriod,pamac_config_get_refresh_period(m_config.get()),
+                                   setRefreshPeriod,pamac_config_set_refresh_period(m_config.get(),uint(refreshPeriod)))
 
     PAMAC_QT_INT_PROPERTY_GET_SET(cleanKeepNumPkgs,pamac_config_get_clean_keep_num_pkgs(m_config.get()),
                               setCleanKeepNumPkgs,pamac_config_set_clean_keep_num_pkgs(m_config.get(),size_t(cleanKeepNumPkgs)))
