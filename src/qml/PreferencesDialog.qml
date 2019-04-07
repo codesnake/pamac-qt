@@ -207,9 +207,12 @@ Dialog{
                         anchors.leftMargin: 6
                         background: Rectangle{
                             color:systemPalette.base
+                            border.color: systemPalette.mid
+                            border.width: 1
                         }
 
                         ListView {
+                            property bool r: false
                             ScrollBar.vertical: ScrollBar{
                                 visible: true
                             }
@@ -232,9 +235,14 @@ Dialog{
                                 text: modelData
                             }
 
-                            model:Database.getIgnorePkgs()
+                            model:{r;Database.getIgnorePkgs()}
                         }
                         Pane{
+                            padding: 0
+                            background: Rectangle{
+                                color:"transparent"
+                            }
+
                             Dialog{
                                 id:inputDialog
                                 visible: false
@@ -252,6 +260,7 @@ Dialog{
 
                                     var obj = {"IgnorePkg":string};
                                     transaction.startWritePamacConfig(obj);
+                                    listView.r=!listView.r;
                                 }
                             }
 
@@ -261,7 +270,6 @@ Dialog{
                                 right: parent.right
                                 bottom: parent.bottom
                             }
-                            height: childrenRect.height
                             Row{
                                 Button{
                                     icon.name: "list-add"
@@ -330,26 +338,25 @@ Dialog{
                     color: systemPalette.alternateBase
                 }
                 id: page1
-                Rectangle {
-                    id: rectangle
-                    height: childrenRect.height + 20
-                    color: "#ff9100"
+                Label {
+                    background: Rectangle{
+                        color: "#ff9100"
+                    }
+                    padding:5
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.top: parent.top
                     anchors.topMargin: 0
-                    clip:true
-                    Label {
-                        id: label6
-                        text: qsTr("AUR is a community maintened repository so it presents potential risks and problems.\nAll AUR users should be familiar with the build process.\n")
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        padding: 6
-                        wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    }
+                    color: "white"
+                    id: label6
+                    text: qsTr("AUR is a community maintened repository so it presents potential risks and problems.\nAll AUR users should be familiar with the build process.")
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                 }
+
 
                 Label {
                     id: label7
@@ -368,7 +375,7 @@ Dialog{
                     x: 465
                     anchors.right: parent.right
                     anchors.rightMargin: 6
-                    anchors.top: rectangle.bottom
+                    anchors.top: label6.bottom
                     anchors.topMargin: 16
                     settingName: "EnableAUR"
                 }
