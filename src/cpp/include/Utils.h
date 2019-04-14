@@ -18,11 +18,11 @@ namespace Utils {
     Q_PROPERTY(QString getName READ getName WRITE setName)\
     inline QString getName() const\
 {\
-    return QString::fromUtf8(method);\
+    return QString::fromUtf8(getMethod);\
     }\
-    inline void setName(const QString& str)\
+    inline void setName(const QString& getName)\
 {\
-    setMethod(str.toUtf8());\
+    setMethod;\
     }
 
 #define PAMAC_QT_URL_PROPERTY_GET(name,method)\

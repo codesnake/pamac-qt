@@ -50,6 +50,9 @@ public:
     PAMAC_QT_INT_PROPERTY_GET_SET(cleanKeepNumPkgs,pamac_config_get_clean_keep_num_pkgs(m_config.get()),
                               setCleanKeepNumPkgs,pamac_config_set_clean_keep_num_pkgs(m_config.get(),size_t(cleanKeepNumPkgs)))
 
+    PAMAC_QT_STRING_PROPERTY_GET_SET(aurBuildDirectory,pamac_config_get_aur_build_dir(m_config.get()),
+                                     setAurBuildDirectory,pamac_config_set_aur_build_dir(m_config.get(),aurBuildDirectory.toUtf8()))
+
     operator PamacConfig*(){
         return m_config.get();
     }

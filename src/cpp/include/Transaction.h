@@ -79,7 +79,7 @@ public:
         pamac_transaction_start_generate_mirrors_list(m_transaction.get(),country.toUtf8());
     }
     Q_INVOKABLE void cleanCache(int cleanKeepNumPkgs,bool cleanRmOnlyInstalled){
-        pamac_transaction_clean_cache(m_transaction.get(),uint(cleanKeepNumPkgs),cleanRmOnlyInstalled);
+        pamac_transaction_clean_cache(m_transaction.get(),uint64_t(cleanKeepNumPkgs),cleanRmOnlyInstalled);
     }
     Q_INVOKABLE void quitDaemon(){
         pamac_transaction_quit_daemon(m_transaction.get());

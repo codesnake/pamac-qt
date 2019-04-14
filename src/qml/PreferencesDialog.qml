@@ -1,10 +1,12 @@
 import QtQuick 2.4
+import Qt.labs.platform 1.1
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import Pamac.Config 1.0
 import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import QtQuick.Dialogs 1.2
+import "../js/JSUtils.js" as Utils
 Dialog{
 
     title: qsTr("Preferences")
@@ -452,24 +454,87 @@ Dialog{
                 Label {
                     enabled: aurEnabledCheckBox.enabled
                     id: label8
-                    height: comboBox1.height
+                    height: aurBuildDirTextArea.height
                     text: qsTr("Build directory:")
                     verticalAlignment: Text.AlignVCenter
-                    anchors.top: comboBox1.top
+                    anchors.top: aurBuildDirTextArea.top
                     anchors.topMargin: 0
                     anchors.left: checkBox6.left
                     anchors.leftMargin: 0
                 }
 
-                ComboBox {
-                    enabled: aurEnabledCheckBox.enabled
-                    id: comboBox1
+                TextArea {
+
+                    text: config.aurBuildDirectory
+
+                    enabled: false
+                    id: aurBuildDirTextArea
                     x: 500
-                    displayText: "(None)"
+                    anchors.left: label8.right
                     anchors.top: checkBoxVCSUpdates.bottom
                     anchors.topMargin: 6
+                    anchors.right: chooseButton.left
+                    Connections{
+                        target: transaction
+                        onWritePamacConfigFinished:{
+                            aurBuildDirTextArea.text = config.aurBuildDirectory;
+                        }
+                    }
+                }
+                Button{
+                    anchors.top: aurBuildDirTextArea.top
+                    enabled: aurEnabledCheckBox.enabled
+                    id:chooseButton
                     anchors.right: parent.right
                     anchors.rightMargin: 6
+                    icon.name: "folder"
+                    onClicked: {
+                        aurBuildDirDialog.open();
+                    }
+                }
+                FileDialog{
+                    folder: encodeURIComponent(aurBuildDirTextArea.text)
+                    id:aurBuildDirDialog
+                    selectFolder:true
+                    selectMultiple: false
+                    selectExisting: true
+                    title: qsTr("Please choose a build directory")
+                    onAccepted: {
+                        var path = Utils.urlToPath(aurBuildDirDialog.fileUrl.toString());
+
+                        var obj = {"BuildDirectory":path};
+                        transaction.startWritePamacConfig(obj);
+                    }
+                }
+                RowLayout{
+                    enabled: aurEnabledCheckBox.enabled
+                    anchors.top: aurBuildDirTextArea.bottom
+                    anchors.left: aurBuildDirTextArea.left
+                    anchors.right: chooseButton.right
+                Button{
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    id:defaultLocationButton
+                    text:qsTr("Default")
+                    onClicked: {
+                        var path = "/var/tmp"
+
+                        var obj = {"BuildDirectory":path};
+                        transaction.startWritePamacConfig(obj);
+                    }
+                }
+                Button{
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    id:tmpLocationButton
+                    text:qsTr("Temporary directory")
+                    onClicked: {
+                        var path = Utils.urlToPath(StandardPaths.standardLocations(StandardPaths.TempLocation)[0]);
+
+                        var obj = {"BuildDirectory":path};
+                        transaction.startWritePamacConfig(obj);
+                    }
+                }
                 }
             }
 
