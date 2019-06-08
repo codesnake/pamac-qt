@@ -392,11 +392,17 @@ Page {
                     }
                 }
             }
+            Flickable{
+                contentHeight: textArea.paintedHeight
+                contentWidth: textArea.paintedWidth
+                clip:true
+                ScrollBar.vertical: ScrollBar {
+                    visible: true
+                }
+                boundsBehavior: Flickable.StopAtBounds
 
-            ScrollView {
-                clip: true
-                contentHeight: textArea.implicitHeight
                 TextArea {
+
                     background: Rectangle{
                         color: systemPalette.alternateBase
                     }

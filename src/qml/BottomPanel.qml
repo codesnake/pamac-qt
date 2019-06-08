@@ -123,13 +123,13 @@ Pane {
 
         Button{
             Layout.preferredWidth:  detailsButtonLabel.paintedWidth+detailsButtonIcon.width+padding*2
-padding: 5
+            padding: 5
             checkable: true
             id:detailsButton
             enabled: transaction.details!=="" || totalPending!=0
             Row{
                 enabled: parent.enabled
-height: parent.height
+                height: parent.height
                 anchors.centerIn: parent
                 Image {
                     enabled: parent.enabled

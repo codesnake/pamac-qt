@@ -4,10 +4,14 @@ import QtQuick.Controls 2.12
 Page {
     title: "Transaction Details"
     objectName: "transactionDetailsPage"
-    ScrollView{
+    Flickable{
         id:scrollView
         anchors.fill: parent
-
+        ScrollBar.vertical: ScrollBar{
+            visible:true
+        }
+        contentHeight: area.paintedHeight
+        contentWidth: area.paintedWidth
         TextArea{
             background: Rectangle{
                 color:systemPalette.base
