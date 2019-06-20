@@ -5,7 +5,6 @@
         <file>src/qml/MainWindow.qml</file>
         <file>src/qml/MenuItemDelegate.qml</file>
         <file>src/qml/PagePackageInfo.qml</file>
-        <file>src/qml/PagePackageTable.qml</file>
         <file>src/qml/ToolBar.qml</file>
         <file>src/qml/PreferencesCheckBox.qml</file>
         <file>src/qml/PreferencesDialog.qml</file>
@@ -23,7 +22,6 @@
         <file>src/qml/TransactionSummaryDialog.qml</file>
         <file>src/qml/UpdatesPage.qml</file>
         <file>src/js/JSUtils.js</file>
-        <file>src/qml/PackageTable.qml</file>
         <file>icons/builtin/16x16/apps/system-software-install.svg</file>
         <file>icons/builtin/16x16/status/package-available-locked.svg</file>
         <file>icons/builtin/16x16/status/package-available.svg</file>
@@ -40,13 +38,12 @@
         <file>icons/builtin/index.theme</file>
         <file>src/qml/SideMenuPending.qml</file>
         <file>src/qml/SideMenuSearch.qml</file>
-        <file>src/qml/RepoPackageDelegate.qml</file>
-        <file>src/qml/AURPackageDelegate.qml</file>
-        <file>src/qml/PageAURPackageTable.qml</file>
-        <file>src/qml/PageRepoPackageTable.qml</file>
         <file>src/qml/PageAURPackageInfo.qml</file>
         <file>src/qml/SideMenuAURPackageInfo.qml</file>
         <file>src/qml/OpenWithDialog.qml</file>
         <file>src/qml/HistoryDialog.qml</file>
+        <file>src/qml/Header.qml</file>
+        <file>src/qml/Table.qml</file>
+        <file>src/qml/LoaderDelegate.qml</file>
     </qresource>
 </RCC>

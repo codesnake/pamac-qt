@@ -39,6 +39,7 @@ INCLUDEPATH += "/usr/lib/glib-2.0/include" /usr/include/glib-2.0/ ./src/cpp/incl
 QMAKE_CXXFLAGS += -std=c++17
 
 HEADERS += \
+    src/cpp/include/QmlTableModel.h \
     src/cpp/include/Config.h \
     src/cpp/include/Database.h \
     src/cpp/include/PackageList.h \
@@ -55,6 +56,7 @@ HEADERS += \
     src/cpp/include/HistoryItemModel.h
 
 SOURCES += \
+    src/cpp/src/QmlTableModel.cpp \
     src/cpp/src/Database.cpp \
     src/cpp/src/main.cpp \
     src/cpp/src/PackageModel.cpp \

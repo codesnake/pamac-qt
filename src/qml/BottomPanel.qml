@@ -192,11 +192,11 @@ Pane {
             Component{
                 id:pendingComponent
                 Flickable{
-                    PagePackageTable{
+                    Table{
                         anchors.left: parent.left
                         anchors.right: parent.right
                         height: item.contentHeight
-                        packageList: Database.getPending(toInstall,toRemove)
+//                        packageList: Database.getPending(toInstall,toRemove)
                     }
                 }
             },

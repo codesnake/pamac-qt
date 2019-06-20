@@ -9,6 +9,7 @@ class PackageModel : public QAbstractTableModel
 {
     Q_OBJECT
     Q_PROPERTY(RepoPackageList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
+    Q_PROPERTY(int columnCount READ columnCount CONSTANT)
 
 public:
     enum PackageRole {
@@ -27,6 +28,7 @@ public:
 
     QHash<int, QByteArray>  roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    Q_INVOKABLE QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const override{ Q_UNUSED(parent);return int(m_packageList.size());}
     int columnCount(const QModelIndex &parent = QModelIndex()) const override
     {
@@ -55,6 +57,9 @@ signals:
     void packageListChanged(RepoPackageList packageList);
 
 private:
+    QStringList list = {"State","Name","Version","Repository","Size"};
+    QList<QVariant> sizeList = {40,"fill",40,50,60};
     RepoPackageList m_packageList;
+
 };
 } //namespace PamacQt
