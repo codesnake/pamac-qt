@@ -155,7 +155,7 @@ Pane {
             enabled: !transaction.started
             text:qsTr("Apply")
             onClicked: {
-                tryLockAndRun(function(){
+                tryLockAndRun(()=>{
                     if(!sysUpgrade)
                         transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
                     else

@@ -27,7 +27,7 @@ Window{
             model:HistoryModel{
                 historyList: Database.getHistory()
             }
-            columnWidthProvider: function(column){
+            columnWidthProvider:(column)=>{
                 return columnWidths[column];
             }
             rowHeightProvider: 25

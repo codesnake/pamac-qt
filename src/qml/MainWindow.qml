@@ -152,7 +152,7 @@ ApplicationWindow {
                                 toLoad.push(fileUrls[i].toString());
                             }
 
-                            tryLockAndRun(function(){transaction.start([],[],toLoad,[],[],[])});
+                            tryLockAndRun(()=>{transaction.start([],[],toLoad,[],[],[])});
 
                         }
                     }
@@ -166,7 +166,7 @@ ApplicationWindow {
                         Action {
                             text: "Refresh databases"
                             onTriggered: {
-                                tryLockAndRun(function(){transaction.startSysupgrade(true,false,[],[])});
+                                tryLockAndRun(()=>transaction.startSysupgrade(true,false,[],[]));
 
                             }
                         }
@@ -184,8 +184,8 @@ ApplicationWindow {
                         Action {
                             text: "Preferences"
                             onTriggered: {
-                                tryLockAndRun(function(){
-                                    JSUtils.connectOnce(transaction.getAuthorizationFinished,function(bool){
+                                tryLockAndRun(()=>{
+                                    JSUtils.connectOnce(transaction.getAuthorizationFinished,(bool)=>{
                                         if(bool)
                                             preferencesDialog.open();
                                     });

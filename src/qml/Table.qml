@@ -37,7 +37,7 @@ Pane{
 
     TableView{
 columnSpacing: 1
-        columnWidthProvider:function (column){
+        columnWidthProvider:(column)=>{
             return header.getColumnWidth(column);
         }
         anchors{
