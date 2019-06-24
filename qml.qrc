@@ -45,5 +45,6 @@
         <file>src/qml/Header.qml</file>
         <file>src/qml/Table.qml</file>
         <file>src/qml/LoaderDelegate.qml</file>
+        <file>src/qml/PackageList.qml</file>
     </qresource>
 </RCC>

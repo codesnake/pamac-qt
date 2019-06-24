@@ -57,8 +57,8 @@ signals:
     void packageListChanged(RepoPackageList packageList);
 
 private:
-    QStringList list = {"State","Name","Version","Repository","Size"};
-    QList<QVariant> sizeList = {40,"fill",40,50,60};
+    QStringList list = {"Name","Version","Repository","Size","State"};
+    QList<QVariant> sizeList = {"fill",40,50,60,70};
     RepoPackageList m_packageList;
 
 };

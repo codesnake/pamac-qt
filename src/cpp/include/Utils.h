@@ -3,6 +3,7 @@
 #include <vector>
 #include <QVariantList>
 #include <QStringList>
+#include <QDateTime>
 
 namespace PamacQt {
 namespace Utils {
@@ -13,7 +14,12 @@ namespace Utils {
 {\
     return QString::fromUtf8(method);\
     }
-
+#define PAMAC_QT_DATETIME_PROPERTY_GET(name,method)\
+    Q_PROPERTY(QDateTime name READ name CONSTANT)\
+    inline QDateTime name() const\
+{\
+    return QDateTime::fromMSecsSinceEpoch(method);\
+    }
 #define PAMAC_QT_STRING_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(QString getName READ getName WRITE setName)\
     inline QString getName() const\

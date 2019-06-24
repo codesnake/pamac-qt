@@ -4,17 +4,7 @@
 #include <QQmlComponent>
 #include <QtDBus/QtDBus>
 
-void send_unity_launcherentry_message(const QVariantMap& message){
-    QDBusMessage signal = QDBusMessage::createSignal("/",
-                                                     "com.canonical.Unity.LauncherEntry",
-                                                     "Update");
 
-    signal << "application://pamac-qt.desktop";
-
-    signal << message;
-
-    QDBusConnection::sessionBus().send(signal);
-}
 
 PamacQt::Transaction::Transaction(Database *db, QObject *parent):QObject(parent),
     m_transaction(std::shared_ptr<PamacTransaction>(pamac_transaction_new(*db),g_object_unref)),
@@ -327,14 +317,5 @@ void PamacQt::Transaction::init()
         this->setProperty("details",details);
     });
 
-    connect(this,&Transaction::startedChanged,[=](bool started){
-        send_unity_launcherentry_message({{"count-visible",started},
-                                          {"count",started?1:0},
-                                          {"progress-visible",started},
-                                          {"progress",0}});
-    });
 
-    connect(this,&Transaction::progressChanged,[=](double progress){
-        send_unity_launcherentry_message({{"progress",progress}});
-    });
 }

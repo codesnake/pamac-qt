@@ -59,11 +59,8 @@ public:
         pamac_transaction_start_get_authorization(m_transaction.get());
     }
 
-    inline Q_INVOKABLE bool getLock(){
-        return pamac_transaction_get_lock(m_transaction.get());
-    }
-    inline Q_INVOKABLE bool unlock(){
-        return pamac_transaction_unlock(m_transaction.get());
+    inline Q_INVOKABLE void getAuthorization(){
+        pamac_transaction_start_get_authorization(m_transaction.get());
     }
     Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
     Q_INVOKABLE void startWriteAlpmConfig(const QVariantMap &map);
