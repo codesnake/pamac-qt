@@ -2,11 +2,18 @@
 #define UNITYPROGRESSNOTIFIER_H
 
 #include <QObject>
-
-class UnityProgressNotifier
+#include "AbstractNotifier.h"
+class UnityProgressNotifier:public QObject,public AbstractNotifier
 {
+    Q_OBJECT
 public:
-    UnityProgressNotifier();
+    UnityProgressNotifier(QObject *parent = nullptr);
+
+    // AbstractNotifier interface
+public slots:
+    void setVisible(bool visible) override;
+    void setProgress(double progress) override;
+    void setMessage(const QString &message) override;
 };
 
 #endif // UNITYPROGRESSNOTIFIER_H

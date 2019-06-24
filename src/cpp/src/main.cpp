@@ -15,6 +15,7 @@
 #include <XDGIconProvider.h>
 #include "AsyncHelpers.h"
 #include "HistoryItemModel.h"
+#include "NotificationService.h"
 #ifdef QT_DEBUG
 #include <QQmlDebuggingEnabler>
 static QQmlDebuggingEnabler enabler;
@@ -74,6 +75,14 @@ int main(int argc, char *argv[])
 
     QQuickStyle::setFallbackStyle("fusion");
     QQuickStyle::setStyle("org.kde.desktop");
+
+    qmlRegisterSingletonType<NotificationService>("NotificationService",1,0,"NotificationService",
+                                                [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
+        Q_UNUSED(scriptEngine)
+
+
+        return NotificationService::createDefault(engine);
+    });
 
     qmlRegisterSingletonType<PamacQt::Database>("Pamac.Database",1,0,"Database",
                                                 [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
