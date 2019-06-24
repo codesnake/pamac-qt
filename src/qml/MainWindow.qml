@@ -7,6 +7,7 @@ import Pamac.Database 1.0
 import Pamac.PackageModel 1.0
 import Pamac.Transaction 1.0
 import Pamac.Async 1.0
+import NotificationService 1.0
 import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
 
@@ -16,14 +17,15 @@ ApplicationWindow {
     }
 
     function tryLockAndRun(val){
-        if(transaction.getLock()){
-            val.apply(arguments);
-        } else{
-            retryTimer.func = val;
-            retryTimer.args = arguments;
-            retryDialog.open();
-            retryTimer.start();
-        }
+                    val.apply(arguments);
+
+//        if(transaction.getLock()){
+//        } else{
+//            retryTimer.func = val;
+//            retryTimer.args = arguments;
+//            retryDialog.open();
+//            retryTimer.start();
+//        }
     }
 
 
@@ -43,11 +45,11 @@ ApplicationWindow {
             id:retryTimer
             running: false
             onTriggered: {
-                if(transaction.getLock()){
-                    retryTimer.stop();
-                    retryDialog.close();
-                    func.apply(mainWindow,args);
-                }
+//                if(transaction.getLock()){
+//                    retryTimer.stop();
+//                    retryDialog.close();
+//                    func.apply(mainWindow,args);
+//                }
             }
         }
         onVisibleChanged: {
@@ -104,6 +106,13 @@ ApplicationWindow {
         }
         Component.onDestruction: {
             transaction.quitDaemon();
+        }
+        onStartedChanged: {
+            NotificationService.setVisible(started);
+        }
+
+        onProgressChanged: {
+            NotificationService.setProgress(progress);
         }
     }
 
@@ -185,12 +194,12 @@ ApplicationWindow {
                             text: "Preferences"
                             onTriggered: {
                                 tryLockAndRun(()=>{
-                                    JSUtils.connectOnce(transaction.getAuthorizationFinished,(bool)=>{
-                                        if(bool)
-                                            preferencesDialog.open();
-                                    });
-                                    transaction.startGetAuthorization();
-                                });
+                                                  JSUtils.connectOnce(transaction.getAuthorizationFinished,(bool)=>{
+                                                                          if(bool)
+                                                                          preferencesDialog.open();
+                                                                      });
+                                                  transaction.startGetAuthorization();
+                                              });
                             }
                         }
                         Action {
@@ -341,111 +350,10 @@ ApplicationWindow {
                 height: parent.height-bottomPanel.height
                 width: parent.width
                 clip: true
-                initialItem: Table{
-                    property alias packageList:packageModel.packageList
-                    property alias packageListFuture:packageModelWatcher.future
-                    model: PackageModel{
-                        id:packageModel
-                        property var watcher: FutureWatcher{
-                            id:packageModelWatcher
-                            onFinished: {
-                                packageModel.packageList = result;
-                            }
-                        }
-                    }
-delegate: LoaderDelegate{
-    height: 25
-    id: packageDelegate
-    columns: [
-        Component{
-            Item {
-                Image {
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked:packageDelegate.packageActionFunc()
-                    }
-
-                    function getStateIcon(){
-                        if(installedVersion!=""){
-                            if(toRemove.indexOf(name)!=-1){
-                                return "package-remove"
-                            }
-
-                            return "package-installed-updated"
-                        }
-
-                        if(toInstall.indexOf(name)!=-1){
-                            return "package-install";
-                        } else {
-                            return "package-available";
-                        }
-                    }
-                    source: "image://icons/builtin/"+getStateIcon()
-                    width: 15
-                    height: width
-                    anchors.centerIn: parent
-                }
-            }
-        },
-        Component{
-            Row{
-                height: parent.height
-                spacing: 5
-                Image{
-                    anchors.verticalCenter: parent.verticalCenter
-                    id:packageIcon
-                    width: 25
-                    height: width
-                    source:iconUrl.toString().length?Qt.resolvedUrl("file://"+iconUrl):"image://icons/package-x-generic"
-                }
-
-                Column{
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width-packageIcon.width-5
-                    Label {
-
-                        width:parent.width
-                        text:appName?appName+" ("+name+")":name
-                        font.weight: Font.Bold
-                        font.bold: true
-
-                        elide: Text.ElideRight
-                    }
-                    Label {
-                        width:parent.width
-                        text:desc
-                        elide: Text.ElideRight
-                    }
-                }
-            }
-        },
-        Component{
-            Label{
-                clip: true
-                text:version
-            }
-        },
-        Component{
-            Label{
-                clip: true
-                text:repo
-            }
-        },
-        Component{
-            Label{
-                clip: true
-                text:size.toString()
-            }
-        }
-    ]
-}
+                initialItem: PackageList {
+                    property string title
                     id: mainView
-                    clip:true
-                    //                    onPackageListChanged: {
-                    //                        if(stackView.depth>1 && stackView.currentItem.objectName!="updatesPage"){
-                    //                            stackView.pop(this);
-                    //                        }
-                    //                    }
+
                 }
 
 
@@ -461,12 +369,4 @@ delegate: LoaderDelegate{
 
         }
     }
-
 }
-
-
-
-/*##^## Designer {
-    D{i:4;anchors_x:553}
-}
- ##^##*/

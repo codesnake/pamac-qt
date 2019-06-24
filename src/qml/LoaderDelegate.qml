@@ -14,13 +14,18 @@ Rectangle{
     property var modelData: model
 
     property list<Component> columns
+    function columnGettingFunction(column){
+        return columns[column]
+    }
 
-    property bool highlighted:isSelected(row)
-    color: highlighted?systemPalette.highlight:systemPalette.base
-
+    property bool highlighted:false
+    property bool hovered
+    color: (hovered || itemMouseArea.containsMouse)?systemPalette.midlight:!highlighted?systemPalette.base:systemPalette.highlight
+    readonly property  alias containsMouse:itemMouseArea.containsMouse
     MouseArea{
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         id:itemMouseArea
+        hoverEnabled: true
         onClicked: {
            delegate.onClicked(mouse)
         }
@@ -38,11 +43,11 @@ Rectangle{
         anchors.leftMargin: 2
 
         Component.onCompleted: {
-            sourceComponent=columns[column]
+            sourceComponent=columnGettingFunction(column)
 
         }
     }
     TableView.onReused: {
-        cellLoader.sourceComponent = columns[column]
+        cellLoader.sourceComponent=columnGettingFunction(column)
     }
 }

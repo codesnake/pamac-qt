@@ -32,7 +32,7 @@ public:
 
     PAMAC_QT_STRING_PROPERTY_GET(repo,pamac_package_get_repo(m_package))
 
-    PAMAC_QT_INT_PROPERTY_GET(size,pamac_package_get_size(m_package))
+    PAMAC_QT_INT_PROPERTY_GET(size,pamac_package_get_installed_size(m_package))
 
     PAMAC_QT_INT_PROPERTY_GET(downloadSize,pamac_package_get_download_size(m_package))
 
@@ -67,9 +67,9 @@ public:
 
     PAMAC_QT_URL_PROPERTY_GET(screenshotUrl,pamac_package_details_get_screenshot(m_details.get()))
 
-    PAMAC_QT_STRING_PROPERTY_GET(installDate,pamac_package_details_get_installdate(m_details.get()))
+    PAMAC_QT_DATETIME_PROPERTY_GET(installDate,pamac_package_details_get_installdate(m_details.get()))
 
-    PAMAC_QT_STRING_PROPERTY_GET(buildDate,pamac_package_details_get_builddate(m_details.get()))
+    PAMAC_QT_DATETIME_PROPERTY_GET(buildDate,pamac_package_details_get_builddate(m_details.get()))
 
     PAMAC_QT_STRING_PROPERTY_GET(installReason,pamac_package_details_get_reason(m_details.get()))
 

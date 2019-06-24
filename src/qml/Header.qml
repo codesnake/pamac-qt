@@ -86,9 +86,10 @@ Rectangle{
                     }
                 }
                 MouseArea{
+                    visible: index!=0
                     z:5
-                    anchors.right: parent.right
-                    anchors.rightMargin: -5
+                    anchors.left: parent.left
+                    anchors.leftMargin: -5
                     property int mouseglobalX
                     height: parent.height
                     width:10
