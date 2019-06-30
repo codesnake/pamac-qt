@@ -3,8 +3,8 @@ import QtQuick.Controls 2.12
 import QPamac.PackageModel 1.0
 import QPamac.Database 1.0
 
-Rectangle{
-
+Pane{
+    padding: 0
     implicitHeight: 45
 
     id:delegate
@@ -18,9 +18,7 @@ Rectangle{
         return columns[column]
     }
 
-    property bool highlighted:false
-    property bool hovered
-    color: (hovered || itemMouseArea.containsMouse)?systemPalette.midlight:!highlighted?systemPalette.base:systemPalette.highlight
+
     readonly property  alias containsMouse:itemMouseArea.containsMouse
     MouseArea{
         acceptedButtons: Qt.LeftButton | Qt.RightButton

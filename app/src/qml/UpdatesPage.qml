@@ -94,15 +94,13 @@ Page {
         }
 
         Label{
-
-
             id:progress
             text:qsTr("Checking for updates")
             font.weight: Font.Bold
             font.pointSize: 12
         }
     }
-    PagePackageTable{
+    PackageList{
         layer.enabled: true
         layer.effect: DropShadow {
             transparentBorder: true

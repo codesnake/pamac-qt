@@ -101,7 +101,6 @@ ApplicationWindow {
             if(success){
                 clear();
             }
-            transaction.unlock();
         }
         Component.onDestruction: {
             transaction.quitDaemon();
@@ -287,43 +286,13 @@ ApplicationWindow {
                 id: drawer
                 width: parent.width
                 initialItem: SideMenuMain{
-                    height: parent.height-updatesItem.height
-                    MenuItemDelegate {
-                        highlighted: false
-                        property int updatesCount:-1
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-                        id:updatesItem
-                        text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
-
-                        width: parent.width
-
-                        onClicked: {
-
-                            if(stackView.currentItem.objectName=="updatesPage"){
-                                stackView.currentItem.reset();
-                            } else{
-                                showUpdates();
-                            }
-                        }
-                        Component.onCompleted: {
-                            Database.getUpdatesAsync();
-                        }
-                        Connections{
-                            target: Database
-                            onUpdatesReady: {
-                                updatesItem.updatesCount = upds.getReposUpdates().size
-                            }
-                        }
-                    }
+                    height: parent.height
                 }
 
             }
         }
 
         Page{
-
-
             anchors{
                 right:parent.right
                 top:parent.top
@@ -359,11 +328,12 @@ ApplicationWindow {
             }
         }
         BottomPanel{
+            width: sidePanel.width
             id:bottomPanel
             anchors{
                 bottom:parent.bottom
                 left:parent.left
-                right:parent.right
+                right:sidePanel.right
             }
 
         }

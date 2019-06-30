@@ -95,76 +95,6 @@ Pane {
         }
     ]
     RowLayout{
-        anchors.margins: 5
-        id:row
-        width: parent.width
-        Column{
-            height: parent.height
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            Label{
-                width: parent.width
-
-                text: transaction.started?transaction.action:(sysUpgrade?calcTotalSize():totalPending + " pending")
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            Layout.fillWidth: true
-            ProgressBar{
-                id:progressBar
-                width: parent.width
-                indeterminate: transaction.indeterminate
-                value: transaction.progress
-                from:0
-                to:1
-            }
-        }
-
-        Button{
-            Layout.preferredWidth:  detailsButtonLabel.paintedWidth+detailsButtonIcon.width+padding*2
-            padding: 5
-            checkable: true
-            id:detailsButton
-            enabled: transaction.details!=="" || totalPending!=0
-            Row{
-                enabled: parent.enabled
-                height: parent.height
-                anchors.centerIn: parent
-                Image {
-                    enabled: parent.enabled
-                    rotation: bottomPanel.state=="expanded"?270:90
-                    id:detailsButtonIcon
-                    width: height
-                    height: parent.height/2
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "image://icon/go-previous"
-                    Behavior on rotation {
-                        NumberAnimation{duration: 400}
-                    }
-                }
-                Label{
-                    enabled: parent.enabled
-                    anchors.verticalCenter: parent.verticalCenter
-                    id:detailsButtonLabel
-                    text:transaction.details!==""?qsTr("Details"):qsTr("Pending")
-                }
-            }
-        }
-        Button{
-            enabled: !transaction.started
-            text:qsTr("Apply")
-            onClicked: {
-                tryLockAndRun(()=>{
-                    if(!sysUpgrade)
-                        transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
-                    else
-                        transaction.startSysupgrade(true,false,[],[]);
-                })
-            }
-
-        }
-
         Button{
             enabled: !transaction.started
             text:qsTr("Cancel")
@@ -179,6 +109,109 @@ Pane {
                 toLoad=[];
             }
         }
+        anchors.margins: 5
+        id:row
+        width: parent.width
+
+        ItemDelegate{
+            id:detailsButton
+            checked:bottomPanel.state=="expanded"
+            checkable: true
+            Layout.fillWidth: true
+            Column{
+
+                anchors.fill: parent
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                Label{
+                    width: parent.width
+
+                    text: transaction.started?transaction.action:(sysUpgrade?calcTotalSize():totalPending + " pending")
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                Rectangle{
+                    Rectangle{
+                        SequentialAnimation on x{
+                            loops: Animation.Infinite
+                            running: progressBar.indeterminate
+                            NumberAnimation{
+                                duration: 1100
+                                easing.type: Easing.InOutCubic
+                                from: 0
+                                to:progressBar.width-progress.width
+                            }
+                            NumberAnimation{
+                                duration: 1100
+                                easing.type: Easing.InOutCubic
+                                to: 0
+                                from:progressBar.width-progress.width
+                            }
+                        }
+
+                        id:progress
+                        height: parent.height
+                        width: parent.indeterminate?parent.width*0.1:parent.value*parent.width/(parent.to-parent.from)
+                        color: systemPalette.highlight
+                    }
+                    height: 5
+                    color: systemPalette.mid
+                    id:progressBar
+                    width: parent.width
+                    property bool indeterminate:  transaction.indeterminate
+                    property var value: transaction.progress
+                    property var from:0
+                    property var to:1
+                }
+            }
+        }
+
+//        Button{
+//            Layout.preferredWidth:  detailsButtonLabel.paintedWidth+detailsButtonIcon.width+padding*2
+//            padding: 5
+//            checkable: true
+//            enabled: transaction.details!=="" || totalPending!=0
+//            Row{
+//                enabled: parent.enabled
+//                height: parent.height
+//                anchors.centerIn: parent
+//                Image {
+//                    enabled: parent.enabled
+//                    rotation: bottomPanel.state=="expanded"?270:90
+//                    id:detailsButtonIcon
+//                    width: height
+//                    height: parent.height/2
+//                    anchors.verticalCenter: parent.verticalCenter
+//                    source: "image://icon/go-previous"
+//                    Behavior on rotation {
+//                        NumberAnimation{duration: 400}
+//                    }
+//                }
+//                Label{
+//                    enabled: parent.enabled
+//                    anchors.verticalCenter: parent.verticalCenter
+//                    id:detailsButtonLabel
+//                    text:transaction.details!==""?qsTr("Details"):qsTr("Pending")
+//                }
+//            }
+//        }
+
+
+
+        Button{
+            enabled: !transaction.started
+            text:qsTr("Apply")
+            onClicked: {
+                tryLockAndRun(()=>{
+                                  if(!sysUpgrade)
+                                  transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
+                                  else
+                                  transaction.startSysupgrade(true,false,[],[]);
+                              })
+            }
+
+        }
     }
     Loader{
         anchors{
@@ -191,13 +224,10 @@ Pane {
         property list<Component> pages:[
             Component{
                 id:pendingComponent
-                Flickable{
-                    Table{
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        height: item.contentHeight
-//                        packageList: Database.getPending(toInstall,toRemove)
-                    }
+                PackageList{
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    packageList: Database.getPending(toInstall,toRemove)
                 }
             },
             Component{

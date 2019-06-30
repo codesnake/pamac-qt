@@ -75,13 +75,34 @@ ToolBar {
         anchors.verticalCenter: parent.verticalCenter
     }
     Button{
+        checkable: true
+        checked: stackView.currentItem.objectName=="updatesPage"
+        id:updatesButton
         flat:true
-        text: qsTr("Select all")
+        icon.name: "update-none"
+        icon.height: 20
+        icon.width:icon.height
         anchors.right: parent.right
-        enabled: stackView.depth == 1
-        visible: enabled
         anchors.verticalCenter: parent.verticalCenter
-        onClicked: mainView.item.selectAll()
+        property int updatesCount:-1
+        text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
+        onClicked: {
+
+            if(stackView.currentItem.objectName=="updatesPage"){
+                stackView.pop();
+            } else{
+                showUpdates();
+            }
+        }
+        Component.onCompleted: {
+            Database.getUpdatesAsync();
+        }
+        Connections{
+            target: Database
+            onUpdatesReady: {
+                updatesButton.updatesCount = upds.getReposUpdates().size
+            }
+        }
     }
 
 }

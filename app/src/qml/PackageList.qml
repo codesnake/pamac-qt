@@ -25,6 +25,24 @@ Table{
     id:list
     property var hoveredRow:-1
     delegate: LoaderDelegate{
+
+        background: Rectangle{
+
+            width: packageDelegate.width+5
+            property var hovered:hoveredRow==row
+            color: {
+                if(highlighted){
+                    return systemPalette.highlight;
+                }
+                if(hovered || packageDelegate.containsMouse)
+                {
+                    return systemPalette.midlight;
+                }
+                return systemPalette.base;
+            }
+        }
+
+
         onContainsMouseChanged: {
             if(containsMouse)
                 hoveredRow=row
@@ -41,12 +59,11 @@ Table{
 
 
 
-        hovered: hoveredRow==row
+
         height: 25
         id: packageDelegate
 
         property bool highlighted:list.isSelected(row)
-        color: highlighted?systemPalette.highlight:systemPalette.base
 
 
         function packageAction(){
@@ -153,9 +170,10 @@ Table{
         ]
     }
     clip:true
-    //                    onPackageListChanged: {
-    //                        if(stackView.depth>1 && stackView.currentItem.objectName!="updatesPage"){
-    //                            stackView.pop(this);
-    //                        }
-    //                    }
+    onPackageListChanged: {
+        list.selectedRows = [];
+        if(stackView.depth>1 && stackView.currentItem.objectName!="updatesPage"){
+            stackView.pop(this);
+        }
+    }
 }

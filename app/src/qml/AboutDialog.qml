@@ -8,10 +8,10 @@ Window {
     }
 
     id: dialog
-    title: "About"
+    title: "About Pamac Qt"
     width: 300
     height: 350
-    Item {
+    Pane {
         anchors.fill: parent
         id: item1
         Image {
@@ -62,6 +62,8 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Button{
+            text:qsTr("OK")
+            onClicked: dialog.close();
             anchors{
                 right: parent.right
                 bottom: parent.bottom

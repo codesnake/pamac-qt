@@ -379,12 +379,11 @@ Page {
                         boundsBehavior: Flickable.StopAtBounds
                         width: 110
                         height: contentHeight
-                        delegate: ItemDelegate {
+                        delegate: MenuItemDelegate {
                             height: 25
                             text: modelData
 
                             onClicked: {
-
                                 stackView.push("PagePackageInfo.qml",{"pkg" : Database.getPkgDetails(modelData.split(":")[0])});
                             }
                         }
