@@ -1,11 +1,14 @@
-import QtQuick 2.4
+import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Dialogs 1.2
+import QtQuick.Window 2.12
 
-Dialog {
+Window {
+    function open(){
+        visible=true
+    }
+
     id: dialog
     title: "About"
-    standardButtons: Dialog.Ok
     width: 300
     height: 350
     Item {
@@ -58,5 +61,12 @@ Dialog {
             font.pointSize: 8
             anchors.horizontalCenter: parent.horizontalCenter
         }
+        Button{
+            anchors{
+                right: parent.right
+                bottom: parent.bottom
+            }
+        }
     }
+
 }

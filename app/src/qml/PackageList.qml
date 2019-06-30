@@ -1,4 +1,4 @@
-import QtQuick 2.9
+import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
@@ -22,6 +22,7 @@ Table{
             }
         }
     }
+    id:list
     property var hoveredRow:-1
     delegate: LoaderDelegate{
         onContainsMouseChanged: {
@@ -30,9 +31,23 @@ Table{
             else if(row==hoveredRow)
                 hoveredRow=-1
         }
+        onDoubleClicked: {
+            stackView.push("PagePackageInfo.qml",{pkg:Database.getPkgDetails(name,appName,false)})
+        }
+        onClicked: {
+            list.selectedRows = [];
+            list.selectRow(row);
+        }
+
+
+
         hovered: hoveredRow==row
         height: 25
         id: packageDelegate
+
+        property bool highlighted:list.isSelected(row)
+        color: highlighted?systemPalette.highlight:systemPalette.base
+
 
         function packageAction(){
 
@@ -74,8 +89,8 @@ Table{
 
             Component{
                 Row{
-anchors.left: parent.left
-anchors.leftMargin: 20
+                    anchors.left: parent.left
+                    anchors.leftMargin: 20
                     height: parent.height
                     spacing: 5
                     Image{
@@ -137,7 +152,6 @@ anchors.leftMargin: 20
             }
         ]
     }
-    id: mainView
     clip:true
     //                    onPackageListChanged: {
     //                        if(stackView.depth>1 && stackView.currentItem.objectName!="updatesPage"){

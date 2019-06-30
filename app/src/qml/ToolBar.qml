@@ -84,6 +84,4 @@ ToolBar {
         onClicked: mainView.item.selectAll()
     }
 
-
-
 }

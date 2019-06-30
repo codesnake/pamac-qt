@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.3
 import QPamac.Config 1.0
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
-import QtQuick.Dialogs 1.2
 import "../js/JSUtils.js" as Utils
 Dialog{
 
@@ -492,20 +491,20 @@ Dialog{
                         aurBuildDirDialog.open();
                     }
                 }
-                FileDialog{
-                    folder: encodeURIComponent(aurBuildDirTextArea.text)
-                    id:aurBuildDirDialog
-                    selectFolder:true
-                    selectMultiple: false
-                    selectExisting: true
-                    title: qsTr("Please choose a build directory")
-                    onAccepted: {
-                        var path = Utils.urlToPath(aurBuildDirDialog.fileUrl.toString());
+//                FileDialog{
+//                    folder: encodeURIComponent(aurBuildDirTextArea.text)
+//                    id:aurBuildDirDialog
+//                    selectFolder:true
+//                    selectMultiple: false
+//                    selectExisting: true
+//                    title: qsTr("Please choose a build directory")
+//                    onAccepted: {
+//                        var path = Utils.urlToPath(aurBuildDirDialog.fileUrl.toString());
 
-                        var obj = {"BuildDirectory":path};
-                        transaction.startWritePamacConfig(obj);
-                    }
-                }
+//                        var obj = {"BuildDirectory":path};
+//                        transaction.startWritePamacConfig(obj);
+//                    }
+//                }
                 RowLayout{
                     enabled: aurEnabledCheckBox.enabled
                     anchors.top: aurBuildDirTextArea.bottom

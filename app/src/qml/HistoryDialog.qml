@@ -22,7 +22,6 @@ Window{
                 visible: true
             }
 
-            property var columnWidths:[80,60,100,80]
             anchors.fill: parent
             model:HistoryModel{
                 historyList: Database.getHistory()

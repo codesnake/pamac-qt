@@ -1,5 +1,5 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.4
+import QtQuick.Controls 2.12
 import QPamac.PackageModel 1.0
 import QPamac.Database 1.0
 
@@ -9,8 +9,8 @@ Rectangle{
 
     id:delegate
 
-    signal onClicked
-    signal onDoubleClicked
+    signal clicked
+    signal doubleClicked
     property var modelData: model
 
     property list<Component> columns
@@ -27,10 +27,10 @@ Rectangle{
         id:itemMouseArea
         hoverEnabled: true
         onClicked: {
-           delegate.onClicked(mouse)
+           delegate.clicked(mouse)
         }
         onDoubleClicked: {
-          delegate.onDoubleClicked(mouse);
+          delegate.doubleClicked(mouse);
         }
 
         anchors.fill: parent

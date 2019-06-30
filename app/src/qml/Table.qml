@@ -30,16 +30,39 @@ Pane{
             table.forceLayout();
         }
     }
-    function selectAll(){
-        table.selectAll();
-    }
     property alias delegate: table.delegate
+    property var selectedRows: []
+
+    function selectRow(row){
+        var i = selectedRows.indexOf(row)
+        if(i==-1){
+            selectedRows.push(row);
+            selectedRowsChanged();
+        }
+        else{
+            selectedRows.slice(i,1)
+            selectedRowsChanged();
+        }
+    }
+    function selectAll(){
+        for(var i =0;i<model.rowCount();i++){
+            selectedRows.push(i);
+        }
+        selectedRowsChanged();
+    }
+
+    function isSelected(row){
+        return selectedRows.indexOf(row)>-1
+    }
+    function clearSelected(){
+        selectedRows = [];
+    }
 
     TableView{
-columnSpacing: 1
+        columnSpacing: 1
         columnWidthProvider:(column)=>{
-            return header.getColumnWidth(column);
-        }
+                                return header.getColumnWidth(column);
+                            }
         anchors{
             top:header.bottom
             bottom: parent.bottom
@@ -55,32 +78,7 @@ columnSpacing: 1
 
         ScrollBar.horizontal: horizontalScrollbar
 
-        property var selectedRows: []
 
-        function select(row){
-            var i = selectedRows.indexOf(row)
-            if(i==-1){
-                selectedRows.push(row);
-                selectedRowsChanged();
-            }
-            else{
-                selectedRows.slice(i,1)
-                selectedRowsChanged();
-            }
-        }
-        function selectAll(){
-            for(var i =0;i<model.rowCount();i++){
-                selectedRows.push(i);
-            }
-            selectedRowsChanged();
-        }
-
-        function isSelected(row){
-            return selectedRows.indexOf(row)>-1
-        }
-        function clearSelected(){
-            selectedRows = [];
-        }
         boundsBehavior: Flickable.StopAtBounds
         clip:true
 

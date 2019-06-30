@@ -1,7 +1,6 @@
-import QtQuick 2.9
+import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
-import QtQuick.Dialogs 1.2
 import QtGraphicalEffects 1.0
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
@@ -78,12 +77,12 @@ ApplicationWindow {
     AboutDialog{
         id:aboutDialog
     }
-    PreferencesDialog{
-        id:preferencesDialog
-        onRejected: {
-            transaction.unlock();
-        }
-    }
+//    PreferencesDialog{
+//        id:preferencesDialog
+//        onRejected: {
+//            transaction.unlock();
+//        }
+//    }
 
     HistoryDialog {
         id: historyDialog
@@ -123,7 +122,7 @@ ApplicationWindow {
     width: 950
     height: 550
     objectName: "mainWindow"
-    title: qsTr("Package manager")
+    title: qsTr("Pamac Qt - preview version")
     SystemPalette{id:systemPalette}
 
     Item{
@@ -151,20 +150,20 @@ ApplicationWindow {
                     font.pixelSize: Qt.application.font.pixelSize * 1.4
                     anchors.verticalCenter: parent.verticalCenter
 
-                    FileDialog{
-                        id:fileDialog
-                        title: qsTr("Install Local Packages")
-                        folder: shortcuts.home
-                        nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
-                        onAccepted: {
-                            for(var i =0;i<fileUrls.length;i++){
-                                toLoad.push(fileUrls[i].toString());
-                            }
+//                    FileDialog{
+//                        id:fileDialog
+//                        title: qsTr("Install Local Packages")
+//                        folder: shortcuts.home
+//                        nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
+//                        onAccepted: {
+//                            for(var i =0;i<fileUrls.length;i++){
+//                                toLoad.push(fileUrls[i].toString());
+//                            }
 
-                            tryLockAndRun(()=>{transaction.start([],[],toLoad,[],[],[])});
+//                            tryLockAndRun(()=>{transaction.start([],[],toLoad,[],[],[])});
 
-                        }
-                    }
+//                        }
+//                    }
                     Menu {
                         onClosed: toolButton1.checked=false
 
