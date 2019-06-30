@@ -7,6 +7,7 @@ import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
 import QPamac.Async 1.0
 import NotificationService 1.0
+import DialogRunner 1.0
 import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
 
@@ -112,6 +113,12 @@ ApplicationWindow {
         onProgressChanged: {
             NotificationService.setProgress(progress);
         }
+        requestCommit: summary=>{
+                           console.log(JSON.stringify(summary));
+            let objects = {"summary":summary,"result":undefined}
+            objects =  DialogRunner.exec("qrc:/src/qml/TransactionSummaryDialog.qml",objects);
+            return objects["result"]
+        }
     }
 
     id: mainWindow
@@ -173,7 +180,7 @@ ApplicationWindow {
                         Action {
                             text: "Refresh databases"
                             onTriggered: {
-                                tryLockAndRun(()=>transaction.startSysupgrade(true,false,[],[]));
+                                transaction.startSysupgrade(true,false,[],[]);
 
                             }
                         }
@@ -315,7 +322,7 @@ ApplicationWindow {
                 }
 
                 id:stackView
-                height: parent.height-bottomPanel.height
+                height: parent.height
                 width: parent.width
                 clip: true
                 initialItem: PackageList {
@@ -328,12 +335,21 @@ ApplicationWindow {
             }
         }
         BottomPanel{
-            width: sidePanel.width
+            Behavior on parent {
+                ParentAnimation{
+                    NumberAnimation{
+
+                    }
+                }
+
+            }
+
+            parent: side?sidePanel:undefined
             id:bottomPanel
             anchors{
                 bottom:parent.bottom
                 left:parent.left
-                right:sidePanel.right
+                right:parent.right
             }
 
         }

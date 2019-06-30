@@ -1,6 +1,6 @@
 #include "Transaction.h"
 #include "Utils.h"
-
+#include <QQmlEngine>
 void LibQPamac::Transaction::startWritePamacConfig(const QVariantMap &map){
     GHashTable* tabl = g_hash_table_new(g_str_hash,
                                         g_str_equal);
@@ -71,7 +71,7 @@ GenericQmlFuture LibQPamac::Transaction::getBuildFiles(const QString &pkgname){
 }
 
 void LibQPamac::Transaction::start(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
-                                 const QStringList& toBuild, const QStringList& tempIgnore, const QStringList& overwriteFiles)
+                                   const QStringList& toBuild, const QStringList& tempIgnore, const QStringList& overwriteFiles)
 {
     using Utils::qStringListToCStringVector;
 
@@ -118,39 +118,53 @@ void LibQPamac::Transaction::setDatabase(LibQPamac::Database *database)
 void LibQPamac::Transaction::init()
 {
     //methods override
-    PAMAC_TRANSACTION_GET_CLASS((static_cast<PamacTransaction*>(this)))->ask_commit=
+    auto selfObject = static_cast<PamacTransaction*>(this);
+    PAMAC_TRANSACTION_GET_CLASS(selfObject)->ask_commit=
             [](PamacTransaction* self, PamacTransactionSummary* summary)->gboolean{
+        auto selfObject = static_cast<LibQPamac::Transaction*>(self);
+        auto engine = qmlEngine(selfObject);
+        return gboolean(engine->fromScriptValue<QVariant>(
+                            selfObject->m_requestCommit.call({engine->toScriptValue(TransactionSummary(summary))}))
+                        .toBool());
 
-        return Q_EMIT gboolean(static_cast<LibQPamac::Transaction*>(self)->requestCommit(TransactionSummary(summary)));
 
 
     };
-    PAMAC_TRANSACTION_GET_CLASS(static_cast<PamacTransaction*>(this))->choose_optdeps=
+    PAMAC_TRANSACTION_GET_CLASS(selfObject)->choose_optdeps=
             [](PamacTransaction* self, const gchar* pkgname, gchar** optdeps, int optdeps_length1)->GList*{
 
         QStringList lst = Utils::cStringArrayToQStringList(optdeps,optdeps_length1);
-
-        QList<bool> varList = Q_EMIT static_cast<LibQPamac::Transaction*>(self)->requestOptDepends(QString::fromUtf8(pkgname),lst);
+        auto selfObject = static_cast<LibQPamac::Transaction*>(self);
+        auto engine = qmlEngine(selfObject);
+        QList<bool> varList = engine->fromScriptValue<QList<bool>>(selfObject->m_requestOptDepends.call({{QString::fromUtf8(pkgname),engine->toScriptValue(lst)}}));
 
         GList* result = nullptr;
 
+        int minLength = std::min(optdeps_length1,varList.length());
 
-            int minLength = std::min(optdeps_length1,varList.length());
-
-            for(int i =0;i<minLength;i++){
-                    char* res = new char[lst[i].toUtf8().length()];
-                    std::memcpy(res,lst[i].toUtf8(),lst[i].toUtf8().size());
-                    result = g_list_prepend(result,res);
-            }
+        for(int i =0;i<minLength;i++){
+            char* res = new char[lst[i].toUtf8().length()];
+            std::memcpy(res,lst[i].toUtf8(),lst[i].toUtf8().size());
+            result = g_list_prepend(result,res);
+        }
 
 
         return result;
     };
-    PAMAC_TRANSACTION_GET_CLASS((static_cast<PamacTransaction*>(this)))->choose_provider=
+    PAMAC_TRANSACTION_GET_CLASS(selfObject)->choose_provider=
             [](PamacTransaction* self, const gchar* depend, gchar** providers, int providers_length1)->gint{
+        QStringList lst = Utils::cStringArrayToQStringList(providers,providers_length1);
 
+        auto selfObject = static_cast<LibQPamac::Transaction*>(self);
+        auto engine = qmlEngine(selfObject);
 
-        return 0;
+        return engine->fromScriptValue<int>(selfObject->m_requestChooseProvider.call({{QString::fromUtf8(depend),engine->toScriptValue(lst)}}));
+    };
+    PAMAC_TRANSACTION_GET_CLASS(selfObject)->ask_import_key=
+            [](PamacTransaction* self, const gchar* pkgname, const gchar* key, const gchar* owner)->gboolean{
+        auto selfObject = static_cast<LibQPamac::Transaction*>(self);
+        auto engine = qmlEngine(selfObject);
+        return gboolean(engine->fromScriptValue<bool>(selfObject->m_requestChooseProvider.call({{QString::fromUtf8(pkgname),QString::fromUtf8(key),QString::fromUtf8(owner)}})));
     };
 
 

@@ -51,6 +51,10 @@ class Transaction : public QObject,public PamacTransaction
     Q_PROPERTY(double progress MEMBER m_progress NOTIFY progressChanged)
     Q_PROPERTY(bool started MEMBER m_started NOTIFY startedChanged)
     Q_PROPERTY(QString details MEMBER m_details NOTIFY detailsChanged)
+    Q_PROPERTY(QJSValue requestCommit WRITE setRequestCommit FINAL)
+    Q_PROPERTY(QJSValue requestImportKey WRITE setRequestImportKey FINAL)
+    Q_PROPERTY(QJSValue requestChooseProvider WRITE setRequestChooseProvider FINAL)
+    Q_PROPERTY(QJSValue requestOptDepends WRITE setRequestOptDepends FINAL)
 
 public:
     Transaction(QObject * parent = nullptr):QObject(parent){}
@@ -85,9 +89,38 @@ public:
                            const QStringList& toBuild = QStringList(), const QStringList& tempIgnore = QStringList(), const QStringList& overwriteFiles = QStringList());
     Q_INVOKABLE void startSysupgrade(bool forceRefresh,bool enableDowngrade,const QStringList& tempIgnore = QStringList(),const QStringList& overwriteFiles = QStringList());
 
+
 public Q_SLOTS:
 
     void setDatabase(Database* database);
+
+    void setRequestCommit(const QJSValue& requestCommit)
+    {
+        if(requestCommit.isCallable()) {
+            m_requestCommit = requestCommit;
+        }
+    }
+
+    void setRequestOptDepends(const QJSValue& requestOptDepends)
+    {
+        if(requestOptDepends.isCallable()){
+            m_requestOptDepends = requestOptDepends;
+        }
+    }
+
+    void setRequestImportKey(const QJSValue& requestImportKey)
+    {
+        if(requestImportKey.isCallable()) {
+        m_requestImportKey = requestImportKey;
+}
+    }
+
+    void setRequestChooseProvider(const QJSValue& requestChooseProvider)
+    {
+        if(requestChooseProvider.isCallable()) {
+        m_requestChooseProvider = requestChooseProvider;
+}
+    }
 
 Q_SIGNALS:
     void getAuthorizationFinished(bool authorized);
@@ -114,10 +147,7 @@ Q_SIGNALS:
     void startedChanged(bool started);
 
     void detailsChanged(QString details);
-    
-    QList<bool> requestOptDepends(const QString& packageName,const QStringList& optDependsList);
 
-    bool requestCommit(const TransactionSummary& summary);
 
 private:
     void init();
@@ -129,6 +159,10 @@ private:
 
     bool m_indeterminate = false;
     bool m_started = false;
+    QJSValue m_requestCommit;
+    QJSValue m_requestOptDepends;
+    QJSValue m_requestImportKey;
+    QJSValue m_requestChooseProvider;
 };
 } //namespace LibQPamac
 

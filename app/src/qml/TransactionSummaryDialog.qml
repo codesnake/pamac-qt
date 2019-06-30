@@ -5,6 +5,7 @@ import QPamac.PackageModel 1.0
 
 Page{
     property var summary
+    property var result
     width: 600
     height: 400
     Flickable{
@@ -70,5 +71,13 @@ Page{
         onRejected: dialogRejected()
     }
     signal dialogAccepted
+    onDialogAccepted: {
+        result = true;
+        Qt.quit();
+    }
+    onDialogRejected: {
+        result = false;
+        Qt.quit();
+    }
     signal dialogRejected
 }
