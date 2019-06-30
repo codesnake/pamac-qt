@@ -40,7 +40,7 @@ extern "C"{
     }\
     }
 namespace LibQPamac {
-class Database:public QObject
+class Database:public QObject,public PamacDatabase
 {
     Q_OBJECT
     Q_PROPERTY(Config config READ config WRITE setConfig NOTIFY configChanged)
@@ -108,14 +108,13 @@ public:
 
     Q_INVOKABLE RepoPackage getSyncPackage(const QString& name);
     Q_INVOKABLE GenericQmlFuture getAurPackage(const QString& name);
-    inline operator PamacDatabase*(){return m_db.get();}
 
 
 
-    bool getCheckspace() const;
+    bool getCheckspace();
 
     inline void refresh(){
-        pamac_database_refresh(m_db.get());
+        pamac_database_refresh(this);
     }
     Q_INVOKABLE QList<HistoryItem> getHistory();
 
@@ -136,7 +135,6 @@ Q_SIGNALS:
 
 private:
     void init();
-    std::shared_ptr<PamacDatabase> m_db;
     Config m_config;
     bool m_asynchronous;
 };

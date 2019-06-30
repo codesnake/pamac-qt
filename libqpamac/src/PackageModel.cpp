@@ -40,10 +40,10 @@ QVariant LibQPamac::PackageModel::data(const QModelIndex &index, int role) const
 
 void LibQPamac::PackageModel::sort(int column, Qt::SortOrder order){
     beginResetModel();
-    std::function<bool(const RepoPackage&,const RepoPackage&)> sortingFunction;
+    std::function<bool(RepoPackage&,RepoPackage&)> sortingFunction;
     switch (column) {
     case 0:
-        sortingFunction = [order](const RepoPackage &p1,const RepoPackage &p2)->bool{
+        sortingFunction = [order](RepoPackage &p1,RepoPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (!p2.installedVersion().isEmpty() && p1.installedVersion().isEmpty()) ||
                         ((p1.installedVersion().isEmpty() == p2.installedVersion().isEmpty()) && (p1.name()>p2.name()));
@@ -55,7 +55,7 @@ void LibQPamac::PackageModel::sort(int column, Qt::SortOrder order){
         };
         break;
     case 1:
-        sortingFunction = [order](const RepoPackage &p1,const RepoPackage &p2)->bool{
+        sortingFunction = [order](RepoPackage &p1,RepoPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (p1.name()>p2.name());
             }
@@ -63,7 +63,7 @@ void LibQPamac::PackageModel::sort(int column, Qt::SortOrder order){
         };
         break;
     case 2:
-        sortingFunction = [order](const RepoPackage &p1,const RepoPackage &p2)->bool{
+        sortingFunction = [order](RepoPackage &p1,RepoPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (p1.version()>p2.version()) ||
                         ((p1.version()==p2.version()) && (p1.name()>p2.name()));
@@ -74,7 +74,7 @@ void LibQPamac::PackageModel::sort(int column, Qt::SortOrder order){
 
         break;
     case 3:
-        sortingFunction = [order](const RepoPackage &p1,const RepoPackage &p2)->bool{
+        sortingFunction = [order](RepoPackage &p1,RepoPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (p1.repo()>p2.repo()) ||
                         ((p1.repo()==p2.repo()) && (p1.name()>p2.name()));
@@ -84,7 +84,7 @@ void LibQPamac::PackageModel::sort(int column, Qt::SortOrder order){
         };
         break;
     case 4:
-        sortingFunction = [order](const RepoPackage &p1,const RepoPackage &p2)->bool{
+        sortingFunction = [order](RepoPackage &p1,RepoPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (p1.size()>p2.size()) ||
                         ((p1.size()==p2.size()) && (p1.name()>p2.name()));

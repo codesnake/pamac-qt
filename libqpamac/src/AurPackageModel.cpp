@@ -32,10 +32,10 @@ QVariant LibQPamac::AurPackageModel::data(const QModelIndex &index, int role) co
 
 void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
     beginResetModel();
-    std::function<bool(const AURPackage&,const AURPackage&)> sortingFunction;
+    std::function<bool(AURPackage&,AURPackage&)> sortingFunction;
     switch (column) {
     case 0:
-        sortingFunction = [order](const AURPackage &p1,const AURPackage &p2)->bool{
+        sortingFunction = [order](AURPackage &p1, AURPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (!p2.installedVersion().isEmpty() && p1.installedVersion().isEmpty()) ||
                         ((p1.installedVersion().isEmpty() == p2.installedVersion().isEmpty()) && (p1.name()>p2.name()));
@@ -47,7 +47,7 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
         };
         break;
     case 1:
-        sortingFunction = [order](const AURPackage &p1,const AURPackage &p2)->bool{
+        sortingFunction = [order]( AURPackage &p1,AURPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (p1.name()>p2.name());
             }
@@ -55,7 +55,7 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
         };
         break;
     case 2:
-        sortingFunction = [order](const AURPackage &p1,const AURPackage &p2)->bool{
+        sortingFunction = [order]( AURPackage &p1,AURPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (p1.version()>p2.version()) ||
                         ((p1.version()==p2.version()) && (p1.name()>p2.name()));
@@ -66,7 +66,7 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
 
         break;
     case 3:
-        sortingFunction = [order](const AURPackage &p1,const AURPackage &p2)->bool{
+        sortingFunction = [order](AURPackage &p1,AURPackage &p2)->bool{
             if(order == Qt::AscendingOrder){
                 return (p1.popularity()>p2.popularity()) ||
                         ((p1.popularity()==p2.popularity()) && (p1.name()>p2.name()));

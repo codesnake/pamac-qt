@@ -110,7 +110,7 @@ void LibQPamac::Transaction::setDatabase(LibQPamac::Database *database)
     if (m_database == database) {
         return;
     }
-    *(static_cast<PamacTransaction*>(this)) = *pamac_transaction_new(*database);
+    *(static_cast<PamacTransaction*>(this)) = *pamac_transaction_new(database);
     init();
 
     Q_EMIT databaseChanged(m_database);

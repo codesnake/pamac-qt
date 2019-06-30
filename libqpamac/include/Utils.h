@@ -10,19 +10,19 @@ namespace Utils {
 
 #define PAMAC_QT_STRING_PROPERTY_GET(name,method)\
     Q_PROPERTY(QString name READ name CONSTANT)\
-    inline QString name() const\
+    inline QString name() \
 {\
     return QString::fromUtf8(method);\
     }
 #define PAMAC_QT_DATETIME_PROPERTY_GET(name,method)\
     Q_PROPERTY(QDateTime name READ name CONSTANT)\
-    inline QDateTime name() const\
+    inline QDateTime name()\
 {\
     return QDateTime::fromMSecsSinceEpoch(method);\
     }
 #define PAMAC_QT_STRING_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(QString getName READ getName WRITE setName)\
-    inline QString getName() const\
+    inline QString getName()\
 {\
     return QString::fromUtf8(getMethod);\
     }\
@@ -33,20 +33,20 @@ namespace Utils {
 
 #define PAMAC_QT_URL_PROPERTY_GET(name,method)\
     Q_PROPERTY(QUrl name READ name CONSTANT)\
-    inline QUrl name() const\
+    inline QUrl name()\
 {\
     return QUrl(method);\
     }
 
 #define PAMAC_QT_INT_PROPERTY_GET(name,method)\
     Q_PROPERTY(int name READ name CONSTANT)\
-    inline int name() const\
+    inline int name()\
 {\
     return int(method);\
     }
 #define PAMAC_QT_INT_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(int getName READ getName WRITE setName)\
-    inline int getName() const\
+    inline int getName()\
 {\
     return int(getMethod);\
 }\
@@ -55,7 +55,7 @@ namespace Utils {
 }
 #define PAMAC_QT_UINT_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(int getName READ getName WRITE setName)\
-    inline uint getName() const\
+    inline uint getName() \
 {\
     return uint(getMethod);\
 }\
@@ -64,13 +64,13 @@ namespace Utils {
 }
 #define PAMAC_QT_DOUBLE_PROPERTY_GET(name,method)\
     Q_PROPERTY(double name READ name CONSTANT)\
-    inline double name() const\
+    inline double name()\
 {\
     return double(method);\
     }
 #define PAMAC_QT_STRINGLIST_PROPERTY_GET(name,method)\
     Q_PROPERTY(QStringList name READ name CONSTANT)\
-    inline QStringList name() const\
+    inline QStringList name()\
 {\
     QStringList result;\
     auto tmp = method;\
@@ -83,7 +83,7 @@ namespace Utils {
 
 #define PAMAC_QT_BOOL_PROPERTY_GET_SET(name,method,setName,setMethod)\
     Q_PROPERTY(bool name READ name WRITE setName)\
-    inline bool name() const\
+    inline bool name()\
 {\
     return method;\
     }\
