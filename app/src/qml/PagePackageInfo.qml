@@ -391,25 +391,29 @@ Page {
                     }
                 }
             }
-            Flickable{
-                contentHeight: textArea.paintedHeight
-                contentWidth: textArea.paintedWidth
-                clip:true
-                ScrollBar.vertical: ScrollBar {
-                    visible: true
+            Pane{
+                anchors.margins: 5
+                padding: 2
+                background: Rectangle{
+                    border.width: 1
+                    border.color: systemPalette.mid
+                    color: systemPalette.base
                 }
-                boundsBehavior: Flickable.StopAtBounds
-
-                TextArea {
-
-                    background: Rectangle{
-                        color: systemPalette.alternateBase
+                ListView{
+                    anchors.fill: parent
+                    anchors.margins: 2
+                    clip:true
+                    ScrollBar.vertical: ScrollBar {
+                        visible: true
                     }
-                    readOnly: true
-                    id: textArea
-
-                    text: Database.getPkgFiles(pkg.name).join("\n")
-                    wrapMode: Text.WordWrap
+                    model:Database.getPkgFiles(pkg.name)
+                    boundsBehavior: Flickable.StopAtBounds
+                    delegate: TextEdit {
+                        text: modelData
+                        readOnly: true
+                        wrapMode: Text.WordWrap
+                        selectByMouse: true
+                    }
                 }
             }
         }
