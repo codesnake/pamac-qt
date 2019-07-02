@@ -8,7 +8,7 @@ file(GLOB app_src "src/cpp/include/*.h" "src/cpp/src/*.cpp")
 add_executable(${PROJECT_NAME} ${app_src} ${RESOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES AUTOMOC TRUE)
 set_target_properties(${PROJECT_NAME} PROPERTIES AUTORCC TRUE)
-
+add_definitions(-DQT_QML_DEBUG)
 target_include_directories(${PROJECT_NAME} PUBLIC "src/cpp/include")
 target_link_libraries(${PROJECT_NAME} libqpamac)
 target_link_libraries(${PROJECT_NAME} qtnotificationservice)
