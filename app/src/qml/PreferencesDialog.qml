@@ -1,27 +1,62 @@
-import QtQuick 2.4
-import Qt.labs.platform 1.1
-import QtQuick.Controls 2.3
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import QPamac.Config 1.0
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
-import "../js/JSUtils.js" as Utils
-Dialog{
+import QPamac.Transaction 1.0
 
+import "../js/JSUtils.js" as Utils
+Page{
     title: qsTr("Preferences")
+    signal dialogAccepted
+    signal dialogRejected
+    signal dialogApplied
+    SystemPalette{
+        id:systemPalette
+    }
+
+    property Transaction transaction
+
+    property var settingsState: {
+        "pamac":{},
+        "alpm":{}
+    }
+    function applySettings(){
+        if(Object.entries(settingsState["pamac"]).length !== 0)
+            transaction.startWritePamacConfig(settingsState["pamac"]);
+        if(Object.entries(settingsState["alpm"]).length !== 0)
+            transaction.startWriteAlpmConfig(settingsState["alpm"])
+    }
+
     width: 600
     height: 400
+    padding: 7
 
-    standardButtons: Dialog.Close
     property var config: Database.config
 
+    onDialogAccepted: {
+        applySettings();
+        Qt.quit();
+    }
+    onDialogApplied: {
+        applySettings();
+    }
 
-    Item {
+    onDialogRejected: {
+        Qt.quit();
+    }
 
-        id: item1
-        anchors.fill: parent
+    id: item1
+    Item  {
+        anchors{
+            top:parent.top
+            left:parent.left
+            right:parent.right
+            bottom: buttonBox.top
+        }
+
         Pane{
-
             padding: 3
             id:tabDrawer
             anchors.left: parent.left
@@ -56,7 +91,8 @@ Dialog{
                         itemText:qsTr("Cache")
                     }
                 }
-                delegate: MenuItemDelegate{
+                delegate:
+                    MenuItemDelegate{
                     backgroundColor: systemPalette.alternateBase
                     highlighted: tabBar.currentIndex==index
                     text: itemText
@@ -122,9 +158,7 @@ Dialog{
                         tristate: false
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                         onClicked: {
-                            var pref = {};
-                            pref[settingName]=checked;
-                            transaction.startWriteAlpmConfig(pref);
+                            settingsState["alpm"][settingName] = pref
                         }
                     }
 
@@ -139,10 +173,8 @@ Dialog{
                         id: spinBoxParallelDownloads
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                         value: config.maxParallelDownloads
-                        onValueChanged: {
-                            var obj = {}
-                            obj = {"MaxParallelDownloads":value}
-                            transaction.startWritePamacConfig(obj);
+                        onValueModified: {
+                            settingsState["pamac"]["MaxParallelDownloads"]=value;
                         }
                     }
 
@@ -198,10 +230,9 @@ Dialog{
                         anchors.rightMargin: 0
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                         value:config.refreshPeriod
-                        onValueChanged: {
-                            var obj = {}
-                            obj = {"RefreshPeriod":value}
-                            transaction.startWritePamacConfig(obj);
+                        onValueModified: {
+                            settingsState["pamac"]["RefreshPeriod"]=value;
+
                         }
                     }
 
@@ -306,8 +337,8 @@ Dialog{
 
                                     var string = list.join(" ");
 
-                                    var obj = {"IgnorePkg":string};
-                                    transaction.startWriteAlpmConfig(obj);
+                                    settingsState["alpm"]["IgnorePkg"]=string;
+
                                 }
                             }
 
@@ -332,8 +363,7 @@ Dialog{
 
                                         var string = list.join(" ");
 
-                                        var obj = {"IgnorePkg":string};
-                                        transaction.startWriteAlpmConfig(obj);
+                                        settingsState["alpm"]["IgnorePkg"]=string;
                                     }
                                 }
                             }
@@ -491,49 +521,47 @@ Dialog{
                         aurBuildDirDialog.open();
                     }
                 }
-//                FileDialog{
-//                    folder: encodeURIComponent(aurBuildDirTextArea.text)
-//                    id:aurBuildDirDialog
-//                    selectFolder:true
-//                    selectMultiple: false
-//                    selectExisting: true
-//                    title: qsTr("Please choose a build directory")
-//                    onAccepted: {
-//                        var path = Utils.urlToPath(aurBuildDirDialog.fileUrl.toString());
+                //                FileDialog{
+                //                    folder: encodeURIComponent(aurBuildDirTextArea.text)
+                //                    id:aurBuildDirDialog
+                //                    selectFolder:true
+                //                    selectMultiple: false
+                //                    selectExisting: true
+                //                    title: qsTr("Please choose a build directory")
+                //                    onAccepted: {
+                //                        var path = Utils.urlToPath(aurBuildDirDialog.fileUrl.toString());
 
-//                        var obj = {"BuildDirectory":path};
-//                        transaction.startWritePamacConfig(obj);
-//                    }
-//                }
+                //                        var obj = {"BuildDirectory":path};
+                //                        transaction.startWritePamacConfig(obj);
+                //                    }
+                //                }
                 RowLayout{
                     enabled: aurEnabledCheckBox.enabled
                     anchors.top: aurBuildDirTextArea.bottom
                     anchors.left: aurBuildDirTextArea.left
                     anchors.right: chooseButton.right
-                Button{
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    id:defaultLocationButton
-                    text:qsTr("Default")
-                    onClicked: {
-                        var path = "/var/tmp"
+                    Button{
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        id:defaultLocationButton
+                        text:qsTr("Default")
+                        onClicked: {
+                            var path = "/var/tmp"
 
-                        var obj = {"BuildDirectory":path};
-                        transaction.startWritePamacConfig(obj);
+                            settingsState["pamac"]["BuildDirectory"]=path;
+                        }
                     }
-                }
-                Button{
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    id:tmpLocationButton
-                    text:qsTr("Temporary directory")
-                    onClicked: {
-                        var path = Utils.urlToPath(StandardPaths.standardLocations(StandardPaths.TempLocation)[0]);
+                    Button{
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        id:tmpLocationButton
+                        text:qsTr("Temporary directory")
+                        onClicked: {
+                            var path = Utils.urlToPath(StandardPaths.standardLocations(StandardPaths.TempLocation)[0]);
 
-                        var obj = {"BuildDirectory":path};
-                        transaction.startWritePamacConfig(obj);
+                            settingsState["pamac"]["BuildDirectory"]=path;
+                        }
                     }
-                }
                 }
             }
 
@@ -553,12 +581,8 @@ Dialog{
                 }
 
                 SpinBox {
-                    onValueChanged: {
-                        if(config.cleanKeepNumPkgs==value)
-                            return;
-
-                        var pref = {"KeepNumPackages":value};
-                        transaction.startWritePamacConfig(pref);
+                    onValueModified: {
+                        settingsState["pamac"]["KeepNumPackages"]=value
                     }
                     value: config.cleanKeepNumPkgs
                     id: spinBox1
@@ -594,5 +618,17 @@ Dialog{
                 }
             }
         }
+    }
+    DialogButtonBox{
+        id:buttonBox
+        anchors{
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        standardButtons: DialogButtonBox.Ok | DialogButtonBox.Apply | DialogButtonBox.Cancel
+        onAccepted: dialogAccepted()
+        onRejected: dialogRejected()
+        onApplied: dialogApplied()
     }
 }

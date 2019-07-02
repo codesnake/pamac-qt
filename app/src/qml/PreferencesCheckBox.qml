@@ -10,8 +10,6 @@ CheckBox {
     id: checkBox
     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
     onClicked: {
-        var pref = {};
-        pref[settingName]=checked;
-        transaction.startWritePamacConfig(pref);
+        settingsState["pamac"][settingName]=checked;
     }
 }

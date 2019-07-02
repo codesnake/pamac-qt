@@ -3,6 +3,10 @@ import QtQuick.Controls 2.12
 import QPamac.Database 1.0
 
 ItemDelegate {
+    SystemPalette{
+        id:systemPalette
+    }
+
     property color backgroundColor: systemPalette.window
     background: Rectangle{
         Behavior on color{

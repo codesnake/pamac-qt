@@ -18,6 +18,9 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,QVariantMap propertiesMap)
     view.setSource(qmlFile);
     view.show();
     QObject *object = view.rootObject();
+
+    view.setTitle(object->property("title").toString());
+
     for (auto it = propertiesMap.keyValueBegin();it!=propertiesMap.keyValueEnd();++it) {
         object->setProperty((*it).first.toUtf8(),(*it).second);
     }

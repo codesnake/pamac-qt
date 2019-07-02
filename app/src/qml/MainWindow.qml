@@ -16,51 +16,10 @@ ApplicationWindow {
         stackView.push("UpdatesPage.qml");
     }
 
-    function tryLockAndRun(val){
-                    val.apply(arguments);
-
-//        if(transaction.getLock()){
-//        } else{
-//            retryTimer.func = val;
-//            retryTimer.args = arguments;
-//            retryDialog.open();
-//            retryTimer.start();
-//        }
-    }
-
 
     onClosing: {
         if(transaction.started)
             close.accepted = false
-    }
-
-    Dialog{
-
-        title: ""
-        id:retryDialog
-        Timer{
-            repeat: true
-            property var func
-            property var args
-            id:retryTimer
-            running: false
-            onTriggered: {
-//                if(transaction.getLock()){
-//                    retryTimer.stop();
-//                    retryDialog.close();
-//                    func.apply(mainWindow,args);
-//                }
-            }
-        }
-        onVisibleChanged: {
-            if(!visible){
-                retryTimer.stop();
-            }
-        }
-        standardButtons: Dialog.NoButton
-        Label{
-            text: qsTr("Waiting for another package manager to quit")
-        }
     }
 
     function clear(){
@@ -78,12 +37,6 @@ ApplicationWindow {
     AboutDialog{
         id:aboutDialog
     }
-//    PreferencesDialog{
-//        id:preferencesDialog
-//        onRejected: {
-//            transaction.unlock();
-//        }
-//    }
 
     HistoryDialog {
         id: historyDialog
@@ -198,13 +151,7 @@ ApplicationWindow {
                         Action {
                             text: "Preferences"
                             onTriggered: {
-                                tryLockAndRun(()=>{
-                                                  JSUtils.connectOnce(transaction.getAuthorizationFinished,(bool)=>{
-                                                                          if(bool)
-                                                                          preferencesDialog.open();
-                                                                      });
-                                                  transaction.startGetAuthorization();
-                                              });
+                                DialogRunner.exec(Qt.resolvedUrl("PreferencesDialog.qml"),{"transaction":transaction})
                             }
                         }
                         Action {
@@ -297,9 +244,11 @@ ApplicationWindow {
                 }
 
             }
+
         }
 
         Page{
+
             anchors{
                 right:parent.right
                 top:parent.top
@@ -317,7 +266,7 @@ ApplicationWindow {
                     transparentBorder: true
                     horizontalOffset: 0
                     verticalOffset: -1
-                    radius: 6
+                    radius: 5
                     color: systemPalette.dark
                 }
 
@@ -334,24 +283,15 @@ ApplicationWindow {
 
             }
         }
-        BottomPanel{
-            Behavior on parent {
-                ParentAnimation{
-                    NumberAnimation{
 
-                    }
-                }
-
-            }
-
-            parent: side?sidePanel:undefined
-            id:bottomPanel
-            anchors{
-                bottom:parent.bottom
-                left:parent.left
-                right:parent.right
-            }
-
+    }
+    BottomPanel{
+        id:bottomPanel
+        anchors{
+            bottom:parent.bottom
+            left:parent.left
+            right:parent.right
         }
+
     }
 }

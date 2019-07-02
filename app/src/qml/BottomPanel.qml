@@ -54,7 +54,7 @@ Pane {
     }
 
     id:bottomPanel
-
+    property bool side:false
 
     states:[
         State{
@@ -96,6 +96,9 @@ Pane {
     ]
     RowLayout{
         Button{
+            id:cancelButton
+            visible: bottomPanel.width>(width+applyButton.width+detailsButton.width)
+
             enabled: !transaction.started
             text:qsTr("Cancel")
             onClicked: {
@@ -167,48 +170,48 @@ Pane {
             }
         }
 
-//        Button{
-//            Layout.preferredWidth:  detailsButtonLabel.paintedWidth+detailsButtonIcon.width+padding*2
-//            padding: 5
-//            checkable: true
-//            enabled: transaction.details!=="" || totalPending!=0
-//            Row{
-//                enabled: parent.enabled
-//                height: parent.height
-//                anchors.centerIn: parent
-//                Image {
-//                    enabled: parent.enabled
-//                    rotation: bottomPanel.state=="expanded"?270:90
-//                    id:detailsButtonIcon
-//                    width: height
-//                    height: parent.height/2
-//                    anchors.verticalCenter: parent.verticalCenter
-//                    source: "image://icon/go-previous"
-//                    Behavior on rotation {
-//                        NumberAnimation{duration: 400}
-//                    }
-//                }
-//                Label{
-//                    enabled: parent.enabled
-//                    anchors.verticalCenter: parent.verticalCenter
-//                    id:detailsButtonLabel
-//                    text:transaction.details!==""?qsTr("Details"):qsTr("Pending")
-//                }
-//            }
-//        }
+        //        Button{
+        //            Layout.preferredWidth:  detailsButtonLabel.paintedWidth+detailsButtonIcon.width+padding*2
+        //            padding: 5
+        //            checkable: true
+        //            enabled: transaction.details!=="" || totalPending!=0
+        //            Row{
+        //                enabled: parent.enabled
+        //                height: parent.height
+        //                anchors.centerIn: parent
+        //                Image {
+        //                    enabled: parent.enabled
+        //                    rotation: bottomPanel.state=="expanded"?270:90
+        //                    id:detailsButtonIcon
+        //                    width: height
+        //                    height: parent.height/2
+        //                    anchors.verticalCenter: parent.verticalCenter
+        //                    source: "image://icon/go-previous"
+        //                    Behavior on rotation {
+        //                        NumberAnimation{duration: 400}
+        //                    }
+        //                }
+        //                Label{
+        //                    enabled: parent.enabled
+        //                    anchors.verticalCenter: parent.verticalCenter
+        //                    id:detailsButtonLabel
+        //                    text:transaction.details!==""?qsTr("Details"):qsTr("Pending")
+        //                }
+        //            }
+        //        }
 
 
 
         Button{
+            id:applyButton
+            visible: bottomPanel.width>(width+cancelButton.width+detailsButton.width)
             enabled: !transaction.started
             text:qsTr("Apply")
             onClicked: {
-                tryLockAndRun(()=>{
-                                  if(!sysUpgrade)
-                                  transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
-                                  else
-                                  transaction.startSysupgrade(true,false,[],[]);
-                              })
+                if(!sysUpgrade)
+                    transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
+                else
+                    transaction.startSysupgrade(true,false,[],[]);
             }
 
         }
@@ -251,9 +254,3 @@ Pane {
         }
     }
 }
-
-
-/*##^## Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
- ##^##*/
