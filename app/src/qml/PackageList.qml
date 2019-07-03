@@ -159,6 +159,8 @@ Table{
             Component{
                 Item {
                     Button{
+
+                        checkable: true
                         anchors.fill: parent
                         anchors.margins: 5
                         text: installedVersion!=""?"Remove":"Install"

@@ -18,10 +18,6 @@ ListView{
             name:qsTr("Repos")
             url:"SideMenuRepos.qml"
         }
-        ListElement{
-            name:qsTr("Installed")
-            url:"SideMenuInstalled.qml"
-        }
     }
     delegate:MenuItemDelegate {
         highlighted: false

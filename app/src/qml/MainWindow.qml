@@ -68,10 +68,10 @@ ApplicationWindow {
         }
         requestCommit: summary=>{
                            console.log(JSON.stringify(summary));
-            let objects = {"summary":summary,"result":undefined}
-            objects =  DialogRunner.exec("qrc:/src/qml/TransactionSummaryDialog.qml",objects);
-            return objects["result"]
-        }
+                           let objects = {"summary":summary,"result":undefined}
+                           objects =  DialogRunner.exec("qrc:/src/qml/TransactionSummaryDialog.qml",objects);
+                           return objects["result"]
+                       }
     }
 
     id: mainWindow
@@ -109,20 +109,20 @@ ApplicationWindow {
                     font.pixelSize: Qt.application.font.pixelSize * 1.4
                     anchors.verticalCenter: parent.verticalCenter
 
-//                    FileDialog{
-//                        id:fileDialog
-//                        title: qsTr("Install Local Packages")
-//                        folder: shortcuts.home
-//                        nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
-//                        onAccepted: {
-//                            for(var i =0;i<fileUrls.length;i++){
-//                                toLoad.push(fileUrls[i].toString());
-//                            }
+                    //                    FileDialog{
+                    //                        id:fileDialog
+                    //                        title: qsTr("Install Local Packages")
+                    //                        folder: shortcuts.home
+                    //                        nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
+                    //                        onAccepted: {
+                    //                            for(var i =0;i<fileUrls.length;i++){
+                    //                                toLoad.push(fileUrls[i].toString());
+                    //                            }
 
-//                            tryLockAndRun(()=>{transaction.start([],[],toLoad,[],[],[])});
+                    //                            tryLockAndRun(()=>{transaction.start([],[],toLoad,[],[],[])});
 
-//                        }
-//                    }
+                    //                        }
+                    //                    }
                     Menu {
                         onClosed: toolButton1.checked=false
 
@@ -220,7 +220,14 @@ ApplicationWindow {
                     source: "image://icon/go-previous"
                 }
                 Behavior on anchors.topMargin {
-                    NumberAnimation{
+                    SequentialAnimation{
+
+                        PauseAnimation {
+                            duration: 300
+                        }
+                        NumberAnimation{
+                            duration: 150
+                        }
                     }
                 }
 

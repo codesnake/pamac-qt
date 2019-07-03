@@ -56,7 +56,7 @@ ToolBar {
         width: height
         icon.name: "go-previous"
         font.pixelSize: Qt.application.font.pixelSize * 1.4
-        enabled: stackView.depth > 1
+        enabled: stackView.depth > 1 && stackView.currentItem.objectName !== "updatesPage"
         visible: enabled
         state:visible?"visible":"hidden"
         onClicked: {
@@ -74,35 +74,58 @@ ToolBar {
         anchors.left: toolButton.right
         anchors.verticalCenter: parent.verticalCenter
     }
-    Button{
-        checkable: true
-        checked: stackView.currentItem.objectName=="updatesPage"
-        id:updatesButton
-        flat:true
-        icon.name: "update-none"
-        icon.height: 20
-        icon.width:icon.height
+    Row{
+        id:toolButtonsRow
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        property int updatesCount:-1
-        text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
-        onClicked: {
-
-            if(stackView.currentItem.objectName=="updatesPage"){
-                stackView.pop();
-            } else{
-                showUpdates();
+        Button{
+            visible:  stackView.currentItem.objectName!="updatesPage"
+            id:installedButton
+            checkable: true
+            checked: drawer.currentItem.objectName == "sideMenuInstalled"
+            flat: true
+            text: qsTr("Installed")
+            icon.name: "dropboxstatus-logo"
+            icon.height: 20
+            icon.width:icon.height
+            property var prevSideMenuState
+            onClicked: {
+                if(checked){
+                    prevSideMenuState = drawer.currentItem;
+                    drawer.push("SideMenuInstalled.qml");
+                }
+                else{
+                    drawer.pop(prevSideMenuState);
+                }
             }
         }
-        Component.onCompleted: {
-            Database.getUpdatesAsync();
-        }
-        Connections{
-            target: Database
-            onUpdatesReady: {
-                updatesButton.updatesCount = upds.getReposUpdates().size
+
+        Button{
+            checkable: true
+            checked: stackView.currentItem.objectName=="updatesPage"
+            id:updatesButton
+            flat:true
+            icon.name: updatesCount<1?"update-none":"update-medium"
+            icon.height: 20
+            icon.width:icon.height
+            property int updatesCount:-1
+            text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
+            onCheckedChanged: {
+                if(checked)
+                    showUpdates();
+                else{
+                    stackView.pop();
+                }
+            }
+            Component.onCompleted: {
+                Database.getUpdatesAsync();
+            }
+            Connections{
+                target: Database
+                onUpdatesReady: {
+                    updatesButton.updatesCount = upds.getReposUpdates().size
+                }
             }
         }
     }
-
 }
