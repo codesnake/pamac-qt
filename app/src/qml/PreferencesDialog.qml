@@ -12,6 +12,7 @@ Page{
     signal dialogAccepted
     signal dialogRejected
     signal dialogApplied
+    signal close
     SystemPalette{
         id:systemPalette
     }
@@ -37,14 +38,14 @@ Page{
 
     onDialogAccepted: {
         applySettings();
-        Qt.quit();
+        close();
     }
     onDialogApplied: {
         applySettings();
     }
 
     onDialogRejected: {
-        Qt.quit();
+        close()
     }
 
     id: item1

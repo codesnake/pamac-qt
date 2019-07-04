@@ -7,6 +7,7 @@ import QtQuick.Shapes 1.11
 Pane{
     padding: 0
     property var model
+    property var view: table
     contentHeight: table.contentHeight
 
     background: Rectangle{

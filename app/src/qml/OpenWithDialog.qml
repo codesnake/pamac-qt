@@ -5,5 +5,8 @@ ApplicationWindow {
     width: 250
     height: 150
     visible: true
-
+    PagePackageInfo{
+        anchors.fill: parent
+        objectName: "openWithPackageInfo"
+    }
 }

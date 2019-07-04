@@ -73,11 +73,12 @@ Page{
     signal dialogAccepted
     onDialogAccepted: {
         result = true;
-        Qt.quit();
+        close();
     }
     onDialogRejected: {
         result = false;
-        Qt.quit();
+        close();
     }
     signal dialogRejected
+    signal close
 }

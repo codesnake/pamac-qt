@@ -13,7 +13,7 @@ QmlDialogRunner::QmlDialogRunner(QObject* parent) : QObject(parent)
 QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,QVariantMap propertiesMap)
 {
     CloseEventFilter filter;
-    QQuickView view;
+    QQuickView view(static_cast<QQmlEngine*>(parent()),nullptr);
     view.installEventFilter(&filter);
     view.setSource(qmlFile);
     view.show();
@@ -24,7 +24,7 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,QVariantMap propertiesMap)
     for (auto it = propertiesMap.keyValueBegin();it!=propertiesMap.keyValueEnd();++it) {
         object->setProperty((*it).first.toUtf8(),(*it).second);
     }
-    connect(view.engine(),&QQmlEngine::quit,&view,&QQuickView::close);
+    connect(object,SIGNAL(close()),&view,SLOT(close()));
     QEventLoop loop;
     connect(&filter,&CloseEventFilter::closing,&loop,&QEventLoop::quit);
     loop.exec();

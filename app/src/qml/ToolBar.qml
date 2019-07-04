@@ -110,7 +110,7 @@ ToolBar {
             icon.width:icon.height
             property int updatesCount:-1
             text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
-            onCheckedChanged: {
+            onClicked: {
                 if(checked)
                     showUpdates();
                 else{

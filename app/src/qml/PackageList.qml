@@ -208,6 +208,8 @@ Table{
     onPackageListChanged: {
         opacity = 1;
         list.selectedRows = [];
+        view.contentY=0;
+
         if(stackView.depth>1 && stackView.currentItem.objectName!="updatesPage"){
             stackView.pop(this);
         }
