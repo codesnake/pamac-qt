@@ -18,7 +18,7 @@ namespace Utils {
     Q_PROPERTY(QDateTime name READ name CONSTANT)\
     inline QDateTime name()\
 {\
-    return QDateTime::fromMSecsSinceEpoch(qint64(method));\
+    return QDateTime::fromTime_t(method);\
     }
 #define PAMAC_QT_STRING_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(QString getName READ getName WRITE setName)\

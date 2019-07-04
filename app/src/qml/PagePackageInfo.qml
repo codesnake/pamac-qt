@@ -296,7 +296,7 @@ Page {
                         Label {
                             id: label13
                             y: -5
-                            text: pkg.buildDate
+                            text: pkg.buildDate.toLocaleDateString(undefined,"dd.MM.yyyy")
                         }
                         Label {
                             id: label7
@@ -308,7 +308,7 @@ Page {
                         Label {
                             id: label14
                             y: -5
-                            text: pkg.installDate
+                            text: pkg.installDate.toLocaleDateString(undefined,"dd.MM.yyyy")
                             visible: false
                         }
                         Label {
