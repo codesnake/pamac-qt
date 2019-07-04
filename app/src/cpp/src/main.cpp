@@ -19,9 +19,9 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    QApplication::setOrganizationName("Artem Grinev");
+    QApplication::setOrganizationName("LordTermor");
     QApplication::setApplicationName("Pamac-Qt");
-    //    QApplication::setApplicationVersion(QString(VERSION));
+        QApplication::setApplicationVersion(QString(VERSION));
     QApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
