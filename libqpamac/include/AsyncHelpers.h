@@ -21,6 +21,7 @@ private:
 struct GenericQmlFuture{
     friend class QmlFutureWatcher;
     Q_GADGET
+
 public:
     GenericQmlFuture(QmlFutureImpl* implementation);
     GenericQmlFuture()=default;
@@ -44,14 +45,18 @@ class QmlFuture:public GenericQmlFuture{
     QmlFuture(QmlFutureImpl* implementation):GenericQmlFuture(implementation){}
 };
 Q_DECLARE_METATYPE(GenericQmlFuture)
+
 class QmlFutureWatcher:public QQuickItem{
     Q_OBJECT
     Q_PROPERTY(GenericQmlFuture future READ future WRITE setFuture NOTIFY futureChanged)
+    Q_PROPERTY(bool running MEMBER m_running)
 public:
     explicit QmlFutureWatcher(QQuickItem* parent = nullptr):
         QQuickItem (parent)
     {
         connect(this,&QmlFutureWatcher::finished,this,&QmlFutureWatcher::reset);QGuiApplication::restoreOverrideCursor();
+
+
     }
     GenericQmlFuture future() const
     {
@@ -73,12 +78,14 @@ public Q_SLOTS:
         future.setWatcher(this);
 
         Q_EMIT futureChanged(future);
+        this->setProperty("running",true);
 
         if(!future.isRunning()) {
             Q_EMIT finished(future.result());
         }
     }
     inline Q_INVOKABLE void reset(){
+        this->setProperty("running",false);
         m_future = GenericQmlFuture();
 
         while(QGuiApplication::overrideCursor()!=nullptr){
@@ -90,4 +97,5 @@ Q_SIGNALS:
     void futureChanged(GenericQmlFuture future);
 private:
     GenericQmlFuture m_future;
+    bool m_running;
 };

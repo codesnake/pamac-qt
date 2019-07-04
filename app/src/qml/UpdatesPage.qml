@@ -5,6 +5,7 @@ import QPamac.Database 1.0
 import QPamac.Package 1.0
 Page {
     SideBar{
+        visible: updates!==undefined
         states: [
             State{
                 name:"opened"
@@ -57,7 +58,7 @@ Page {
         }
     }
 
-    title: "Updates"
+    title: qsTr("Updates")
     objectName: "updatesPage"
     property var updates
 

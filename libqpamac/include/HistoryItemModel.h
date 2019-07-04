@@ -97,6 +97,13 @@ public:
     {
         return {{Qt::DisplayRole,"modelData"}};
     }
+
+    // QAbstractItemModel interface
+public:
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+private:
+    QStringList list = {"Date","Name","Action","Size"};
+    QList<QVariant> sizeList = {"fill","fill","fill","fill"};
 };
 
 }//namespace LibQPamac

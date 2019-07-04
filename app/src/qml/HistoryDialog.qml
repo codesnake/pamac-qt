@@ -17,21 +17,15 @@ Window{
     Pane{
         padding: 3
         anchors.fill: parent
-        TableView{
-            ScrollBar.vertical: ScrollBar{
-                visible: true
-            }
+        Table{
 
             anchors.fill: parent
             model:HistoryModel{
                 historyList: Database.getHistory()
             }
-            columnWidthProvider:(column)=>{
-                return columnWidths[column];
-            }
-            rowHeightProvider: 25
-            reuseItems:false
+
             delegate: Pane{
+                height: 25
                 clip: true
                 background: Rectangle{
                     border.color: systemPalette.mid

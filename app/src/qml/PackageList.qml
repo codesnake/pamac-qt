@@ -22,9 +22,32 @@ Table{
             }
         }
     }
+    showHeader: packageList.length>0
+
+    Column{
+        width: implicitWidth
+        height: implicitHeight
+        anchors.centerIn: parent
+        visible: packageList.length==0
+        spacing: 3
+        Image {
+            width: parent.width/2
+            height: width
+            source: "image://icons/package-x-generic"
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Label{
+            id:progress
+            text:qsTr("This category is empty")
+            font.weight: Font.Bold
+            font.pointSize: 12
+        }
+    }
+
     id:list
     property var hoveredRow:-1
     delegate: LoaderDelegate{
+
 
         background: Rectangle{
 
@@ -67,18 +90,28 @@ Table{
 
 
         function packageAction(){
+            let el;
+            if(installedVersion!=""){
+                el = toRemove.indexOf(name);
+                if(el!==-1){
+                    toRemove.splice(el,1)
+                    toRemoveChanged();
+                }
+                else{
+                    toRemove.push(name);
+                    toRemoveChanged();
+                }
+            } else{
+                el = toInstall.indexOf(name);
+                if(el!==-1){
+                    toInstall.splice(el,1)
+                    toInstallChanged();
+                }
+                else{
+                    toInstall.push(name);
+                    toInstallChanged();
+                }
 
-            const arr = installedVersion!=""?toRemove:toInstall;
-
-            if(arr.indexOf(name)!=-1){
-                arr.filter(item => item !== name)
-                toRemoveChanged();
-                toInstallChanged();
-            }
-            else{
-                arr.push(name);
-                toRemoveChanged();
-                toInstallChanged();
             }
         }
 
@@ -173,9 +206,17 @@ Table{
     }
     clip:true
     onPackageListChanged: {
+        opacity = 1;
         list.selectedRows = [];
         if(stackView.depth>1 && stackView.currentItem.objectName!="updatesPage"){
             stackView.pop(this);
         }
+    }
+    onPackageListFutureChanged: {
+        opacity = 0;
+    }
+
+    Behavior on opacity {
+        NumberAnimation{}
     }
 }

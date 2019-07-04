@@ -38,3 +38,17 @@ QList<HistoryItem> HistoryItem::fromStringList(const QStringList &list){
 }
 
 } //namespace LibQPamac
+
+
+QVariant LibQPamac::HistoryItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    switch (role) {
+    case Qt::DisplayRole:
+        return list[section];
+
+    case Qt::SizeHintRole:
+        return sizeList[section];
+
+    }
+    return QVariant::Invalid;
+}

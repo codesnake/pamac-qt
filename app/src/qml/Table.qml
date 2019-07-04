@@ -15,6 +15,7 @@ Pane{
     id:tableRoot
 
     Header {
+        visible: showHeader
         anchors{
             top:parent.top
             left:parent.left
@@ -30,6 +31,7 @@ Pane{
             table.forceLayout();
         }
     }
+    property bool showHeader
     property alias delegate: table.delegate
     property var selectedRows: []
 

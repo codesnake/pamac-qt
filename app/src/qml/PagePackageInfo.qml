@@ -409,6 +409,7 @@ Page {
                     model:Database.getPkgFiles(pkg.name)
                     boundsBehavior: Flickable.StopAtBounds
                     delegate: TextEdit {
+                        color: systemPalette.text
                         text: modelData
                         readOnly: true
                         wrapMode: Text.WordWrap

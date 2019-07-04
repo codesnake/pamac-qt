@@ -66,6 +66,10 @@ ApplicationWindow {
         onProgressChanged: {
             NotificationService.setProgress(progress);
         }
+        onActionChanged: {
+            mainWindow.title = action
+        }
+
         requestCommit: summary=>{
                            console.log(JSON.stringify(summary));
                            let objects = {"summary":summary,"result":undefined}
