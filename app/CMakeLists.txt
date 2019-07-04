@@ -13,4 +13,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC "src/cpp/include")
 target_link_libraries(${PROJECT_NAME} libqpamac)
 target_link_libraries(${PROJECT_NAME} qtnotificationservice)
 
-qt5_use_modules(${PROJECT_NAME} Core Qml Quick QuickControls2)
+qt5_use_modules(${PROJECT_NAME} Core Qml Quick QuickControls2 Widgets)

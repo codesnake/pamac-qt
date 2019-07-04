@@ -9,4 +9,4 @@ file(GLOB notificationservices_src
 add_library(${PROJECT_NAME} ${notificationservices_src})
 set_target_properties(${PROJECT_NAME} PROPERTIES AUTOMOC TRUE)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-qt5_use_modules(${PROJECT_NAME} Core DBus)
+qt5_use_modules(${PROJECT_NAME} Core DBus Widgets)

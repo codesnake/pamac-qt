@@ -13,9 +13,9 @@ import "../js/JSUtils.js" as JSUtils
 
 ApplicationWindow {
     function showUpdates(){
-        stackView.push("UpdatesPage.qml");
-    }
-
+        if(stackView.currentItem.objectName!=="updatesPage")
+            stackView.push("UpdatesPage.qml");
+   }
 
     onClosing: {
         if(transaction.started)
@@ -66,8 +66,9 @@ ApplicationWindow {
         onProgressChanged: {
             NotificationService.setProgress(progress);
         }
-        onActionChanged: {
-            mainWindow.title = action
+
+        onEmitAction: {
+            NotificationService.setMessage(emitAction);
         }
 
         requestCommit: summary=>{
@@ -304,5 +305,8 @@ ApplicationWindow {
             right:parent.right
         }
 
+    }
+    Component.onCompleted: {
+        NotificationService;
     }
 }

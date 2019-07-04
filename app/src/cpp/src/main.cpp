@@ -1,4 +1,5 @@
-#include <QGuiApplication>
+#include <Config.h>
+#include <QApplication>
 #include <QQmlContext>
 #include <QQuickStyle>
 #include <QtQuickControls2>
@@ -14,15 +15,15 @@ static QQmlDebuggingEnabler enabler;
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-    QGuiApplication::setOrganizationName("Artem Grinev");
-    QGuiApplication::setApplicationName("Pamac-Qt");
-    //    QGuiApplication::setApplicationVersion(QString(VERSION));
-    QGuiApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QApplication::setOrganizationName("Artem Grinev");
+    QApplication::setApplicationName("Pamac-Qt");
+    //    QApplication::setApplicationVersion(QString(VERSION));
+    QApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QCommandLineParser parser;
     parser.addHelpOption();
@@ -49,9 +50,33 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType<NotificationService>("NotificationService",1,0,"NotificationService",
                                                   [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
         Q_UNUSED(scriptEngine)
+        auto qmlApplicationEngine = qobject_cast<QQmlApplicationEngine*>(engine);
+        auto showAction = new QAction("Show");
+        auto exitAction = new QAction("Exit");
+        auto updatesAction = new QAction("Show Updates");
+        auto icon = new QSystemTrayIcon(engine);
 
 
-        return NotificationService::createDefault(engine);
+
+        QObject::connect(updatesAction,&QAction::triggered,engine,[=](){
+            showAction->trigger();
+            QMetaObject::invokeMethod(qmlApplicationEngine->rootObjects()[0],"showUpdates");
+        });
+        QObject::connect(showAction,&QAction::triggered,engine,[=](){QMetaObject::invokeMethod(qmlApplicationEngine->rootObjects()[0],"show");});
+        QObject::connect(exitAction,&QAction::triggered,engine,[=](){engine->quit();});
+
+        auto menu = new QMenu("Main");
+        menu->addActions({
+                             showAction,
+                             updatesAction,
+                             exitAction
+                         });
+        icon->setIcon(QIcon::fromTheme("system-software-install"));
+        icon->setContextMenu(menu);
+        icon->setToolTip("Package management tool");
+        return NotificationService::NotificationServiceBuilder()
+                .probeDBus()
+                ->addTrayIcon(icon)->build(engine);
     });
     qmlRegisterSingletonType<QmlDialogRunner>("DialogRunner",1,0,"DialogRunner",
                                               [](QQmlEngine *engine, QJSEngine *scriptEngine)->QObject*{
@@ -75,6 +100,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    return QGuiApplication::exec();
+    return QApplication::exec();
 
 }
