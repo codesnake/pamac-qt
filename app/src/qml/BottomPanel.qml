@@ -95,26 +95,7 @@ Pane {
         }
     ]
     RowLayout{
-        Button{
-            id:cancelButton
-            visible: bottomPanel.width>(width+applyButton.width+detailsButton.width)
 
-            enabled: !transaction.started
-            text:qsTr("Cancel")
-            onClicked: {
-                if(sysUpgrade){
-                    stackView.pop();
-                }
-
-                toInstall = [];
-                toRemove = [];
-                toBuild=[];
-                toLoad=[];
-            }
-        }
-        anchors.margins: 5
-        id:row
-        width: parent.width
 
         ItemDelegate{
             id:detailsButton
@@ -200,7 +181,23 @@ Pane {
         //            }
         //        }
 
+        Button{
+            id:cancelButton
+            visible: bottomPanel.width>(width+applyButton.width+detailsButton.width)
 
+            enabled: !transaction.started
+            text:qsTr("Cancel")
+            onClicked: {
+                if(sysUpgrade){
+                    stackView.pop();
+                }
+
+                toInstall = toRemove = toBuild = toLoad = [];
+            }
+        }
+        anchors.margins: 5
+        id:row
+        width: parent.width
 
         Button{
             id:applyButton
@@ -227,10 +224,29 @@ Pane {
         property list<Component> pages:[
             Component{
                 id:pendingComponent
-                PackageList{
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    packageList: Database.getPending(toInstall,toRemove)
+                Pane{
+                    padding: 0
+                    SideBar{
+                        width: toBuild.length>0?undefined:0
+                        id:sideMenuPending
+                        initialItem:SideMenuPending{
+
+                            anchors{
+                                left:parent.left
+                                bottom: parent.bottom
+                                top:parent.top
+                            }
+                        }
+                    }
+
+                    PackageList{
+
+                        anchors.left: sideMenuPending.right
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        packageList: Database.getPending(toInstall,toRemove)
+                    }
                 }
             },
             Component{

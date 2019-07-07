@@ -17,7 +17,6 @@ ListView{
     }
     delegate:MenuItemDelegate {
         text: name
-        height:(!Database.config.enableAur && index==Database.AUR)?-spacing:35
         onClicked:{
             currentIndex=index
             if(index==Database.Repos){
@@ -25,13 +24,6 @@ ListView{
             } else{
                 mainView.packageList = undefined
             }
-        }
-    }
-    StackView.onActivating: {
-        if(currentIndex==Database.Repos){
-            mainView.packageList= Database.getPending(toInstall,toRemove);
-        } else{
-            mainView.packageList = undefined
         }
     }
 }
