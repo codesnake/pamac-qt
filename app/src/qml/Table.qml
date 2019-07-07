@@ -29,8 +29,14 @@ Pane{
         height: 20
         model: tableRoot.model
         onWidthChanged: {
-            table.forceLayout();
-        }
+            for(let row =0;row<table.rows;row++) {
+                for(let column =0;column<table.columns;column++) {
+//                    table.contentItem.children[row*table.columns+column].width = header.getColumnWidth(column);
+                    table.update();
+                    table.forceLayout();
+
+                }
+            }        }
     }
     property bool showHeader
     property alias delegate: table.delegate
