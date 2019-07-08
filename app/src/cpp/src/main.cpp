@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
     QApplication::setOrganizationName("LordTermor");
     QApplication::setApplicationName("Pamac-Qt");
-        QApplication::setApplicationVersion(QString(VERSION));
+    QApplication::setApplicationVersion(QString(VERSION));
     QApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
         });
         QObject::connect(showAction,&QAction::triggered,engine,[=](){QMetaObject::invokeMethod(qmlApplicationEngine->rootObjects()[0],"show");});
         QObject::connect(exitAction,&QAction::triggered,engine,[=](){engine->quit();});
+        QObject::connect(icon,&QSystemTrayIcon::activated,showAction,&QAction::triggered,Qt::DirectConnection);
 
         auto menu = new QMenu("Main");
         menu->addActions({
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
         icon->setIcon(QIcon::fromTheme("system-software-install"));
         icon->setContextMenu(menu);
         icon->setToolTip("Package management tool");
+
         return NotificationService::NotificationServiceBuilder()
                 .probeDBus()
                 ->addTrayIcon(icon)->build(engine);
@@ -96,10 +98,29 @@ int main(int argc, char *argv[])
         }
     }
 
+    QObject::connect(&engine,&QQmlApplicationEngine::quit,&engine,[&](){
+        QSettings settings;
+        auto list = engine.rootObjects();
+        settings.beginGroup("Window");
+        for(const QByteArray& el : {"x","y","width","height"}){
+            settings.setValue(el,list[0]->property(el));
+        }
+        settings.endGroup();
+        settings.sync();
+    });
+
     if (engine.rootObjects().isEmpty()){
         return -1;
     }
-
+    QSettings settings;
+    auto list = engine.rootObjects();
+    settings.beginGroup("Window");
+    for(const QByteArray& el : {"x","y","width","height"}){
+        QVariant setting;
+        if((setting = settings.value(el,QVariant::Invalid))!=QVariant::Invalid){
+            list[0]->setProperty(el,settings.value(el));
+        }
+    }
     return QApplication::exec();
 
 }
