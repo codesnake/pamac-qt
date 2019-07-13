@@ -14,7 +14,10 @@ file(GLOB qpamac_src
 )
 
 add_library(${PROJECT_NAME} SHARED ${qpamac_src})
-set_target_properties(${PROJECT_NAME} PROPERTIES AUTOMOC TRUE)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+                                    AUTOMOC TRUE
+                                    CXX_STANDARD 17
+                                    CXX_EXTENSIONS ON)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 target_link_libraries(${PROJECT_NAME} ${GLIB2_LIBRARIES} ${PAMAC_LIBRARIES})

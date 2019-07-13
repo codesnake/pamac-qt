@@ -40,7 +40,7 @@ extern "C"{
     }\
     }
 namespace LibQPamac {
-class Database:public QObject,public PamacDatabase
+class Database:public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Config config READ config WRITE setConfig NOTIFY configChanged)
@@ -96,6 +96,9 @@ public:
     {
         return m_config;
     }
+    PamacDatabase* getHandle(){
+        return handle;
+    }
 
     Q_INVOKABLE QStringList getMirrorsCountries();
     Q_INVOKABLE QString getMirrorsChoosenCountry();
@@ -114,7 +117,7 @@ public:
     bool getCheckspace();
 
     inline void refresh(){
-        pamac_database_refresh(this);
+        pamac_database_refresh(handle);
     }
     Q_INVOKABLE QList<HistoryItem> getHistory();
 
@@ -134,6 +137,7 @@ Q_SIGNALS:
 
 
 private:
+    PamacDatabase* handle;
     void init();
     Config m_config;
     bool m_asynchronous;

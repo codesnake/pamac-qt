@@ -3,9 +3,11 @@
 #include <QGuiApplication>
 #include <QCursor>
 #include <memory>
+#include <mutex>
 class QmlFutureWatcher;
 class Database;
 struct QmlFutureImpl{
+    std::mutex mutex;
     friend struct GenericQmlFuture;
     void setFuture(QVariant future);
 
@@ -39,11 +41,6 @@ private:
     }
     std::shared_ptr<QmlFutureImpl> implementation;
 };
-template<class T>
-class QmlFuture:public GenericQmlFuture{
-    T result() const;
-    QmlFuture(QmlFutureImpl* implementation):GenericQmlFuture(implementation){}
-};
 Q_DECLARE_METATYPE(GenericQmlFuture)
 
 class QmlFutureWatcher:public QQuickItem{
@@ -64,29 +61,10 @@ public:
     }
 
 public Q_SLOTS:
-    void setFuture(GenericQmlFuture future)
-    {
-
-        if (m_future.implementation == future.implementation) {
-            return;
-        }
-        if(m_future.implementation!=nullptr){
-            m_future.setWatcher(nullptr);
-        }
-        QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-        future.setWatcher(this);
-
-        Q_EMIT futureChanged(future);
-        this->setProperty("running",true);
-
-        if(!future.isRunning()) {
-            Q_EMIT finished(future.result());
-        }
-    }
+    void setFuture(GenericQmlFuture future);
     inline Q_INVOKABLE void reset(){
         this->setProperty("running",false);
-        m_future = GenericQmlFuture();
+
 
         while(QGuiApplication::overrideCursor()!=nullptr){
             QGuiApplication::restoreOverrideCursor();

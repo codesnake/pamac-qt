@@ -16,32 +16,32 @@ class TransactionSummary{
     Q_PROPERTY(RepoPackageList toUpgrade READ toUpgrade CONSTANT)
 
 public:
-    TransactionSummary(PamacTransactionSummary* s):summary(std::shared_ptr<PamacTransactionSummary>(s,g_object_unref)){}
+    TransactionSummary(PamacTransactionSummary* s):summary(s){}
     TransactionSummary()=default;
     RepoPackageList toInstall() const{
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_install(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_install(summary));
     }
     RepoPackageList toRemove() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_remove(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_remove(summary));
     }
     RepoPackageList toReinstall() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_reinstall(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_reinstall(summary));
     }
     RepoPackageList toBuild() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_build(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_build(summary));
     }
     RepoPackageList toUpgrade() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_upgrade(summary.get()));
+        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_upgrade(summary));
     }
 private:
-    std::shared_ptr<PamacTransactionSummary> summary;
+    PamacTransactionSummary* summary;
 
 };
-class Transaction : public QObject,public PamacTransaction
+class Transaction : public QObject
 {
 
     Q_OBJECT
@@ -59,11 +59,11 @@ class Transaction : public QObject,public PamacTransaction
 public:
     Transaction(QObject * parent = nullptr):QObject(parent){}
     Q_INVOKABLE void startGetAuthorization(){
-        pamac_transaction_start_get_authorization(this);
+        pamac_transaction_start_get_authorization(m_handle);
     }
 
     inline Q_INVOKABLE void getAuthorization(){
-        pamac_transaction_start_get_authorization(this);
+        pamac_transaction_start_get_authorization(m_handle);
     }
     Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
     Q_INVOKABLE void startWriteAlpmConfig(const QVariantMap &map);
@@ -76,13 +76,13 @@ public:
     }
 
     Q_INVOKABLE void startGenerateMirrorsList(const QString& country = "all"){
-        pamac_transaction_start_generate_mirrors_list(this,country.toUtf8());
+        pamac_transaction_start_generate_mirrors_list(m_handle,country.toUtf8());
     }
     Q_INVOKABLE void cleanCache(int cleanKeepNumPkgs,bool cleanRmOnlyInstalled){
-        pamac_transaction_start_clean_cache(this,uint64_t(cleanKeepNumPkgs),gboolean(cleanRmOnlyInstalled));
+        pamac_transaction_start_clean_cache(m_handle,uint64_t(cleanKeepNumPkgs),gboolean(cleanRmOnlyInstalled));
     }
     Q_INVOKABLE void quitDaemon(){
-        pamac_transaction_quit_daemon(this);
+        pamac_transaction_quit_daemon(m_handle);
     }
 
     Q_INVOKABLE void start(const QStringList& toInstall = QStringList(), const QStringList& toRemove = QStringList(), const QStringList& toLoad = QStringList(),
@@ -111,15 +111,15 @@ public Q_SLOTS:
     void setRequestImportKey(const QJSValue& requestImportKey)
     {
         if(requestImportKey.isCallable()) {
-        m_requestImportKey = requestImportKey;
-}
+            m_requestImportKey = requestImportKey;
+        }
     }
 
     void setRequestChooseProvider(const QJSValue& requestChooseProvider)
     {
         if(requestChooseProvider.isCallable()) {
-        m_requestChooseProvider = requestChooseProvider;
-}
+            m_requestChooseProvider = requestChooseProvider;
+        }
     }
 
 Q_SIGNALS:
@@ -135,6 +135,22 @@ Q_SIGNALS:
     void importantDetailsOutput(bool imporant);
     void writeAlpmConfigFinished();
     void writePamacConfigFinished();
+
+    void startWaiting ();
+    void stopWaiting ();
+    void startDownloading ();
+    void stopDownloading ();
+    void startBuilding ();
+    void stopBuilding ();
+    void sysupgradeFinished (bool success);
+    void setPkgreasonFinished ();
+    void startGeneratingMirrorsList ();
+    void generateMirrorsListFinished ();
+    void cleanCacheFinished ();
+    void cleanBuildFilesFinished ();
+    void downloadingUpdatesFinished();
+
+
 
     void databaseChanged(Database* database);
 
@@ -152,6 +168,7 @@ Q_SIGNALS:
 private:
     void init();
     Database* m_database = nullptr;
+    PamacTransaction* m_handle;
 
     QString m_action;
     double m_progress = 0;

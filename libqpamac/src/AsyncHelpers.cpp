@@ -41,3 +41,24 @@ void GenericQmlFuture::setRunning(bool isRunning)
     implementation->m_isRunning = isRunning;
 }
 
+
+void QmlFutureWatcher::setFuture(GenericQmlFuture future)
+{
+    future.implementation->mutex.lock();
+    if (m_future.implementation == future.implementation) {
+        return;
+    }
+
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    future.setWatcher(this);
+    m_future = future;
+
+    Q_EMIT futureChanged(future);
+    this->setProperty("running",true);
+
+    if(!future.isRunning()) {
+        Q_EMIT finished(future.result());
+    }
+    future.implementation->mutex.unlock();
+}

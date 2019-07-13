@@ -51,6 +51,8 @@ class HistoryItemModel : public QAbstractTableModel
 {
     Q_OBJECT
     Q_PROPERTY(QList<HistoryItem> historyList READ historyList WRITE setHistoryList NOTIFY historyListChanged)
+    Q_PROPERTY(int columnCount READ columnCount CONSTANT)
+    Q_PROPERTY(int rowCount READ rowCount CONSTANT)
 public:
     explicit HistoryItemModel(QObject *parent = nullptr);
 
@@ -62,12 +64,12 @@ private:
 
     // QAbstractItemModel interface
 public:
-    int rowCount(const QModelIndex &parent) const override
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override
     {
         Q_UNUSED(parent);
         return m_historyList.length();
     }
-    int columnCount(const QModelIndex &parent) const override
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override
     {
         Q_UNUSED(parent);
         return 4;
@@ -100,7 +102,7 @@ public:
 
     // QAbstractItemModel interface
 public:
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    Q_INVOKABLE QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 private:
     QStringList list = {"Date","Name","Action","Size"};
     QList<QVariant> sizeList = {"fill","fill","fill","fill"};
