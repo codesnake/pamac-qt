@@ -34,11 +34,11 @@ RepoPackageDetails Database::getPkgDetails(const QString &pkgname, const QString
 GenericQmlFuture Database::getAurPkgDetails(const QString &pkgname)
 {
     auto future = new QmlFutureImpl;
-    pamac_database_get_aur_pkg_details(handle,pkgname.toUtf8(),Utils::cify([=](GObject* parent,GAsyncResult* result,void*){
-        return  futureWrapFunction<AURPackageDetails()>(future,[=](){
+    pamac_database_get_aur_pkg_details(handle,pkgname.toUtf8(),Utils::cify([](GObject* parent,GAsyncResult* result,void* future){
+        return  futureWrapFunction<AURPackageDetails()>(reinterpret_cast<QmlFutureImpl*>(future),[=](){
             return AURPackageDetails(pamac_database_get_aur_pkg_details_finish(reinterpret_cast<PamacDatabase*>(parent),result));
         });
-    }),nullptr);
+    }),future);
     return GenericQmlFuture(future);
 
 }

@@ -307,6 +307,8 @@ ApplicationWindow {
 
     }
     Component.onCompleted: {
+        //Init signleton
         NotificationService;
+
     }
 }

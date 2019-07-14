@@ -36,7 +36,8 @@ Pane{
                     table.forceLayout();
 
                 }
-            }        }
+            }
+        }
     }
     property bool showHeader
     property alias delegate: table.delegate

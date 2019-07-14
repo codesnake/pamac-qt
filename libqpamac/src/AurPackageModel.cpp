@@ -81,3 +81,18 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
 
     endResetModel();
 }
+
+
+QVariant LibQPamac::AurPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+
+    switch (role) {
+    case Qt::DisplayRole:
+        return list[section];
+
+    case Qt::SizeHintRole:
+        return sizeList[section];
+
+    }
+    return QVariant::Invalid;
+}

@@ -7,21 +7,34 @@ import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
 import QPamac.Async 1.0
+import QPamac.AUR.PackageModel 1.0
 import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
 
 Table{
-    property alias packageList:packageModel.packageList
+    property var packageList
     property alias packageListFuture:packageModelWatcher.future
-    model: PackageModel{
-        id:packageModel
-        property var watcher: FutureWatcher{
-            id:packageModelWatcher
-            onFinished: {
-                packageModel.packageList = result;
-            }
+
+    model: list.packageList.packageType()==="Repo"?repoPackageModel:aurPackageModel
+
+    PackageModel{
+        id:repoPackageModel
+        packageList: list.packageList
+    }
+
+    AURPackageModel{
+        id:aurPackageModel
+        packageList: list.packageList
+    }
+
+    property var watcher: FutureWatcher{
+        id:packageModelWatcher
+        onFinished: {
+            list.packageList = result;
         }
     }
+
+
     showHeader: packageList.length>0
 
     Column{
@@ -73,7 +86,10 @@ Table{
                 hoveredRow=-1
         }
         onDoubleClicked: {
+            if( list.packageList.packageType()==="Repo")
             stackView.push("PagePackageInfo.qml",{pkg:Database.getPkgDetails(name,appName,false)})
+            else
+                stackView.push("PageAURPackageInfo.qml",{packageFuture:Database.getAurPkgDetails(name)})
         }
         onClicked: {
             list.selectedRows = [];
@@ -90,7 +106,9 @@ Table{
 
 
         function packageAction(){
+
             let el;
+            if(list.packageList.packageType()==="Repo")
             if(installedVersion!=""){
                 el = toRemove.indexOf(name);
                 if(el!==-1){
@@ -113,12 +131,35 @@ Table{
                 }
 
             }
+            else{
+                if(installedVersion!=""){
+                    el = toRemove.indexOf(name);
+                    if(el!==-1){
+                        toRemove.splice(el,1)
+                        toRemoveChanged();
+                    }
+                    else{
+                        toRemove.push(name);
+                        toRemoveChanged();
+                    }
+                } else{
+                    el = toBuild.indexOf(name);
+                    if(el!==-1){
+                        toBuild.splice(el,1)
+                        toBuildChanged();
+                    }
+                    else{
+                        toBuild.push(name);
+                        toBuildChanged();
+                    }
+
+                }
+            }
         }
 
 
 
         function isPending(){
-
             if(installedVersion!=""){
                 if(toRemove.indexOf(name)!=-1){
                     return true
@@ -126,17 +167,24 @@ Table{
 
                 return false
             }
-
+            if(list.packageList.packageType()==="Repo"){
             if(toInstall.indexOf(name)!=-1){
                 return true
             } else {
                 return false
             }
+        }
+            else{
+                if(toBuild.indexOf(name)!=-1){
+                    return true
+                } else {
+                    return false
+                }
+            }
 
         }
-
-        columns: [
-
+        columns: list.packageList.packageType()==="Repo"?repoColumns:aurColumns
+        property list<Component> repoColumns: [
             Component{
                 Row{
                     anchors.left: parent.left
@@ -150,17 +198,17 @@ Table{
                         height: width
                         source:iconUrl.toString().length?Qt.resolvedUrl("file://"+iconUrl):"image://icons/package-x-generic"
                     }
-                    
+
                     Column{
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width-packageIcon.width-5
                         Label {
-                            
+
                             width:parent.width
                             text:appName?appName+" ("+name+")":name
                             font.weight: Font.Bold
                             font.bold: true
-                            
+
                             elide: Text.ElideRight
                         }
                         Label {
@@ -203,6 +251,61 @@ Table{
                 }
             }
         ]
+        property list<Component> aurColumns:[
+
+
+            Component{
+                Row{
+                    height: parent.height
+                    spacing: 5
+                    Image{
+                        anchors.verticalCenter: parent.verticalCenter
+                        id:packageIcon
+                        width: 25
+                        height: width
+                        source:"image://icons/package-x-generic"
+                    }
+
+                    Column{
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width-packageIcon.width-5
+                        Label {
+                            width:parent.width
+                            text:name
+                            font.weight: Font.Bold
+                            font.bold: true
+
+                            elide: Text.ElideRight
+                        }
+                        Label {
+                            width:parent.width
+                            text:desc
+                            elide: Text.ElideRight
+                        }
+                    }
+                }
+            },
+            Component{
+                Label{
+                    clip: true
+                    text:version
+                }
+            },
+            Component{
+                Item {
+                    Button{
+
+                        checkable: true
+                        anchors.fill: parent
+                        anchors.margins: 5
+                        text: installedVersion!=""?"Remove":"Install"
+                        checked: isPending()
+                        onClicked: packageAction()
+                    }
+                }
+            }
+        ]
+
     }
     clip:true
     onPackageListChanged: {

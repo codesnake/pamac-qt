@@ -10,17 +10,20 @@ Rectangle{
     id: header
     function getColumnWidth(index){
         let a = header.model.headerData(index,0,13);
-        if(a!="fill"){
+        if(a!=="fill"){
             return a;
         } else{
+            let fillCount = 0;
             let size = 0;
             for(let i = 0;i<header.model.columnCount;i++){
                 let b = header.model.headerData(i,0,13);
-                if(b!="fill"){
+                if(b!=="fill"){
                     size+=b;
+                } else{
+                    fillCount++;
                 }
             }
-            return header.width-size;
+            return header.width/fillCount-size;
         }
     }
     Row{

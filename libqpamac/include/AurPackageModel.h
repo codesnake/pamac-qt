@@ -9,6 +9,8 @@ class AurPackageModel : public QAbstractTableModel
 {
     Q_OBJECT
     Q_PROPERTY(AURPackageList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
+    Q_PROPERTY(int columnCount READ columnCount CONSTANT)
+
 
 public:
     enum PackageRole {
@@ -28,7 +30,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return 4;
+        return 3;
     }
     inline AURPackageList packageList() const
     {
@@ -52,6 +54,12 @@ Q_SIGNALS:
     void packageListChanged(AURPackageList packageList);
 
 private:
+    QStringList list = {"Name","Version","State"};
+    QList<QVariant> sizeList = {"fill",40,70};
     AURPackageList m_packageList;
+
+    // QAbstractItemModel interface
+public:
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 };
 } //namespace LibQPamac

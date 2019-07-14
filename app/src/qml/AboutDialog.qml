@@ -57,11 +57,6 @@ Window{
             anchors.top: header.bottom
             anchors.topMargin: 20
             TabBar{
-                anchors{
-                    left:parent.left
-                    right:parent.right
-                }
-
                 id:tabs
                 TabButton {
                     text: qsTr("About")

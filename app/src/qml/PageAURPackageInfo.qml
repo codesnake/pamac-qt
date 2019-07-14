@@ -352,7 +352,11 @@ Page {
                         }
                     }
                 }
-                ScrollView {
+                Flickable {
+                    ScrollBar.vertical: ScrollBar{
+                        visible: true
+                    }
+                    boundsBehavior: Flickable.StopAtBounds
                     anchors.top: buildFileTabBar.bottom
                     anchors.right: parent.right
                     anchors.left: parent.left
