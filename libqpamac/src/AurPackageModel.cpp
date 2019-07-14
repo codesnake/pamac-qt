@@ -85,6 +85,9 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
 
 QVariant LibQPamac::AurPackageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    if(section>=columnCount()) {
+        return QVariant::Invalid;
+    }
 
     switch (role) {
     case Qt::DisplayRole:

@@ -42,6 +42,10 @@ QList<HistoryItem> HistoryItem::fromStringList(const QStringList &list){
 
 QVariant LibQPamac::HistoryItemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    if(section>=columnCount()) {
+        return QVariant::Invalid;
+    }
+
     switch (role) {
     case Qt::DisplayRole:
         return list[section];
