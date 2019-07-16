@@ -14,3 +14,5 @@ add_definitions(-DVERSION=\"${RES}\")
 
 add_subdirectory(app)
 
+
+install(TARGETS libqpamac qtnotificationservice pamac-qt-app)

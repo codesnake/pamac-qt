@@ -25,3 +25,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${GLIB2_INCLUDE_DIRS} ${PAMAC_
 target_compile_options(${PROJECT_NAME} PUBLIC ${GLIB2_CFLAGS_OTHER} )
 
 qt5_use_modules(${PROJECT_NAME} Core Qml Quick)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
