@@ -23,7 +23,7 @@ ListView{
         packageList: listView.packageList
     }
 
-    delegate:ItemDelegate {
+    delegate:Label{
         width: parent.width
         height: childrenRect.height
         RowLayout{

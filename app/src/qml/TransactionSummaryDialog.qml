@@ -6,6 +6,7 @@ import QPamac.PackageModel 1.0
 Page{
     property var summary
     property var result
+    anchors.fill: parent
     width: 600
     height: 400
     Flickable{

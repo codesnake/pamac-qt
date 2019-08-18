@@ -8,19 +8,24 @@ objectName: "sideMenuSearch"
         ListElement{
             name:"Repository"
             type: Database.Repos
+            itemVisible:true
         }
         ListElement{
             name:"AUR"
             type: Database.AUR
 
         }
-
+        Component.onCompleted: {
+            this.get(1).itemVisible = Database.config.enableAur
+        }
     }
 
     delegate:MenuItemDelegate {
         text: name
 
-        height:(!Database.config.enableAur && index==Database.AUR)?-spacing:35
+        height:35
+        
+        visible:  itemVisible
         onClicked:{
             currentIndex=index
 

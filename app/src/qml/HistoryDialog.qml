@@ -11,8 +11,6 @@ Window{
     }
     title: qsTr("Transaction history")
     height: 400
-    maximumWidth: 320
-    width: maximumWidth
     id:historyDialog
     Pane{
         padding: 3
@@ -24,20 +22,14 @@ Window{
                 historyList: Database.getHistory()
             }
 
-            delegate: Pane{
-                height: 25
-                clip: true
-                background: Rectangle{
-                    border.color: systemPalette.mid
-                    color: systemPalette.base
-                }
-                padding:0
+            delegate:
                 Label{
+                background: Rectangle{
+                    border.color: systemPalette.alternateBase
+                }
                     wrapMode: Text.WordWrap
-                    anchors.fill: parent
                     text: modelData
                 }
-            }
         }
     }
 }
