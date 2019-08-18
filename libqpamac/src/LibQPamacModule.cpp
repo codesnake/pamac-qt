@@ -10,39 +10,37 @@
 #include <Config.h>
 #include <Transaction.h>
 #include <QMetaType>
-Q_DECLARE_METATYPE(QList<LibQPamac::Package>);
 
 void LibQPamacModule::registerTypes(const char *uri)
 {
     using namespace LibQPamac;
-    qRegisterMetaType<LibQPamac::AURPackage>("AURPackage");
-    qRegisterMetaType<LibQPamac::PackageDetails>("PackageDetails");
-    qRegisterMetaType<LibQPamac::Package>("Package");
-    qRegisterMetaType<LibQPamac::Updates>("Updates");
-    qRegisterMetaType<LibQPamac::Config>("Config");
-    qRegisterMetaType<LibQPamac::TransactionSummary>("TransactionSummary");
+    qRegisterMetaType<AURPackage>("AURPackage");
+    qRegisterMetaType<PackageDetails>("PackageDetails");
+    qRegisterMetaType<Package>("Package");
+    qRegisterMetaType<Updates>("Updates");
+    qRegisterMetaType<Config>("Config");
+    qRegisterMetaType<TransactionSummary>("TransactionSummary");
     qRegisterMetaType<GenericQmlFuture>("Future");
-    qRegisterMetaType<QList<LibQPamac::HistoryItem>>("QList<HistoryItem>");
+    qRegisterMetaType<QList<HistoryItem>>("QList<HistoryItem>");
 
     qmlRegisterSingletonType<LibQPamac::Database>("QPamac.Database",1,0,"Database",
                                                 [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
         Q_UNUSED(scriptEngine)
 
-        LibQPamac::Database *database = new LibQPamac::Database("/etc/pamac.conf",scriptEngine);
-        return database;
+        return new LibQPamac::Database("/etc/pamac.conf",scriptEngine);
     });
 
     qmlRegisterUncreatableType<GenericQmlFuture>("QPamac.Async",1,0,"Future","");
     qmlRegisterType<QmlFutureWatcher>("QPamac.Async",1,0,"FutureWatcher");
 
-    qmlRegisterType<LibQPamac::HistoryItemModel>("QPamac.History",1,0,"HistoryModel");
-    qmlRegisterUncreatableType<LibQPamac::AURPackage>("QPamac.AUR.Package",1,0,"AURPackage","");
-    qmlRegisterUncreatableType<LibQPamac::PackageDetails>("QPamac.Package",1,0,"PackageDetails","");
-    qmlRegisterUncreatableType<LibQPamac::Package>("QPamac.Package",1,0,"Package","");
-    qmlRegisterType<LibQPamac::PackageModel>("QPamac.PackageModel",1,0,"PackageModel");
-    qmlRegisterType<LibQPamac::AurPackageModel>("QPamac.AUR.PackageModel",1,0,"AURPackageModel");
-    qmlRegisterUncreatableType<LibQPamac::Updates>("QPamac.Database",1,0,"Updates","");
-    qmlRegisterType<LibQPamac::Transaction>("QPamac.Transaction",1,0,"Transaction");
-    qmlRegisterUncreatableType<LibQPamac::Config>("QPamac.Config",1,0,"Config","");
-    qmlRegisterUncreatableType<LibQPamac::TransactionSummary>("QPamac.Transaction",1,0,"TransactionSummary","");
+    qmlRegisterType<HistoryItemModel>("QPamac.History",1,0,"HistoryModel");
+    qmlRegisterUncreatableType<AURPackage>("QPamac.AUR.Package",1,0,"AURPackage","");
+    qmlRegisterUncreatableType<PackageDetails>("QPamac.Package",1,0,"PackageDetails","");
+    qmlRegisterUncreatableType<Package>("QPamac.Package",1,0,"Package","");
+    qmlRegisterType<PackageModel>("QPamac.PackageModel",1,0,"PackageModel");
+    qmlRegisterType<AurPackageModel>("QPamac.AUR.PackageModel",1,0,"AURPackageModel");
+    qmlRegisterUncreatableType<Updates>("QPamac.Database",1,0,"Updates","");
+    qmlRegisterType<Transaction>("QPamac.Transaction",1,0,"Transaction");
+    qmlRegisterUncreatableType<Config>("QPamac.Config",1,0,"Config","");
+    qmlRegisterUncreatableType<TransactionSummary>("QPamac.Transaction",1,0,"TransactionSummary","");
 }
