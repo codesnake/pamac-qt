@@ -11,4 +11,10 @@ StackView {
     anchors.left: parent.left
     height: parent.height
 
+    Connections{
+        target: transaction
+        onFinished:{
+            drawerStack.currentItem.StackView.activating();
+        }
+    }
 }
