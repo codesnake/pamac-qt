@@ -1,5 +1,5 @@
 #include "AsyncHelpers.h"
-#include "RepoPackage.h"
+#include "Package.h"
 GenericQmlFuture::GenericQmlFuture(QmlFutureImpl *implementation):
     implementation(std::shared_ptr<QmlFutureImpl>(implementation,[](QmlFutureImpl* impl){
                    if (impl->m_isRunning) {

@@ -4,7 +4,7 @@ extern "C"{
 #include "pamac.h"
 }
 #include <QObject>
-#include <RepoPackage.h>
+#include <Package.h>
 #include <AsyncHelpers.h>
 #include <memory>
 #include <Config.h>
@@ -39,7 +39,7 @@ public:
     Database(PamacDatabase* m_db,QObject* parent = nullptr);
     Database(const QString &configFile, QObject* parent = nullptr);
 
-    Q_INVOKABLE RepoPackageDetails getPkgDetails(const QString &pkgname,const QString &app_name = "",bool useSyncDB = false);
+    Q_INVOKABLE PackageDetails getPkgDetails(const QString &pkgname,const QString &app_name = "",bool useSyncDB = false);
     Q_INVOKABLE GenericQmlFuture getAurPkgDetails(const QString &pkgname);
     Q_INVOKABLE GenericQmlFuture cloneBuildFiles(const QString& pkgname,bool overwrite = true);
 
@@ -73,12 +73,12 @@ public:
 
     Q_INVOKABLE void getUpdatesAsync();
 
-    Q_INVOKABLE RepoPackage getInstalledPackage(const QString& name);
+    Q_INVOKABLE Package getInstalledPackage(const QString& name);
 
-    Q_INVOKABLE RepoPackage getSyncPackage(const QString& name);
+    Q_INVOKABLE Package getSyncPackage(const QString& name);
     Q_INVOKABLE GenericQmlFuture getAurPackage(const QString& name);
 
-
+    Q_INVOKABLE QVariantList findPackagesByName(const QStringList& names);
 
     bool getCheckspace();
 

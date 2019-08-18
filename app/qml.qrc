@@ -46,5 +46,6 @@
         <file>src/qml/Table.qml</file>
         <file>src/qml/LoaderDelegate.qml</file>
         <file>src/qml/PackageList.qml</file>
+        <file>src/qml/ProgressBar.qml</file>
     </qresource>
 </RCC>

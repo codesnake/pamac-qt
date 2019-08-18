@@ -7,28 +7,28 @@
 #include "Utils.h"
 #include <QtDebug>
 namespace LibQPamac {
-class RepoPackage
+class Package
 {
     Q_GADGET
 public:
 
-    RepoPackage()=default;
+    Package()=default;
 
-    RepoPackage(PamacPackage* package){
+    Package(PamacPackage* package){
         m_handle=package;
         g_object_ref(m_handle);
 
     }
-    RepoPackage(const RepoPackage& another){
+    Package(const Package& another){
         m_handle=another.m_handle;
         g_object_ref(m_handle);
     }
-    RepoPackage operator =(const RepoPackage& another){
+    Package operator =(const Package& another){
         m_handle=another.m_handle;
         g_object_ref(m_handle);
         return *this;
     }
-    RepoPackage(void* packageData){
+    Package(void* packageData){
         m_handle=reinterpret_cast<PamacPackage*>(packageData);
         g_object_ref(m_handle);
     }
@@ -52,7 +52,7 @@ public:
     PAMAC_QT_INT_PROPERTY_GET(downloadSize,pamac_package_get_download_size(m_handle))
 
 
-    ~RepoPackage(){
+    ~Package(){
 //        g_object_unref(m_handle);
     }
 
@@ -63,26 +63,26 @@ private:
     PamacPackage* m_handle;
 };
 
-class RepoPackageDetails
+class PackageDetails
 {
     Q_GADGET
 public:
 
-    RepoPackageDetails()= default;
-    RepoPackageDetails(const RepoPackageDetails& another){
+    PackageDetails()= default;
+    PackageDetails(const PackageDetails& another){
         m_handle=another.m_handle;
         g_object_ref(m_handle);
     }
-    RepoPackageDetails operator =(const RepoPackageDetails& another){
+    PackageDetails operator =(const PackageDetails& another){
         m_handle = another.m_handle;
         g_object_ref(m_handle);
         return *this;
     }
-    RepoPackageDetails(PamacPackageDetails* details){
+    PackageDetails(PamacPackageDetails* details){
         m_handle = details;
         g_object_ref(m_handle);
     }
-    ~RepoPackageDetails(){
+    ~PackageDetails(){
         g_object_unref(m_handle);
     }
     PAMAC_QT_STRING_PROPERTY_GET(name,pamac_package_details_get_name(m_handle))
@@ -115,5 +115,5 @@ private:
     PamacPackageDetails* m_handle;
 };
 } //namespace LibQPamac
-Q_DECLARE_METATYPE(LibQPamac::RepoPackage)
-Q_DECLARE_METATYPE(LibQPamac::RepoPackageDetails)
+Q_DECLARE_METATYPE(LibQPamac::Package)
+Q_DECLARE_METATYPE(LibQPamac::PackageDetails)

@@ -4,20 +4,20 @@
 #include <Database.h>
 #include <AurPackageModel.h>
 #include <AurPackage.h>
-#include <RepoPackage.h>
+#include <Package.h>
 #include <PackageModel.h>
 #include <Updates.h>
 #include <Config.h>
 #include <Transaction.h>
 #include <QMetaType>
-Q_DECLARE_METATYPE(QList<LibQPamac::RepoPackage>);
+Q_DECLARE_METATYPE(QList<LibQPamac::Package>);
 
 void LibQPamacModule::registerTypes(const char *uri)
 {
     using namespace LibQPamac;
     qRegisterMetaType<LibQPamac::AURPackage>("AURPackage");
-    qRegisterMetaType<LibQPamac::RepoPackageDetails>("RepoPackageDetails");
-    qRegisterMetaType<LibQPamac::RepoPackage>("RepoPackage");
+    qRegisterMetaType<LibQPamac::PackageDetails>("PackageDetails");
+    qRegisterMetaType<LibQPamac::Package>("Package");
     qRegisterMetaType<LibQPamac::Updates>("Updates");
     qRegisterMetaType<LibQPamac::Config>("Config");
     qRegisterMetaType<LibQPamac::TransactionSummary>("TransactionSummary");
@@ -37,8 +37,8 @@ void LibQPamacModule::registerTypes(const char *uri)
 
     qmlRegisterType<LibQPamac::HistoryItemModel>("QPamac.History",1,0,"HistoryModel");
     qmlRegisterUncreatableType<LibQPamac::AURPackage>("QPamac.AUR.Package",1,0,"AURPackage","");
-    qmlRegisterUncreatableType<LibQPamac::RepoPackageDetails>("QPamac.Package",1,0,"RepoPackageDetails","");
-    qmlRegisterUncreatableType<LibQPamac::RepoPackage>("QPamac.Package",1,0,"RepoPackage","");
+    qmlRegisterUncreatableType<LibQPamac::PackageDetails>("QPamac.Package",1,0,"PackageDetails","");
+    qmlRegisterUncreatableType<LibQPamac::Package>("QPamac.Package",1,0,"Package","");
     qmlRegisterType<LibQPamac::PackageModel>("QPamac.PackageModel",1,0,"PackageModel");
     qmlRegisterType<LibQPamac::AurPackageModel>("QPamac.AUR.PackageModel",1,0,"AURPackageModel");
     qmlRegisterUncreatableType<LibQPamac::Updates>("QPamac.Database",1,0,"Updates","");

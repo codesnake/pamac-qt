@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import QPamac.Database 1.0
 import "../js/JSUtils.js" as Utils
+import "./" as PamacQt
 
 Pane {
     background: Pane{
@@ -102,6 +103,7 @@ Pane {
             checked:bottomPanel.state=="expanded"
             checkable: true
             Layout.fillWidth: true
+            padding: 5
             Column{
 
                 anchors.fill: parent
@@ -115,38 +117,10 @@ Pane {
                     horizontalAlignment: Text.AlignHCenter
                 }
 
-                Rectangle{
-                    Rectangle{
-                        SequentialAnimation on x{
-                            loops: Animation.Infinite
-                            running: progressBar.indeterminate
-                            NumberAnimation{
-                                duration: 1100
-                                easing.type: Easing.InOutCubic
-                                from: 0
-                                to:progressBar.width-progress.width
-                            }
-                            NumberAnimation{
-                                duration: 1100
-                                easing.type: Easing.InOutCubic
-                                to: 0
-                                from:progressBar.width-progress.width
-                            }
-                        }
-
-                        id:progress
-                        height: parent.height
-                        width: parent.indeterminate?parent.width*0.1:parent.value*parent.width/(parent.to-parent.from)
-                        color: systemPalette.highlight
-                    }
-                    height: 5
-                    color: systemPalette.mid
-                    id:progressBar
+                PamacQt.ProgressBar {
+                    id: progressBar
+                    height: 6
                     width: parent.width
-                    property bool indeterminate:  transaction.indeterminate
-                    property var value: transaction.progress
-                    property var from:0
-                    property var to:1
                 }
             }
         }
@@ -217,7 +191,7 @@ Pane {
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-//                        packageList: Database.getPending(toInstall,toRemove)
+                        packageList: Database.findPackagesByName(toInstall.concat(toRemove))
                     }
                 }
             },

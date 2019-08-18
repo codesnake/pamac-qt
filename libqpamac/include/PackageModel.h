@@ -1,5 +1,5 @@
 #pragma once
-#include "RepoPackage.h"
+#include "Package.h"
 #include <QObject>
 #include <QAbstractTableModel>
 #include <QJSValue>

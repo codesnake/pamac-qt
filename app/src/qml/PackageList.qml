@@ -20,7 +20,7 @@ Table{
     model:modelLoader.item
     Loader{
         id: modelLoader
-        sourceComponent: (JSUtils.isAccessible(packageList) && list.packageList.every((item)=>JSUtils.qmlTypeOf(item,"LibQPamac::RepoPackage")))?
+        sourceComponent: (JSUtils.isAccessible(packageList) && list.packageList.every((item)=>JSUtils.qmlTypeOf(item,"LibQPamac::Package")))?
                               repoPackageModelComponent:aurPackageModelComponent
     }
     Component{
@@ -97,7 +97,7 @@ Table{
                 hoveredRow=-1
         }
         onDoubleClicked: {
-            if( list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::RepoPackage")))
+            if( list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::Package")))
                 stackView.push("PagePackageInfo.qml",{pkg:Database.getPkgDetails(name,appName,false)})
             else
                 stackView.push("PageAURPackageInfo.qml",{packageFuture:Database.getAurPkgDetails(name)})
@@ -119,7 +119,7 @@ Table{
         function packageAction(){
 
             let el;
-            if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::RepoPackage")))
+            if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::Package")))
                 if(installedVersion!=""){
                     el = toRemove.indexOf(name);
                     if(el!==-1){
@@ -178,7 +178,7 @@ Table{
 
                 return false
             }
-            if(JSUtils.qmlTypeOf(modelData,"LibQPamac::RepoPackage")){
+            if(JSUtils.qmlTypeOf(modelData,"LibQPamac::Package")){
                 if(toInstall.indexOf(name)!=-1){
                     return true
                 } else {
