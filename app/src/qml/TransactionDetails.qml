@@ -4,32 +4,28 @@ import QtQuick.Controls 2.12
 Page {
     title: "Transaction Details"
     objectName: "transactionDetailsPage"
-    Flickable{
-        id:scrollView
-        anchors.fill: parent
-        ScrollBar.vertical: ScrollBar{
-            visible:true
+    padding: 5
+    Pane{
+        background: Rectangle{
+            color:systemPalette.base
+            border.color: systemPalette.mid
         }
-        contentHeight: area.paintedHeight
-        contentWidth: area.paintedWidth
-        TextArea{
-            background: Rectangle{
-                color:systemPalette.base
+        clip: true
+        anchors.fill: parent
+        padding: 0
+        ListView{
+            anchors.fill: parent
+            ScrollBar.vertical: ScrollBar{
+                visible:true
             }
-
-            readOnly: true
-            id:area
-            font.pointSize: 10
-
-            Connections{
-                target: transaction
-                onDetailsChanged:{
-                    area.clear();
-                    area.append(transaction.details);
-                }
+            model: transaction.details.split("\n");
+            delegate: Text {
+                text: modelData
             }
         }
     }
+
+
     Component.onCompleted: {
         area.append(transaction.details);
     }
