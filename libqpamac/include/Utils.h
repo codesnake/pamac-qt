@@ -6,12 +6,13 @@
 #include <QVariantList>
 #include <QStringList>
 #include <QDateTime>
+#include <QtDebug>
 
 namespace LibQPamac::Utils{
 
 #define PAMAC_QT_STRING_PROPERTY_GET(name,method)\
     Q_PROPERTY(QString name READ name CONSTANT)\
-    inline QString name() \
+    inline QString name() const \
 {\
     return QString::fromUtf8(method);\
 }
@@ -19,7 +20,7 @@ namespace LibQPamac::Utils{
     Q_PROPERTY(QDateTime name READ name CONSTANT)\
     inline QDateTime name()\
 {\
-    return QDateTime::fromTime_t(method);\
+    return QDateTime::fromTime_t(uint(method));\
 }
 #define PAMAC_QT_STRING_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(QString getName READ getName WRITE setName)\
@@ -34,20 +35,20 @@ namespace LibQPamac::Utils{
 
 #define PAMAC_QT_URL_PROPERTY_GET(name,method)\
     Q_PROPERTY(QUrl name READ name CONSTANT)\
-    inline QUrl name()\
+    inline QUrl name() const\
 {\
     return QUrl(method);\
 }
 
 #define PAMAC_QT_INT_PROPERTY_GET(name,method)\
     Q_PROPERTY(int name READ name CONSTANT)\
-    inline int name()\
+    inline int name() const\
 {\
     return int(method);\
 }
 #define PAMAC_QT_INT_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(int getName READ getName WRITE setName)\
-    inline int getName()\
+    inline int getName() const\
 {\
     return int(getMethod);\
 }\
@@ -56,7 +57,7 @@ namespace LibQPamac::Utils{
 }
 #define PAMAC_QT_UINT_PROPERTY_GET_SET(getName,getMethod,setName,setMethod)\
     Q_PROPERTY(int getName READ getName WRITE setName)\
-    inline uint getName() \
+    inline uint getName() const\
 {\
     return uint(getMethod);\
 }\
@@ -65,13 +66,13 @@ namespace LibQPamac::Utils{
 }
 #define PAMAC_QT_DOUBLE_PROPERTY_GET(name,method)\
     Q_PROPERTY(double name READ name CONSTANT)\
-    inline double name()\
+    inline double name() const\
 {\
     return double(method);\
 }
 #define PAMAC_QT_STRINGLIST_PROPERTY_GET(name,method)\
     Q_PROPERTY(QStringList name READ name CONSTANT)\
-    inline QStringList name()\
+    inline QStringList name() const\
 {\
     QStringList result;\
     auto tmp = method;\
@@ -84,7 +85,7 @@ namespace LibQPamac::Utils{
 
 #define PAMAC_QT_BOOL_PROPERTY_GET_SET(name,method,setName,setMethod)\
     Q_PROPERTY(bool name READ name WRITE setName)\
-    inline bool name()\
+    inline bool name() const\
 {\
     return method;\
 }\
@@ -116,6 +117,9 @@ QList<T> gListToQList(GList* list,std::function<T(void*)> wrapFunction,GDestroyN
 
     return result;
 }
+#define PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(PackageType)\
+    [](void* data){return QVariant::fromValue(PackageType(data));}
+
 
 // https://stackoverflow.com/a/48368508
 

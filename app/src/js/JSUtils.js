@@ -37,3 +37,10 @@ function urlToPath(urlString) {
     }
     return decodeURIComponent(s);
 }
+function qmlTypeOf(object, className){
+   let objectString = object.toString();
+   return objectString.startsWith(className)
+}
+function isAccessible(object){
+    return typeof(object)!=="undefined" && object !== null
+}

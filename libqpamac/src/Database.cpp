@@ -1,20 +1,20 @@
 #include "Database.h"
+#include <functional>
 
-template <typename T>
-auto futureWrapFunction = [](QmlFutureImpl* future,std::function<T> function){
-future->mutex.lock();
-if(future->isRunning()){
-future->setFuture(QVariant::fromValue(function()));
-} else {
-delete future;
+GAsyncReadyCallback asyncCallback(){
+    return ([](GObject* parent,GAsyncResult* result,void* lambdaPtr){
+
+        auto function = reinterpret_cast<std::function<void(GObject*,GAsyncResult*)>*>(lambdaPtr);
+        auto object = reinterpret_cast<GObject*>(parent);
+        (*function)(object,result);
+        delete function;
+    });
 }
-future->mutex.unlock();
-};
 
 namespace LibQPamac {
 Database::Database(PamacDatabase *db, QObject *parent):
     QObject(parent)
-   {
+{
 
     init();
 }
@@ -22,7 +22,7 @@ Database::Database(PamacDatabase *db, QObject *parent):
 Database::Database(const QString& configFile, QObject *parent):
     QObject(parent){
     m_config = Config(configFile);
-    handle = pamac_database_new(&m_config);
+    handle = pamac_database_new(m_config);
     init();
 }
 
@@ -35,10 +35,10 @@ GenericQmlFuture Database::getAurPkgDetails(const QString &pkgname)
 {
     auto future = new QmlFutureImpl;
     pamac_database_get_aur_pkg_details(handle,pkgname.toUtf8(),Utils::cify([](GObject* parent,GAsyncResult* result,void* future){
-        return  futureWrapFunction<AURPackageDetails()>(reinterpret_cast<QmlFutureImpl*>(future),[=](){
-            return AURPackageDetails(pamac_database_get_aur_pkg_details_finish(reinterpret_cast<PamacDatabase*>(parent),result));
-        });
-    }),future);
+                                           //        return  futureWrapFunction<AURPackageDetails()>(reinterpret_cast<QmlFutureImpl*>(future),[=](){
+                                           //            return AURPackageDetails(pamac_database_get_aur_pkg_details_finish(reinterpret_cast<PamacDatabase*>(parent),result));
+                                           //        });
+                                       }),future);
     return GenericQmlFuture(future);
 
 }
@@ -62,31 +62,6 @@ GenericQmlFuture Database::cloneBuildFiles(const QString &pkgname, bool overwrit
     return GenericQmlFuture(future);
 }
 
-RepoPackageList Database::getInstalledApps()
-{
-    return RepoPackageList::fromGList(pamac_database_get_installed_apps(handle));
-}
-
-RepoPackageList Database::getInstalledPackages(Database::InstalledPackageTypes type)
-{
-    RepoPackageList lst;
-    switch (type) {
-    case Installed:
-        lst = RepoPackageList::fromGList(pamac_database_get_installed_pkgs(handle));
-        break;
-    case Explicitly:
-        lst = RepoPackageList::fromGList(pamac_database_get_explicitly_installed_pkgs(handle));
-        break;
-    case Orphans:
-        lst = RepoPackageList::fromGList(pamac_database_get_orphans(handle));
-        break;
-    case Foreign:
-        lst =  RepoPackageList::fromGList(pamac_database_get_foreign_pkgs(handle));
-        break;
-    }
-    return lst;
-}
-
 QStringList Database::getRepos()
 {
     return Utils::gListToQStringList(pamac_database_get_repos_names(handle),true);
@@ -95,21 +70,6 @@ QStringList Database::getRepos()
 QStringList Database::getGroups()
 {
     return Utils::gListToQStringList(pamac_database_get_groups_names(handle),true);
-}
-
-RepoPackageList Database::getCategoryPackages(const QString &category)
-{
-    return RepoPackageList::fromGList(pamac_database_get_category_pkgs(handle,category.toUtf8()));
-}
-
-RepoPackageList Database::getRepoPackages(const QString &repo)
-{
-    return RepoPackageList::fromGList(pamac_database_get_repo_pkgs(handle,repo.toUtf8()));
-}
-
-RepoPackageList Database::getGroupPackages(const QString &group)
-{
-    return RepoPackageList::fromGList(pamac_database_get_group_pkgs(handle,group.toUtf8()));
 }
 
 QStringList Database::getIgnorePkgs()
@@ -121,7 +81,13 @@ GenericQmlFuture Database::searchPkgsInAurAsync(const QString &name)
 {
     auto future = new QmlFutureImpl;
 
-    pamac_database_search_in_aur(handle,name.toUtf8(),PAMAC_QT_AUR_PACKAGELIST_ASYNC_CALLBACK(pamac_database_search_in_aur_finish),future);
+    pamac_database_search_in_aur(handle,name.toUtf8(),
+                                 asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+        future->setFuture(QVariant::fromValue
+                          (LibQPamac::Utils::gListToQList<QVariant>(
+                               pamac_database_search_in_aur_finish(object,result),
+                               PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AURPackage))));
+    }));
     return GenericQmlFuture(future);
 }
 
@@ -129,7 +95,9 @@ GenericQmlFuture Database::getCategoryPackagesAsync(const QString &category)
 {
     auto future = new QmlFutureImpl;
 
-    pamac_database_get_category_pkgs_async(handle,category.toUtf8(),PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_get_category_pkgs_finish),future);
+    pamac_database_get_category_pkgs_async(handle,category.toUtf8(),asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+        future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_category_pkgs_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+    }));
     return GenericQmlFuture(future);
 }
 
@@ -137,7 +105,9 @@ GenericQmlFuture Database::searchPkgsAsync(const QString &name)
 {
     auto future = new QmlFutureImpl;
 
-    pamac_database_search_pkgs_async(handle,name.toUtf8(),PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_search_pkgs_finish),future);
+    pamac_database_search_pkgs_async(handle,name.toUtf8(),asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+        future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_search_pkgs_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+    }));
     return GenericQmlFuture(future);
 }
 
@@ -145,7 +115,10 @@ GenericQmlFuture Database::getGroupPackagesAsync(const QString &group)
 {
     auto future = new QmlFutureImpl;
 
-    pamac_database_get_group_pkgs_async(handle,group.toUtf8(),PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_get_group_pkgs_finish),future);
+    pamac_database_get_group_pkgs_async(handle,group.toUtf8(),asyncCallback(),
+                                        new std::function([=](PamacDatabase* object, GAsyncResult* result){
+                                                future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_group_pkgs_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+                                            }));
     return GenericQmlFuture(future);
 }
 
@@ -153,27 +126,24 @@ GenericQmlFuture Database::getRepoPackagesAsync(const QString &repo)
 {
     auto future = new QmlFutureImpl;
 
-    pamac_database_get_repo_pkgs_async(handle,repo.toUtf8(),PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_get_repo_pkgs_finish),future);
+    pamac_database_get_repo_pkgs_async(handle,repo.toUtf8(),asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+        future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_repo_pkgs_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+    }));
     return GenericQmlFuture(future);
 }
 
 GenericQmlFuture Database::getInstalledAppsAsync(){
     auto future = new QmlFutureImpl;
-    pamac_database_get_installed_apps_async(handle,([](GObject* parent,GAsyncResult* result,void* future){
-        return  futureWrapFunction<RepoPackageList()>(reinterpret_cast<QmlFutureImpl*>(future),[=](){
-            return RepoPackageList::fromGList(pamac_database_get_installed_apps_finish(reinterpret_cast<PamacDatabase*>(parent),result));
-        });
-    }),future);
+    pamac_database_get_installed_apps_async(handle,
+                                            asyncCallback(),
+                                            new std::function([=](PamacDatabase* object, GAsyncResult* result){
+       future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_installed_apps_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+    }));
     return GenericQmlFuture(future);
 }
 
 QStringList Database::getPkgFiles(const QString &name){
     return  Utils::gListToQStringList(pamac_database_get_pkg_files(handle,name.toUtf8()),true);
-}
-
-RepoPackageList Database::searchPkgs(const QString &name)
-{
-    return RepoPackageList::fromGList(pamac_database_search_pkgs(handle,name.toUtf8()));
 }
 
 QStringList Database::getMirrorsCountries(){
@@ -200,25 +170,6 @@ void Database::getUpdatesAsync(){
         Q_EMIT db->updatesReady(arg);
     },this);
 
-}
-
-RepoPackageList Database::getPending(const QStringList &toInstall, const QStringList &toRemove)
-{
-    RepoPackageList result;
-    for (const auto &element: toInstall) {
-        RepoPackage pkg;
-        if((pkg = getInstalledPackage(element)).name().isEmpty()){
-            pkg = getSyncPackage(element);
-        }
-        result.append(pkg);
-    }
-    for(const auto &element:toRemove){
-        RepoPackage pkg;
-        if(!(pkg = getInstalledPackage(element)).name().isEmpty()){
-            result.append(pkg);
-        }
-    }
-    return result;
 }
 
 RepoPackage Database::getInstalledPackage(const QString &name){
@@ -287,16 +238,24 @@ GenericQmlFuture LibQPamac::Database::getInstalledPackagesAsync(Database::Instal
     auto future = new QmlFutureImpl;
     switch (type) {
     case Installed:
-        pamac_database_get_installed_pkgs_async(handle,PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_get_installed_pkgs_finish),future);
+        pamac_database_get_installed_pkgs_async(handle,asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+            future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_installed_pkgs_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+        }));
         break;
     case Explicitly:
-        pamac_database_get_explicitly_installed_pkgs_async(handle,PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_get_explicitly_installed_pkgs_finish),future);
+        pamac_database_get_explicitly_installed_pkgs_async(handle,asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+            future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_explicitly_installed_pkgs_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+        }));
         break;
     case Orphans:
-        pamac_database_get_orphans_async(handle,PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_get_orphans_finish),future);
+        pamac_database_get_orphans_async(handle,asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+           future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_orphans_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+        }));
         break;
     case Foreign:
-        pamac_database_get_foreign_pkgs_async(handle,PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(pamac_database_get_foreign_pkgs_finish),future);
+        pamac_database_get_foreign_pkgs_async(handle,asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+            future->setFuture(LibQPamac::Utils::gListToQList<QVariant>(pamac_database_get_foreign_pkgs_finish(object,result),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage)));
+        }));
         break;
     }
 

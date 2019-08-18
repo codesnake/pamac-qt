@@ -26,4 +26,7 @@ ListView{
             }
         }
     }
+    ScrollBar.vertical: ScrollBar{
+        visible: true
+    }
 }

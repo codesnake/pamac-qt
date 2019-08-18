@@ -15,7 +15,7 @@ ApplicationWindow {
     function showUpdates(){
         if(stackView.currentItem.objectName!=="updatesPage")
             stackView.push("UpdatesPage.qml");
-   }
+    }
 
     onClosing: {
         if(transaction.started)
@@ -72,7 +72,6 @@ ApplicationWindow {
         }
 
         requestCommit: summary=>{
-                           console.log(JSON.stringify(summary));
                            let objects = {"summary":summary,"result":undefined}
                            objects =  DialogRunner.exec("qrc:/src/qml/TransactionSummaryDialog.qml",objects);
                            return objects["result"]
@@ -98,7 +97,7 @@ ApplicationWindow {
             id:sidePanel
             anchors.top: parent.top
             anchors.left:parent.left
-            anchors.bottom:bottomPanel.top
+            anchors.bottom:parent.bottom
             height: parent.height
             header:ToolBar{
                 padding: 5
@@ -245,16 +244,14 @@ ApplicationWindow {
                 }
             }
             SideBar {
-
                 clip: true
                 anchors.top: backMenuItem.bottom
                 anchors.bottom: parent.bottom
-                id: drawer
                 width: parent.width
+                id: drawer
                 initialItem: SideMenuMain{
                     height: parent.height
                 }
-
             }
 
         }
@@ -290,6 +287,10 @@ ApplicationWindow {
                     property string title
                     id: mainView
 
+                    onPackageListChanged: {
+                            stackView.pop(this);
+
+                    }
                 }
 
 
@@ -307,7 +308,7 @@ ApplicationWindow {
 
     }
     Component.onCompleted: {
-        //Init signleton
+        //Init singleton
         NotificationService;
 
     }

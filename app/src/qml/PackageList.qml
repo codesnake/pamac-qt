@@ -8,23 +8,34 @@ import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
 import QPamac.Async 1.0
 import QPamac.AUR.PackageModel 1.0
+import QPamac.Package 1.0
 import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
 
 Table{
-    property var packageList
+    property var packageList: []
+
     property alias packageListFuture:packageModelWatcher.future
 
-    model: list.packageList.packageType()==="Repo"?repoPackageModel:aurPackageModel
-
-    PackageModel{
-        id:repoPackageModel
-        packageList: list.packageList
+    model:modelLoader.item
+    Loader{
+        id: modelLoader
+        sourceComponent: (JSUtils.isAccessible(packageList) && list.packageList.every((item)=>JSUtils.qmlTypeOf(item,"LibQPamac::RepoPackage")))?
+                              repoPackageModelComponent:aurPackageModelComponent
     }
-
-    AURPackageModel{
-        id:aurPackageModel
-        packageList: list.packageList
+    Component{
+        id:repoPackageModelComponent
+        PackageModel{
+            id:repoPackageModel
+            packageList: list.packageList
+        }
+    }
+    Component{
+        id: aurPackageModelComponent
+        AURPackageModel{
+            id:aurPackageModel
+            packageList: list.packageList
+        }
     }
 
     property var watcher: FutureWatcher{
@@ -35,13 +46,13 @@ Table{
     }
 
 
-    showHeader: packageList.length>0
+    showHeader: JSUtils.isAccessible(packageList) && packageList.length>0
 
     Column{
         width: implicitWidth
         height: implicitHeight
         anchors.centerIn: parent
-        visible: packageList.length==0
+        visible: JSUtils.isAccessible(packageList) && packageList.length===0
         spacing: 3
         Image {
             width: parent.width/2
@@ -86,8 +97,8 @@ Table{
                 hoveredRow=-1
         }
         onDoubleClicked: {
-            if( list.packageList.packageType()==="Repo")
-            stackView.push("PagePackageInfo.qml",{pkg:Database.getPkgDetails(name,appName,false)})
+            if( list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::RepoPackage")))
+                stackView.push("PagePackageInfo.qml",{pkg:Database.getPkgDetails(name,appName,false)})
             else
                 stackView.push("PageAURPackageInfo.qml",{packageFuture:Database.getAurPkgDetails(name)})
         }
@@ -108,29 +119,29 @@ Table{
         function packageAction(){
 
             let el;
-            if(list.packageList.packageType()==="Repo")
-            if(installedVersion!=""){
-                el = toRemove.indexOf(name);
-                if(el!==-1){
-                    toRemove.splice(el,1)
-                    toRemoveChanged();
-                }
-                else{
-                    toRemove.push(name);
-                    toRemoveChanged();
-                }
-            } else{
-                el = toInstall.indexOf(name);
-                if(el!==-1){
-                    toInstall.splice(el,1)
-                    toInstallChanged();
-                }
-                else{
-                    toInstall.push(name);
-                    toInstallChanged();
-                }
+            if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::RepoPackage")))
+                if(installedVersion!=""){
+                    el = toRemove.indexOf(name);
+                    if(el!==-1){
+                        toRemove.splice(el,1)
+                        toRemoveChanged();
+                    }
+                    else{
+                        toRemove.push(name);
+                        toRemoveChanged();
+                    }
+                } else{
+                    el = toInstall.indexOf(name);
+                    if(el!==-1){
+                        toInstall.splice(el,1)
+                        toInstallChanged();
+                    }
+                    else{
+                        toInstall.push(name);
+                        toInstallChanged();
+                    }
 
-            }
+                }
             else{
                 if(installedVersion!=""){
                     el = toRemove.indexOf(name);
@@ -167,13 +178,13 @@ Table{
 
                 return false
             }
-            if(list.packageList.packageType()==="Repo"){
-            if(toInstall.indexOf(name)!=-1){
-                return true
-            } else {
-                return false
+            if(JSUtils.qmlTypeOf(modelData,"LibQPamac::RepoPackage")){
+                if(toInstall.indexOf(name)!=-1){
+                    return true
+                } else {
+                    return false
+                }
             }
-        }
             else{
                 if(toBuild.indexOf(name)!=-1){
                     return true
@@ -183,7 +194,7 @@ Table{
             }
 
         }
-        columns: list.packageList.packageType()==="Repo"?repoColumns:aurColumns
+        columns: JSUtils.qmlTypeOf(list.model,"LibQPamac::PackageModel")?repoColumns:aurColumns
         property list<Component> repoColumns: [
             Component{
                 Row{
@@ -312,10 +323,6 @@ Table{
         opacity = 1;
         list.selectedRows = [];
         view.contentY=0;
-
-        if(stackView.depth>1 && stackView.currentItem.objectName!="updatesPage"){
-            stackView.pop(this);
-        }
     }
     onPackageListFutureChanged: {
         opacity = 0;

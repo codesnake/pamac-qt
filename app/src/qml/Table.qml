@@ -21,7 +21,7 @@ Pane{
             top:parent.top
             left:parent.left
             right:parent.right
-            rightMargin: verticalScrollbar.width+header.model.columnCount
+            rightMargin:(header.model !== null)? verticalScrollbar.width+header.model.columnCount:0
         }
 
         id: header
@@ -31,7 +31,6 @@ Pane{
         onWidthChanged: {
             for(let row =0;row<table.rows;row++) {
                 for(let column =0;column<table.columns;column++) {
-//                    table.contentItem.children[row*table.columns+column].width = header.getColumnWidth(column);
                     table.update();
                     table.forceLayout();
 

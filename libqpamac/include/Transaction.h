@@ -9,33 +9,33 @@ namespace LibQPamac{
 class Database;
 class TransactionSummary{
     Q_GADGET
-    Q_PROPERTY(RepoPackageList toInstall READ toInstall CONSTANT)
-    Q_PROPERTY(RepoPackageList toRemove READ toRemove CONSTANT)
-    Q_PROPERTY(RepoPackageList toReinstall READ toReinstall CONSTANT)
-    Q_PROPERTY(RepoPackageList toBuild READ toBuild CONSTANT)
-    Q_PROPERTY(RepoPackageList toUpgrade READ toUpgrade CONSTANT)
+    Q_PROPERTY(QVariantList toInstall READ toInstall CONSTANT)
+    Q_PROPERTY(QVariantList toRemove READ toRemove CONSTANT)
+    Q_PROPERTY(QVariantList toReinstall READ toReinstall CONSTANT)
+    Q_PROPERTY(QVariantList toBuild READ toBuild CONSTANT)
+    Q_PROPERTY(QVariantList toUpgrade READ toUpgrade CONSTANT)
 
 public:
     TransactionSummary(PamacTransactionSummary* s):summary(s){}
     TransactionSummary()=default;
-    RepoPackageList toInstall() const{
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_install(summary));
+    QVariantList toInstall() const{
+        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_install(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage));
     }
-    RepoPackageList toRemove() const
+    QVariantList toRemove() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_remove(summary));
+        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_remove(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage));
     }
-    RepoPackageList toReinstall() const
+    QVariantList toReinstall() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_reinstall(summary));
+        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_reinstall(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage));
     }
-    RepoPackageList toBuild() const
+    QVariantList toBuild() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_build(summary));
+        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_build(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage));
     }
-    RepoPackageList toUpgrade() const
+    QVariantList toUpgrade() const
     {
-        return RepoPackageList::fromGList(pamac_transaction_summary_get_to_upgrade(summary));
+        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_upgrade(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage));
     }
 private:
     PamacTransactionSummary* summary;

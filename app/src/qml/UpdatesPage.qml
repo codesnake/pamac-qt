@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QtGraphicalEffects 1.0
 import QPamac.Database 1.0
 import QPamac.Package 1.0
+import "../js/JSUtils.js" as JSUtils
 Page {
     SideBar{
         visible: updates!==undefined
@@ -110,9 +111,13 @@ Page {
             radius: 6
             color: systemPalette.dark
         }
-        packageList: updatesDrawerListView.currentIndex==Database.Repos?updates.getReposUpdates():updates.getAurUpdates()
+        packageList: JSUtils.isAccessible(updates)?
+                         updatesDrawerListView.currentIndex==Database.Repos?
+                             updates.getReposUpdates():
+                             updates.getAurUpdates():
+                       []
         id:updatesPackageTable
-        visible: packageList.length>0
+        visible: JSUtils.isAccessible(packageList) && packageList.length>0
         anchors{
             left: updatesDrawer.right
             right: parent.right

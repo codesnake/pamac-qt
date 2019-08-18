@@ -36,7 +36,7 @@ ItemDelegate {
         }
 
     }
-    highlighted: index==currentIndex
+    highlighted: typeof(index) !== "undefined" && index===currentIndex
     width: parent.width
     height:35
     leftPadding: 15

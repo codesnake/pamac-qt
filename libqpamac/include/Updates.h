@@ -4,7 +4,6 @@
 #include "Utils.h"
 #include "RepoPackage.h"
 #include "AurPackage.h"
-#include "PackageList.h"
 namespace LibQPamac {
 class Updates
 {
@@ -12,11 +11,11 @@ class Updates
 public:
     Updates()=default;
     Updates(PamacUpdates* upd):m_updates(std::shared_ptr<PamacUpdates>(upd,g_object_unref)){}
-    inline Q_INVOKABLE RepoPackageList getReposUpdates(){
-        return RepoPackageList::fromGList(pamac_updates_get_repos_updates(m_updates.get()));
+    inline Q_INVOKABLE QVariantList getReposUpdates(){
+        return Utils::gListToQList<QVariant>(pamac_updates_get_repos_updates(m_updates.get()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(RepoPackage));
     }
-    inline Q_INVOKABLE AURPackageList getAurUpdates(){
-        return AURPackageList::fromGList(pamac_updates_get_aur_updates(m_updates.get()));
+    inline Q_INVOKABLE QVariantList getAurUpdates(){
+        return Utils::gListToQList<QVariant>(pamac_updates_get_aur_updates(m_updates.get()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AURPackage));
     }
 private:
     std::shared_ptr<PamacUpdates> m_updates;

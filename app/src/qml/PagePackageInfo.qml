@@ -351,6 +351,7 @@ Page {
                     }
 
                     ListView {
+
                         id: listView
                         x: 126
                         y: 30

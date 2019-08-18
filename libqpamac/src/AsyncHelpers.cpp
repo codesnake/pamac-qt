@@ -1,12 +1,12 @@
 #include "AsyncHelpers.h"
-
+#include "RepoPackage.h"
 GenericQmlFuture::GenericQmlFuture(QmlFutureImpl *implementation):
     implementation(std::shared_ptr<QmlFutureImpl>(implementation,[](QmlFutureImpl* impl){
-                       if (impl->m_isRunning) {
-                        impl->m_isRunning=false;
-                       } else {
-                        delete impl;
-                       }
+                   if (impl->m_isRunning) {
+                   impl->m_isRunning=false;
+                   } else {
+                   delete impl;
+                   }
                    })){}
 
 QVariant GenericQmlFuture::result() const
@@ -19,11 +19,15 @@ void GenericQmlFuture::setResult(QVariant future){
 }
 
 void QmlFutureImpl::setFuture(QVariant future){
-    futureData = std::move(future);
-    m_isRunning = false;
-    if(watcher!=nullptr){
-        Q_EMIT watcher->finished(futureData);
+    this->mutex.lock();
+    if(isRunning()){
+        futureData = std::move(future);
+        m_isRunning = false;
+        if(watcher!=nullptr){
+            Q_EMIT watcher->finished(futureData);
+        }
     }
+    this->mutex.unlock();
 }
 
 bool QmlFutureImpl::isRunning() const

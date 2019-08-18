@@ -6,7 +6,7 @@ import QPamac.Async 1.0
 import QtQuick.Shapes 1.11
 Rectangle{
 
-    property var model
+    property var model: undefined
     id: header
     function getColumnWidth(index){
         let a = header.model.headerData(index,0,13);
@@ -40,7 +40,7 @@ Rectangle{
             property int sortOrder: Qt.DescendingOrder
             height: parent.height
             width: parent.width
-            model: header.model.columnCount
+            model: header.model !== null && header.model.columnCount
             ItemDelegate {
 
                 layer.enabled: true

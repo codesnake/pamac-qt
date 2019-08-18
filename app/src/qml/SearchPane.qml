@@ -78,7 +78,6 @@ Pane{
         focus: true
         id:searchArea
         width: parent.width
-        leftPadding: searchImage.width + 6
         anchors.centerIn: parent
 
         onTextChanged: {

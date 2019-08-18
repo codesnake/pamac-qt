@@ -5,40 +5,13 @@ extern "C"{
 }
 #include <QObject>
 #include <RepoPackage.h>
-#include <PackageList.h>
 #include <AsyncHelpers.h>
 #include <memory>
 #include <Config.h>
 #include <Updates.h>
 #include <HistoryItemModel.h>
 
-#define PAMAC_QT_REPO_PACKAGELIST_ASYNC_CALLBACK(method)\
-    [](GObject* parent,GAsyncResult* result,void* futurePtr){\
-    auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);\
-    if(future->isRunning()){\
-    future->setFuture(QVariant::fromValue(RepoPackageList::fromGList(method(reinterpret_cast<PamacDatabase*>(parent),result))));\
-    } else {\
-    delete future;\
-    }\
-    }
-#define PAMAC_QT_AUR_PACKAGELIST_ASYNC_CALLBACK(method)\
-    [](GObject* parent,GAsyncResult* result,void* futurePtr){\
-    auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);\
-    if(future->isRunning()){\
-    future->setFuture(QVariant::fromValue(AURPackageList::fromGList(method(reinterpret_cast<PamacDatabase*>(parent),result))));\
-    } else {\
-    delete future;\
-    }\
-    }
-#define PAMAC_QT_AUR_PACKAGE_DETAILS_ASYNC_CALLBACK(method)\
-    [](GObject* parent,GAsyncResult* result,void* futurePtr){\
-    auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);\
-    if(future->isRunning()){\
-    future->setFuture(QVariant::fromValue(AURPackageDetails(method(reinterpret_cast<PamacDatabase*>(parent),result))));\
-    } else {\
-    delete future;\
-    }\
-    }
+
 namespace LibQPamac {
 class Database:public QObject
 {
@@ -70,15 +43,11 @@ public:
     Q_INVOKABLE GenericQmlFuture getAurPkgDetails(const QString &pkgname);
     Q_INVOKABLE GenericQmlFuture cloneBuildFiles(const QString& pkgname,bool overwrite = true);
 
-    Q_INVOKABLE RepoPackageList getInstalledApps();
 
-    Q_INVOKABLE RepoPackageList getInstalledPackages(InstalledPackageTypes type);
     Q_INVOKABLE QStringList getRepos();
     Q_INVOKABLE QStringList getGroups();
 
-    Q_INVOKABLE RepoPackageList getCategoryPackages(const QString &category);
-    Q_INVOKABLE RepoPackageList getRepoPackages(const QString &repo);
-    Q_INVOKABLE RepoPackageList getGroupPackages(const QString &group);
+
     Q_INVOKABLE QStringList getIgnorePkgs();
     Q_INVOKABLE GenericQmlFuture searchPkgsInAurAsync(const QString &name);
 
@@ -90,7 +59,6 @@ public:
     Q_INVOKABLE GenericQmlFuture getInstalledPackagesAsync(InstalledPackageTypes type);
 
     Q_INVOKABLE QStringList getPkgFiles(const QString &name);
-    Q_INVOKABLE RepoPackageList searchPkgs(const QString & name);
 
     Config config() const
     {
@@ -104,8 +72,6 @@ public:
     Q_INVOKABLE QString getMirrorsChoosenCountry();
 
     Q_INVOKABLE void getUpdatesAsync();
-
-    Q_INVOKABLE RepoPackageList getPending(const QStringList& toInstall, const QStringList& toRemove);
 
     Q_INVOKABLE RepoPackage getInstalledPackage(const QString& name);
 

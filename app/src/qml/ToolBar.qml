@@ -79,6 +79,7 @@ ToolBar {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         Button{
+            property var size: 20
             visible:  stackView.currentItem.objectName!="updatesPage"
             id:installedButton
             checkable: true
@@ -86,8 +87,8 @@ ToolBar {
             flat: true
             text: qsTr("Installed")
             icon.name: "dropboxstatus-logo"
-            icon.height: 20
-            icon.width:icon.height
+            icon.height: size
+            icon.width: size
             property var prevSideMenuState
             onClicked: {
                 if(checked){
@@ -107,7 +108,7 @@ ToolBar {
             flat:true
             icon.name: updatesCount<1?"update-none":"update-medium"
             icon.height: 20
-            icon.width:icon.height
+            icon.width: 20
             property int updatesCount:-1
             text: updatesCount<1?qsTr("Updates"):qsTr("Updates (")+updatesCount+")"
             onClicked: {
@@ -123,7 +124,7 @@ ToolBar {
             Connections{
                 target: Database
                 onUpdatesReady: {
-                    updatesButton.updatesCount = upds.getReposUpdates().size
+                    updatesButton.updatesCount = upds.getReposUpdates().length
                 }
             }
         }

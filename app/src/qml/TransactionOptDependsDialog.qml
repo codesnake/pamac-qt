@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 Page {
-
     property string pkgName
     property var opDeps
     property var opted:[]

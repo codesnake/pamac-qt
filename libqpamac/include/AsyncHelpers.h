@@ -52,8 +52,6 @@ public:
         QQuickItem (parent)
     {
         connect(this,&QmlFutureWatcher::finished,this,&QmlFutureWatcher::reset);QGuiApplication::restoreOverrideCursor();
-
-
     }
     GenericQmlFuture future() const
     {
@@ -64,6 +62,7 @@ public Q_SLOTS:
     void setFuture(GenericQmlFuture future);
     inline Q_INVOKABLE void reset(){
         this->setProperty("running",false);
+
 
 
         while(QGuiApplication::overrideCursor()!=nullptr){

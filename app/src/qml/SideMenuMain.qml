@@ -30,8 +30,11 @@ ListView{
         mainView.packageListFuture = Database.getInstalledAppsAsync();
         mainView.title='Installed Apps';
     }
-Component.onCompleted: {
-    mainView.packageListFuture = Database.getInstalledAppsAsync();
-    mainView.title=qsTr('Installed Apps');
-}
+    Component.onCompleted: {
+        mainView.packageListFuture = Database.getInstalledAppsAsync();
+        mainView.title=qsTr('Installed Apps');
+    }
+    ScrollBar.vertical: ScrollBar{
+        visible: true
+    }
 }
