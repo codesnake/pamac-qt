@@ -1,35 +1,42 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Window 2.12
 import QPamac.History 1.0
 import QPamac.Database 1.0
 import "../js/JSUtils.js" as JSUtils
 
-Window{
-    function open(){
-        visible=true;
-    }
-    title: qsTr("Transaction history")
-    height: 400
+Pane{
+    SystemPalette{id:systemPalette}
+    property var title: qsTr("Transaction history")
     id:historyDialog
-    Pane{
-        padding: 3
-        anchors.fill: parent
-        Table{
+    padding: 3
+    anchors.fill: parent
+    Table{
+        background: Rectangle{
+            color:systemPalette.alternateBase
+        }
 
-            anchors.fill: parent
-            model:HistoryModel{
-                historyList: Database.getHistory()
+        anchors.fill: parent
+        model:HistoryModel{
+            historyList: Database.getHistory()
+        }
+
+        delegate: Label{
+            background: Rectangle{
+                color: (row%2!==0)?systemPalette.alternateBase:systemPalette.mid
             }
 
-            delegate:
-                Label{
-                background: Rectangle{
-                    border.color: systemPalette.alternateBase
+            Rectangle{
+                anchors{
+                    top: parent.top
+                    left:parent.left
+                    right: parent.right
                 }
-                    wrapMode: Text.WordWrap
-                    text: modelData
-                }
+                height:2
+                color: (row%2===0)?systemPalette.alternateBase:systemPalette.mid
+            }
+            padding: 5
+            wrapMode: Text.WordWrap
+            text: modelData
         }
     }
 }

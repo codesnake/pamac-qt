@@ -78,11 +78,11 @@ public:
     {
         if(role==Qt::DisplayRole){
             switch (index.column()) {
-            case 0:
+            case 2:
                 return m_historyList[index.row()].time.toString();
             case 1:
                 return HistoryItem::typeToString(m_historyList[index.row()].type);
-            case 2:
+            case 0:
                 return m_historyList[index.row()].name;
             case 3:
                 return m_historyList[index.row()].version;
@@ -104,7 +104,7 @@ public:
 public:
     Q_INVOKABLE QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 private:
-    QStringList list = {"Date","Name","Action","Size"};
+    QStringList list = {"Name","Action","Date","Size"};
     QList<QVariant> sizeList = {"fill","fill","fill","fill"};
 };
 

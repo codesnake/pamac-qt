@@ -38,10 +38,6 @@ ApplicationWindow {
         id:aboutDialog
     }
 
-    HistoryDialog {
-        id: historyDialog
-    }
-
     Transaction{
         id:transaction
         database: Database
@@ -144,7 +140,7 @@ ApplicationWindow {
                         }
                         Action { text: "View History"
                             onTriggered: {
-                                historyDialog.open();
+                                DialogRunner.exec("qrc:/src/qml/HistoryDialog.qml");
                             }
                         }
                         Action {

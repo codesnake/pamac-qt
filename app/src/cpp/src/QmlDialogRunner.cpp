@@ -10,7 +10,7 @@ QmlDialogRunner::QmlDialogRunner(QObject* parent) : QObject(parent)
 
 }
 
-QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,QVariantMap propertiesMap)
+QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propertiesMap)
 {
     CloseEventFilter filter;
     QQuickView view(static_cast<QQmlEngine*>(parent()),nullptr);
@@ -19,17 +19,13 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,QVariantMap propertiesMap)
     view.show();
     QObject *object = view.rootObject();
 
-    view.setTitle(object->property("title").toString());
-
-    bool ok = false;
-
-
-
     for (auto it = propertiesMap.keyValueBegin();it!=propertiesMap.keyValueEnd();++it) {
         object->setProperty((*it).first.toUtf8(),(*it).second);
     }
+    view.setTitle(object->property("title").toString());
     connect(object,SIGNAL(close()),&view,SLOT(close()));
 
+    bool ok = false;
     auto minHeight = object->property("minimumHeight").toInt(&ok);
     view.setMinimumHeight(ok?minHeight:400);
     auto minWidth = object->property("minimumWidth").toInt(&ok);
@@ -38,8 +34,9 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,QVariantMap propertiesMap)
     QEventLoop loop;
     connect(&filter,&CloseEventFilter::closing,&loop,&QEventLoop::quit);
     loop.exec();
-    for (auto it = propertiesMap.keyValueBegin();it!=propertiesMap.keyValueEnd();++it) {
+    QVariantMap result;
+    for (auto it = result.keyValueBegin();it!=result.keyValueEnd();++it) {
         (*it).second = object->property((*it).first.toUtf8());
     }
-    return propertiesMap;
+    return result;
 }

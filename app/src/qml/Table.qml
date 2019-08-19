@@ -19,6 +19,7 @@ Pane{
         visible: showHeader
         anchors{
             top:parent.top
+
             left:parent.left
             right:parent.right
             rightMargin:(header.model !== null)? verticalScrollbar.width+header.model.columnCount:0
@@ -26,7 +27,7 @@ Pane{
 
         id: header
         color: systemPalette.mid
-        height: 20
+        height: showHeader?20:0
         model: tableRoot.model
         onWidthChanged: {
             for(let row =0;row<table.rows;row++) {
@@ -38,7 +39,7 @@ Pane{
             }
         }
     }
-    property bool showHeader
+    property bool showHeader:true
     property alias delegate: table.delegate
     property var selectedRows: []
 
