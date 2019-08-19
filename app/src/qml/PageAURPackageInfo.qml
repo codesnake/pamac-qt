@@ -352,28 +352,36 @@ Page {
                         }
                     }
                 }
-                Flickable {
-                    ScrollBar.vertical: ScrollBar{
-                        visible: true
+                Pane {
+                    padding: 0
+                    background: Rectangle{
+                        border.width: 1
+                        border.color: systemPalette.mid
+                        color: systemPalette.base
                     }
-                    boundsBehavior: Flickable.StopAtBounds
                     anchors.top: buildFileTabBar.bottom
                     anchors.right: parent.right
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
                     clip: true
-                    contentHeight: textArea.implicitHeight
-                    TextArea {
-                        background: Rectangle{
-                            color: systemPalette.alternateBase
+
+                    ListView {
+                        anchors.fill: parent
+                        boundsBehavior: Flickable.StopAtBounds
+                        ScrollBar.vertical: ScrollBar{
+                            visible: true
                         }
-                        id: textArea
-                        text:buildFilesPage.buildFiles[buildFileTabBar.currentItem.text]
-                        onTextChanged: {
-                            buildFilesPage.buildFiles[buildFileTabBar.currentItem.text]=text
+                        ScrollBar.horizontal: ScrollBar{
+                            visible: true
                         }
 
-                        wrapMode: Text.WordWrap
+                        model: Utils.isAccessible(buildFileTabBar.currentItem) && Utils.isAccessible(buildFileTabBar.currentItem.text)
+                               ? buildFilesPage.buildFiles[buildFileTabBar.currentItem.text].split("\n")
+                               : undefined
+
+                        delegate: Label{
+                            text: modelData
+                        }
                     }
                 }
             }
