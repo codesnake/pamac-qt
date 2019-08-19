@@ -34,7 +34,7 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
     QEventLoop loop;
     connect(&filter,&CloseEventFilter::closing,&loop,&QEventLoop::quit);
     loop.exec();
-    QVariantMap result;
+    QVariantMap result = propertiesMap;
     for (auto it = result.keyValueBegin();it!=result.keyValueEnd();++it) {
         (*it).second = object->property((*it).first.toUtf8());
     }

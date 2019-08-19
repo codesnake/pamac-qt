@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import QPamac.PackageModel 1.0
 
 Page{
-    property var summary
+    property var summary:null
     property var result
     anchors.fill: parent
     width: 600
