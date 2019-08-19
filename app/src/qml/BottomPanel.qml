@@ -45,7 +45,7 @@ Pane {
         var list = stackView.currentItem.updates.getReposUpdates();
         var totalSize = 0;
         for(var i =0;i<list.length;i++){
-            totalSize += list.at(i).downloadSize;
+            totalSize += list[i].downloadSize;
         }
         if(totalSize==0){
             return "";
