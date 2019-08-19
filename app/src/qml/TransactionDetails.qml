@@ -22,11 +22,9 @@ Page {
             delegate: Text {
                 text: modelData
             }
+            onCountChanged: {
+                positionViewAtEnd();
+            }
         }
-    }
-
-
-    Component.onCompleted: {
-        area.append(transaction.details);
     }
 }

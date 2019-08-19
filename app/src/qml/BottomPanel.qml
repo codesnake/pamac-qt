@@ -45,7 +45,7 @@ Pane {
         var list = stackView.currentItem.updates.getReposUpdates();
         var totalSize = 0;
         for(var i =0;i<list.length;i++){
-            totalSize += list[i].downloadSize;
+            totalSize += ignoreWhenUpdate.indexOf(list[i].name)!=-1? list[i].downloadSize:0;
         }
         if(totalSize==0){
             return "";
@@ -99,6 +99,13 @@ Pane {
 
 
         ItemDelegate{
+            MouseArea{
+                anchors.fill: parent
+                visible: sysUpgrade
+                enabled: sysUpgrade
+                hoverEnabled: true
+            }
+
             id:detailsButton
             checked:bottomPanel.state=="expanded"
             checkable: true
@@ -131,7 +138,7 @@ Pane {
             id:cancelButton
             visible: bottomPanel.width>(width+applyButton.width+detailsButton.width)
 
-            enabled: !transaction.started
+            enabled: !(transaction.started ||  (transaction.details.length!=0 && totalPending==0))
             text:qsTr("Cancel")
             onClicked: {
                 if(sysUpgrade){
@@ -148,13 +155,13 @@ Pane {
         Button{
             id:applyButton
             visible: bottomPanel.width>(width+cancelButton.width+detailsButton.width)
-            enabled: !transaction.started
+            enabled: !(transaction.started ||  (transaction.details.length!=0 && totalPending==0))
             text:qsTr("Apply")
             onClicked: {
                 if(!sysUpgrade)
                     transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
                 else
-                    transaction.startSysupgrade(true,false,[],[]);
+                    transaction.startSysupgrade(true,false,ignoreWhenUpdate,[]);
             }
 
         }
@@ -203,13 +210,14 @@ Pane {
 
         ]
 
-        sourceComponent:transaction.details!==""?detailsComponent:pendingComponent
+        sourceComponent:((transaction.details!=="" && transaction.started) || (totalPending==0 && !transaction.started))?detailsComponent:pendingComponent
     }
     onTotalPendingChanged: {
         if(transaction.details.length!=0){
             if(totalPending!=0){
                 transaction.details = "";
             }
+
         }
         else if(totalPending==0){
             detailsButton.checked=false;
