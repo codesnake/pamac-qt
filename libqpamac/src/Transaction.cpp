@@ -138,7 +138,7 @@ void LibQPamac::Transaction::init()
         QStringList lst = Utils::cStringArrayToQStringList(optdeps,optdeps_length1);
 
         auto engine = qmlEngine(this);
-        QList<bool> varList = engine->fromScriptValue<QList<bool>>(this->m_requestOptDepends.call({{QString::fromUtf8(pkgname),engine->toScriptValue(lst)}}));
+        auto varList = engine->fromScriptValue<QList<bool>>(this->m_requestOptDepends.call({{QString::fromUtf8(pkgname),engine->toScriptValue(lst)}}));
 
         GList* result = nullptr;
 
@@ -167,7 +167,7 @@ void LibQPamac::Transaction::init()
             Utils::cify([=](PamacTransaction* self, const gchar* pkgname, const gchar* key, const gchar* owner)->gboolean{
 
         auto engine = qmlEngine(this);
-        return gboolean(engine->fromScriptValue<bool>(this->m_requestChooseProvider.call({{QString::fromUtf8(pkgname),QString::fromUtf8(key),QString::fromUtf8(owner)}})));
+        return gboolean(engine->fromScriptValue<bool>(this->m_requestImportKey.call({{QString::fromUtf8(pkgname),QString::fromUtf8(key),QString::fromUtf8(owner)}})));
     });
 
     g_signal_connect(static_cast<PamacTransaction*>(m_handle),"finished",

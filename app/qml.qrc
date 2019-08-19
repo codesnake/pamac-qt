@@ -49,5 +49,6 @@
         <file>src/qml/ProgressBar.qml</file>
         <file>src/qml/ScreenshotViewerDialog.qml</file>
         <file>src/qml/PackageDelegate.qml</file>
+        <file>src/qml/AskImportKeyDialog.qml</file>
     </qresource>
 </RCC>

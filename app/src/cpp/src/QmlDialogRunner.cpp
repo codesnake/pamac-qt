@@ -20,7 +20,9 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
     QObject *object = view.rootObject();
 
     for (auto it = propertiesMap.keyValueBegin();it!=propertiesMap.keyValueEnd();++it) {
-        object->setProperty((*it).first.toUtf8(),(*it).second);
+        if((*it).second.isValid()){
+            object->setProperty((*it).first.toUtf8(),(*it).second);
+        }
     }
     view.setTitle(object->property("title").toString());
     connect(object,SIGNAL(close()),&view,SLOT(close()));

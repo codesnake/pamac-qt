@@ -68,6 +68,22 @@ ApplicationWindow {
             NotificationService.setMessage(emitAction);
         }
 
+        requestChooseProvider: (depend,list)=>{
+                                   let objects = {"depend":depend,"lst":list,"provider":undefined}
+                                   objects = DialogRunner.exec("qrc:/src/qml/ChooseProviderDialog.qml",objects)
+                                   return objects["provider"]
+                               }
+
+        requestOptDepends: (pkgname,lst)=>{
+                               let result = DialogRunner.exec("qrc:/src/qml/TransactionOptDependsDialog.qml",{"pkgName":pkgname,"opDeps":lst,"opted":undefined});
+                               return objects["opted"];
+                           }
+
+        requestImportKey: (pkgname,key,owner)=>{
+                              let objects = {"pkgName":pkgname,"key":key,"owner":owner,"ok":undefined}
+                              objects = DialogRunner.exec("qrc:/src/qml/AskImportKeyDialog.qml",objects);
+                              return objects["ok"];
+                          }
         requestCommit: summary=>{
                            let objects = {"summary":summary,"result":undefined}
                            objects =  DialogRunner.exec("qrc:/src/qml/TransactionSummaryDialog.qml",objects);

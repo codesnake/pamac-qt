@@ -4,6 +4,7 @@ Page {
     property string pkgName
     property var opDeps
     property var opted:[]
+//    property string title: "Optional dependecies for " + pkgName;
     width: 600
     height: 400
     Pane{
@@ -39,15 +40,9 @@ Page {
             right: parent.right
         }
         standardButtons: DialogButtonBox.Ok
-        onAccepted: dialogAccepted()
-        onRejected: dialogRejected()
-    }
-    signal dialogAccepted
-    signal dialogRejected
-
-    function onShow(){
-        for(var i = 0;i<opDeps.length;i++){
-            opted[i]=false;
+        onAccepted: {
+            close()
         }
     }
+    signal close
 }
