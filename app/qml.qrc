@@ -47,5 +47,6 @@
         <file>src/qml/LoaderDelegate.qml</file>
         <file>src/qml/PackageList.qml</file>
         <file>src/qml/ProgressBar.qml</file>
+        <file>src/qml/ScreenshotViewerDialog.qml</file>
     </qresource>
 </RCC>

@@ -21,10 +21,20 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,QVariantMap propertiesMap)
 
     view.setTitle(object->property("title").toString());
 
+    bool ok = false;
+
+
+
     for (auto it = propertiesMap.keyValueBegin();it!=propertiesMap.keyValueEnd();++it) {
         object->setProperty((*it).first.toUtf8(),(*it).second);
     }
     connect(object,SIGNAL(close()),&view,SLOT(close()));
+
+    auto minHeight = object->property("minimumHeight").toInt(&ok);
+    view.setMinimumHeight(ok?minHeight:400);
+    auto minWidth = object->property("minimumWidth").toInt(&ok);
+    view.setMinimumWidth(ok?minWidth:600);
+
     QEventLoop loop;
     connect(&filter,&CloseEventFilter::closing,&loop,&QEventLoop::quit);
     loop.exec();

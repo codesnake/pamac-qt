@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QPamac.Package 1.0
 import QPamac.Database 1.0
 import QtQuick.Layouts 1.3
+import DialogRunner 1.0
 
 Page {
     objectName: "packageInfoPage"
@@ -177,12 +178,19 @@ Page {
 
                     Image {
                         visible: source
-                        id: image1
+                        id: screenshot
                         width: height * (sourceSize.width / sourceSize.height)
                         height: visible ? 200 : 0
                         asynchronous: true
                         fillMode: Image.PreserveAspectFit
                         source: pkg.screenshotUrl
+                        MouseArea{
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                DialogRunner.exec("qrc:/src/qml/ScreenshotViewerDialog.qml",{source:screenshot.source})
+                            }
+                        }
                     }
 
                     Grid {
