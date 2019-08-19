@@ -14,7 +14,8 @@ StackView {
     Connections{
         target: transaction
         onFinished:{
-            drawerStack.currentItem.StackView.activating();
+            if(success)
+                drawerStack.currentItem.StackView.activating();
         }
     }
 }
