@@ -99,6 +99,7 @@ ApplicationWindow {
             anchors.left:parent.left
             anchors.bottom:parent.bottom
             height: parent.height
+            width:Math.min(175,parent.width*0.3)
             header:ToolBar{
                 padding: 5
                 height: toolBar.height
@@ -180,14 +181,14 @@ ApplicationWindow {
                     name:"opened"
                     PropertyChanges {
                         target: sidePanel
-                        width:Math.min(175,parent.width*0.3)
+                        anchors.leftMargin: 0
                     }
                 },
                 State{
                     name:"hidden"
                     PropertyChanges {
                         target: sidePanel
-                        width:0
+                        anchors.leftMargin: -Math.min(175,sidePanel.parent.width*0.3)
                     }
                 }
             ]
@@ -199,7 +200,7 @@ ApplicationWindow {
                         NumberAnimation{
                             duration: 200
                             easing.type: Easing.InOutQuad
-                            properties: "width"
+                            properties: "anchors.leftMargin"
                         }
                     ]
                 }]
@@ -262,8 +263,8 @@ ApplicationWindow {
                 right:parent.right
                 top:parent.top
                 bottom: parent.bottom
+                left:sidePanel.right
             }
-            width: mainWindow.width-drawer.width
             header:PamacQt.ToolBar {
                 id: toolBar
                 height: 40
@@ -288,7 +289,7 @@ ApplicationWindow {
                     id: mainView
 
                     onPackageListChanged: {
-                            stackView.pop(this);
+                        stackView.pop(this);
 
                     }
                 }
