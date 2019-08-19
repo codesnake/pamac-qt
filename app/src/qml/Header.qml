@@ -7,23 +7,33 @@ import QtQuick.Shapes 1.11
 Rectangle{
 
     property var model: undefined
+    property var customWidths:({})
+
     id: header
+
     function getColumnWidth(index){
-        let a = header.model.headerData(index,0,13);
+
+        let a = header.model.headerData(index, 0, 13); //13 is a Qt::SizeHint
+
+
         if(a!=="fill"){
             return a;
         } else{
             let fillCount = 0;
             let size = 0;
-            for(let i = 0;i<header.model.columnCount;i++){
-                let b = header.model.headerData(i,0,13);
+            for(let i = 0;i<header.model.columnCount; i++){
+                let b = header.model.headerData(i, 0, 13); //13 is a Qt::SizeHint
                 if(b!=="fill"){
+                    if(i in customWidths){
+                        b = customWidths[i];
+                    }
+
                     size+=b;
                 } else{
                     fillCount++;
                 }
             }
-            return header.width/fillCount-size;
+            return header.width/fillCount - size;
         }
     }
     Row{
@@ -36,7 +46,7 @@ Rectangle{
         width: parent.width
         Repeater {
             id:headerRepeater
-            property int sortColumn:1
+            property int sortColumn: 1
             property int sortOrder: Qt.DescendingOrder
             height: parent.height
             width: parent.width
@@ -49,7 +59,7 @@ Rectangle{
                 height: parent.height
                 id:headerBlock
                 text: header.model.headerData(index,0,0)
-                width: getColumnWidth(index)
+                width: customWidths[index]
                 font.pixelSize: 12
                 padding: 3
                 
@@ -57,9 +67,9 @@ Rectangle{
                     if(headerRepeater.sortColumn != index){
                         headerRepeater.sortColumn = index;
                     } else{
-                        headerRepeater.sortOrder=(headerRepeater.sortOrder==Qt.DescendingOrder)?Qt.AscendingOrder:Qt.DescendingOrder;
+                        headerRepeater.sortOrder=!headerRepeater.sortOrder;
                     }
-                    packageModel.sort(index, headerRepeater.sortOrder);
+                    table.model.sort(index, headerRepeater.sortOrder);
                 }
                 Shape {
                     visible:  headerRepeater.sortColumn==index
@@ -98,22 +108,36 @@ Rectangle{
                     width:10
                     cursorShape: Qt.SizeHorCursor
                     onPositionChanged: {
-                        
-//                        if(headerBlock.width+mouse.x>0){
-//                            if(getColumnWidths[index]==="fill"){
-//                                getColumnWidths[index]=headerBlock.width;
-//                            }
+                        let tmpIndex = index-1;
+
+                        if(headerBlock.width+mouse.x>0){
                             
-//                            getColumnWidths[index]+=mouse.x;
-//                            getColumnWidthsChanged();
-//                        }
+                            header.customWidths[tmpIndex]+=mouse.x;
+                            header.customWidths[index]-=mouse.x;
+                            header.customWidthsChanged();
+
+                        }
                         table.forceLayout();
                     }
                 }
-                
+
             }
-            
-            
+        }
+    }
+    onWidthChanged: {
+        for(let i = 0;i<header.model.columnCount; i++){
+            if(header.model.headerData(i, 0, 13)==="fill"){
+                customWidths[i] = getColumnWidth(i);
+            }
+        }
+        header.customWidthsChanged();
+    }
+    onModelChanged: {
+        if(header.model!==null){
+            for(let i = 0;i<header.model.columnCount; i++){
+                header.customWidths[i]=header.getColumnWidth(i);
+            }
+            header.customWidthsChanged();
         }
     }
 }

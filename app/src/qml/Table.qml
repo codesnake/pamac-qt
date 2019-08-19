@@ -39,7 +39,7 @@ Pane{
             }
         }
     }
-    property bool showHeader:true
+    property bool showHeader: true
     property alias delegate: table.delegate
     property var selectedRows: []
 
@@ -71,7 +71,7 @@ Pane{
     TableView{
         columnSpacing: 1
         columnWidthProvider:(column)=>{
-                                return header.getColumnWidth(column);
+                                return header.customWidths[column];
                             }
         anchors{
             top:header.bottom
