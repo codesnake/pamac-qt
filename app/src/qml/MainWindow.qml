@@ -33,6 +33,7 @@ ApplicationWindow {
     property var toRemove: []
     property var toBuild: []
     property var toLoad: []
+    property var ignoreWhenUpdate: []
 
     AboutDialog{
         id:aboutDialog

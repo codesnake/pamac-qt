@@ -19,7 +19,8 @@ public:
         RepoNameRole,
         IconRole,
         InstalledVersionRole,
-        AppNameRole
+        AppNameRole,
+        DownloadSizeRole
     };
 
     PackageModel(QList<QVariant>& packageList, QObject *parent = Q_NULLPTR):QAbstractTableModel (parent),m_packageList(packageList){}

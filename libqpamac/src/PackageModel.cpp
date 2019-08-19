@@ -11,6 +11,7 @@ QHash<int, QByteArray> LibQPamac::PackageModel::roleNames() const {
     roles[IconRole] = "iconUrl";
     roles[InstalledVersionRole] = "installedVersion";
     roles[AppNameRole] = "appName";
+    roles[DownloadSizeRole] = "downloadSize";
     return roles;
 }
 
@@ -35,6 +36,8 @@ QVariant LibQPamac::PackageModel::data(const QModelIndex &index, int role) const
         return package.installedVersion();
     case PackageModel::AppNameRole:
         return package.appName();
+    case PackageModel::DownloadSizeRole:
+        return  QLocale().formattedDataSize(package.downloadSize());
     default:
         return QVariant::Invalid;
     }
