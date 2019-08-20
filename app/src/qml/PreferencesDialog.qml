@@ -439,7 +439,7 @@ Page{
                 Label {
                     id: label7
                     height: aurEnabledCheckBox.height
-                    text: qsTr("Enable AUR support")
+                    text: qsTr("Enable AUR support (EXPERIMENTAL)")
                     verticalAlignment: Text.AlignVCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 6

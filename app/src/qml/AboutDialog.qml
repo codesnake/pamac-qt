@@ -15,8 +15,11 @@ Window{
     Pane {
         anchors.fill: parent
         id: item1
+        padding: 2
 
         Pane{
+            anchors.topMargin: 4
+            anchors.top: parent.top
             id:header
             height: implicitHeight
             width: implicitWidth
@@ -76,7 +79,7 @@ Window{
                 Label {
 
                     id: label
-                    text: qsTr("A Qt5 frontend for libpamac")
+                    text: qsTr("A Qt5 frontend for libpamac\n(Work in progress)")
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
 

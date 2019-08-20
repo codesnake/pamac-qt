@@ -106,7 +106,9 @@ ToolBar {
             checked: stackView.currentItem.objectName=="updatesPage"
             id:updatesButton
             flat:true
-            icon.name: updatesCount<1?"update-none":"update-medium"
+            icon.name:stackView.currentItem.objectName=="updatesPage"?
+                          "go-previous":
+                          updatesCount<1?"update-none":"update-medium"
             icon.height: 20
             icon.width: 20
             property int updatesCount:-1

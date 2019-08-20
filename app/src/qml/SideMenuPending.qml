@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QPamac.Database 1.0
 ListView{
     boundsBehavior: Flickable.StopAtBounds
+
     model:ListModel{
         ListElement{
             name:"Repository"
@@ -13,17 +14,11 @@ ListView{
             type: Database.AUR
 
         }
-
     }
     delegate:MenuItemDelegate {
         text: name
         onClicked:{
             currentIndex=index
-            if(index==Database.Repos){
-                mainView.packageList= Database.getPending(toInstall,toRemove);
-            } else{
-                mainView.packageList = undefined
-            }
         }
     }
     ScrollBar.vertical: ScrollBar{

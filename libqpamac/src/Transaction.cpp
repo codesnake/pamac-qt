@@ -169,7 +169,12 @@ void LibQPamac::Transaction::init()
         auto engine = qmlEngine(this);
         return gboolean(engine->fromScriptValue<bool>(this->m_requestImportKey.call({{QString::fromUtf8(pkgname),QString::fromUtf8(key),QString::fromUtf8(owner)}})));
     });
+    PAMAC_TRANSACTION_GET_CLASS(m_handle)->ask_edit_build_files =
+            Utils::cify([=](PamacTransaction* self, PamacTransactionSummary* summary)->gboolean{
+        auto engine = qmlEngine(this);
 
+        return false;
+    });
     g_signal_connect(static_cast<PamacTransaction*>(m_handle),"finished",
                      reinterpret_cast<GCallback>(+[](GObject* obj,bool success,Transaction* t){
                          Q_UNUSED(obj);

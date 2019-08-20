@@ -7,7 +7,6 @@ import "../js/JSUtils.js" as JSUtils
 Page {
 
 
-    title: qsTr("Updates")
     objectName: "updatesPage"
     property var updates
 

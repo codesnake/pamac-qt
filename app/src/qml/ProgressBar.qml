@@ -6,6 +6,7 @@ import "../js/JSUtils.js" as Utils
 
 Rectangle{
     Rectangle{
+        anchors.left: parent.left
         SequentialAnimation on x{
             loops: Animation.Infinite
             running: progressBar.indeterminate

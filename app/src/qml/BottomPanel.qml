@@ -45,7 +45,7 @@ Pane {
         var list = stackView.currentItem.updates.getReposUpdates();
         var totalSize = 0;
         for(var i =0;i<list.length;i++){
-            totalSize += ignoreWhenUpdate.indexOf(list[i].name)!=-1? list[i].downloadSize:0;
+            totalSize += ignoreWhenUpdate.indexOf(list[i].name)==-1?list[i].downloadSize:0;
         }
         if(totalSize==0){
             return "";
@@ -96,16 +96,7 @@ Pane {
         }
     ]
     RowLayout{
-
-
         ItemDelegate{
-            MouseArea{
-                anchors.fill: parent
-                visible: sysUpgrade
-                enabled: sysUpgrade
-                hoverEnabled: true
-            }
-
             id:detailsButton
             checked:bottomPanel.state=="expanded"
             checkable: true
@@ -128,6 +119,11 @@ Pane {
                     id: progressBar
                     height: 6
                     width: parent.width
+                }
+            }
+            onClicked: {
+                if(!checked){
+                    transaction.details = ""
                 }
             }
         }
@@ -180,25 +176,32 @@ Pane {
                 Pane{
                     padding: 0
                     SideBar{
-                        width: toBuild.length>0?undefined:0
+//                        width: toBuild.length>0?170:0
+                        width: 0
                         id:sideMenuPending
                         initialItem:SideMenuPending{
-
-                            anchors{
-                                left:parent.left
-                                bottom: parent.bottom
-                                top:parent.top
+                            onCurrentIndexChanged: {
+                                if(currentIndex==Database.Repos){
+                                    pendingPackageList.packageList = Database.findPackagesByName(toInstall.concat(toRemove));
+                                } else{
+                                    pendingPackageList.packageListFuture = Database.getAurPackages(toBuild);
+                                }
                             }
                         }
+                        anchors{
+                            left:parent.left
+                            bottom: parent.bottom
+                            top:parent.top
+                        }
+
                     }
 
                     PackageList{
-
+                        id:pendingPackageList
                         anchors.left: sideMenuPending.right
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        packageList: Database.findPackagesByName(toInstall.concat(toRemove))
                     }
                 }
             },
@@ -217,10 +220,14 @@ Pane {
             if(totalPending!=0){
                 transaction.details = "";
             }
-
         }
-        else if(totalPending==0){
-            detailsButton.checked=false;
+    }
+    Connections{
+        target: transaction
+        onFinished:{
+            if(state!="expanded"){
+                transaction.details = "";
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 
 ListView {
     boundsBehavior: Flickable.StopAtBounds
-    model:["Description","Dependecies","Files"]
+    model:["Description","Dependencies","Files"]
     delegate:  MenuItemDelegate{
         backgroundColor: systemPalette.alternateBase
         id:packageInfoDelegate

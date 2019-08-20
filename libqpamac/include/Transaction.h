@@ -55,6 +55,7 @@ class Transaction : public QObject
     Q_PROPERTY(QJSValue requestImportKey WRITE setRequestImportKey FINAL)
     Q_PROPERTY(QJSValue requestChooseProvider WRITE setRequestChooseProvider FINAL)
     Q_PROPERTY(QJSValue requestOptDepends WRITE setRequestOptDepends FINAL)
+    Q_PROPERTY(QJSValue requestEditBuildFiles WRITE setRequestEditBuildFiles FINAL)
 
 public:
     Transaction(QObject * parent = nullptr):QObject(parent){}
@@ -90,6 +91,7 @@ public:
     Q_INVOKABLE void startSysupgrade(bool forceRefresh,bool enableDowngrade,const QStringList& tempIgnore = QStringList(),const QStringList& overwriteFiles = QStringList());
 
 
+
 public Q_SLOTS:
 
     void setDatabase(Database* database);
@@ -121,6 +123,13 @@ public Q_SLOTS:
             m_requestChooseProvider = requestChooseProvider;
         }
     }
+
+    void setRequestEditBuildFiles(const QJSValue &requestEditBuildFiles){
+        if(requestEditBuildFiles.isCallable()){
+            m_requestEditBuildFiles = requestEditBuildFiles;
+        }
+    }
+
 
 Q_SIGNALS:
     void getAuthorizationFinished(bool authorized);
@@ -180,6 +189,7 @@ private:
     QJSValue m_requestOptDepends;
     QJSValue m_requestImportKey;
     QJSValue m_requestChooseProvider;
+    QJSValue m_requestEditBuildFiles;
 };
 } //namespace LibQPamac
 

@@ -58,7 +58,7 @@ LoaderDelegate{
     function packageAction(){
         
         let el;
-        if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::Package")))
+        if(JSUtils.qmlTypeOf(modelData,"LibQPamac::Package"))
             if(installedVersion!=""){
                 el = toRemove.indexOf(name);
                 if(el!==-1){
@@ -232,8 +232,14 @@ LoaderDelegate{
                     anchors.fill: parent
                     anchors.margins: 5
                     text: "Update"
-                    checked:  ignoreWhenUpdate.indexOf(name)!=undefined
-                    onCheckedChanged: checked?ignoreWhenUpdate.push(name):ignoreWhenUpdate = ignoreWhenUpdate.filter(value=>value!==name)
+                    checked:  ignoreWhenUpdate.indexOf(name)==-1
+                    onCheckedChanged: {
+                        if(!checked){
+                            ignoreWhenUpdate.push(name)
+                            ignoreWhenUpdateChanged();
+                        } else {
+                            ignoreWhenUpdate = ignoreWhenUpdate.filter(value=>value!==name)}
+                    }
                 }
             }
         }

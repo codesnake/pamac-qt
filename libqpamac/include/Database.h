@@ -57,6 +57,7 @@ public:
     Q_INVOKABLE GenericQmlFuture getRepoPackagesAsync(const QString &repo);
     Q_INVOKABLE GenericQmlFuture getInstalledAppsAsync();
     Q_INVOKABLE GenericQmlFuture getInstalledPackagesAsync(InstalledPackageTypes type);
+    Q_INVOKABLE GenericQmlFuture getAurPackages(const QStringList &nameList);
 
     Q_INVOKABLE QStringList getPkgFiles(const QString &name);
 

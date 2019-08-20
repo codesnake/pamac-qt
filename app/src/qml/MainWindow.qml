@@ -98,7 +98,7 @@ ApplicationWindow {
     width: 950
     height: 550
     objectName: "mainWindow"
-    title: qsTr("Pamac Qt - preview version")
+    title: qsTr("Pamac Qt - Beta version")
     SystemPalette{id:systemPalette}
 
     Item{
@@ -127,20 +127,7 @@ ApplicationWindow {
                     font.pixelSize: Qt.application.font.pixelSize * 1.4
                     anchors.verticalCenter: parent.verticalCenter
 
-                    //                    FileDialog{
-                    //                        id:fileDialog
-                    //                        title: qsTr("Install Local Packages")
-                    //                        folder: shortcuts.home
-                    //                        nameFilters: ["Alpm packages (*.pkg.tar.xz)"]
-                    //                        onAccepted: {
-                    //                            for(var i =0;i<fileUrls.length;i++){
-                    //                                toLoad.push(fileUrls[i].toString());
-                    //                            }
 
-                    //                            tryLockAndRun(()=>{transaction.start([],[],toLoad,[],[],[])});
-
-                    //                        }
-                    //                    }
                     Menu {
                         onClosed: toolButton1.checked=false
 

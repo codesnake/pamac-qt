@@ -4,8 +4,8 @@
 GAsyncReadyCallback asyncCallback(){
     return ([](GObject* parent,GAsyncResult* result,void* lambdaPtr){
 
-        auto function = reinterpret_cast<std::function<void(GObject*,GAsyncResult*)>*>(lambdaPtr);
-        auto object = reinterpret_cast<GObject*>(parent);
+        auto function = reinterpret_cast<std::function<void(PamacDatabase*,GAsyncResult*)>*>(lambdaPtr);
+        auto object = reinterpret_cast<PamacDatabase*>(parent);
         (*function)(object,result);
         delete function;
     });
@@ -200,7 +200,9 @@ QVariantList Database::findPackagesByName(const QStringList &names)
     for(auto& name: names){
         Package pkg;
         if((pkg = getInstalledPackage(name)).name().isEmpty()){
-            pkg = getSyncPackage(name);
+            if((pkg = getSyncPackage(name)).name().isEmpty()){
+
+            }
         }
         packages.append(QVariant::fromValue(pkg));
 
@@ -273,6 +275,45 @@ GenericQmlFuture LibQPamac::Database::getInstalledPackagesAsync(Database::Instal
         break;
     }
 
+    return GenericQmlFuture(future);
+}
+
+
+
+GenericQmlFuture Database::getAurPackages(const QStringList &nameList)
+{
+
+    //method returns non usable values
+    auto list = Utils::qStringListToCStringVector(nameList);
+    QmlFutureImpl* future = new QmlFutureImpl;
+
+    pamac_database_get_aur_pkgs(handle,list.data(),list.size(),asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+
+        auto hashTable = pamac_database_get_aur_pkgs_finish(object,result);
+
+        QVariantList resultList;
+
+        g_hash_table_foreach(hashTable,[](void* keyPtr,void* valuePtr,void* funcPtr){
+
+
+
+            auto key = reinterpret_cast<char*>(keyPtr);
+            auto value = reinterpret_cast<PamacAURPackage*>(valuePtr);
+
+            auto func = reinterpret_cast<std::function<void(const QString&,const AURPackage&)>*>(funcPtr);
+
+            (*func)(QString::fromUtf8(key),AURPackage(value));
+
+            delete func;
+            delete key;
+
+        }, new std::function([&](const QString& key,const AURPackage& value){
+            resultList.push_back(QVariant::fromValue(value));
+        }));
+
+
+        future->setFuture(resultList);
+    }));
     return GenericQmlFuture(future);
 }
 
