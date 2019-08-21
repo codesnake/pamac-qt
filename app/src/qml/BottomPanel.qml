@@ -176,8 +176,7 @@ Pane {
                 Pane{
                     padding: 0
                     SideBar{
-//                        width: toBuild.length>0?170:0
-                        width: 0
+                        width: toBuild.length>0?170:0
                         id:sideMenuPending
                         initialItem:SideMenuPending{
                             onCurrentIndexChanged: {

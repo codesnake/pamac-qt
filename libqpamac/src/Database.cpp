@@ -283,35 +283,22 @@ GenericQmlFuture LibQPamac::Database::getInstalledPackagesAsync(Database::Instal
 GenericQmlFuture Database::getAurPackages(const QStringList &nameList)
 {
 
-    //method returns non usable values
-    auto list = Utils::qStringListToCStringVector(nameList);
-    QmlFutureImpl* future = new QmlFutureImpl;
+    auto list = new std::vector<char*>(Utils::qStringListToCStringVector(nameList));
+    auto future = new QmlFutureImpl;
 
-    pamac_database_get_aur_pkgs(handle,list.data(),list.size(),asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
+    pamac_database_get_aur_pkgs(handle,list->data(),list->size(),asyncCallback(),new std::function([=](PamacDatabase* object, GAsyncResult* result){
 
         auto hashTable = pamac_database_get_aur_pkgs_finish(object,result);
 
         QVariantList resultList;
 
-        g_hash_table_foreach(hashTable,[](void* keyPtr,void* valuePtr,void* funcPtr){
+        auto glist = g_hash_table_get_values(hashTable);
 
+        for(auto it = glist;it!=nullptr;it=it->next){
+            resultList.push_back(QVariant::fromValue(AURPackage(it->data)));
+        }
 
-
-            auto key = reinterpret_cast<char*>(keyPtr);
-            auto value = reinterpret_cast<PamacAURPackage*>(valuePtr);
-
-            auto func = reinterpret_cast<std::function<void(const QString&,const AURPackage&)>*>(funcPtr);
-
-            (*func)(QString::fromUtf8(key),AURPackage(value));
-
-            delete func;
-            delete key;
-
-        }, new std::function([&](const QString& key,const AURPackage& value){
-            resultList.push_back(QVariant::fromValue(value));
-        }));
-
-
+        delete list;
         future->setFuture(resultList);
     }));
     return GenericQmlFuture(future);
