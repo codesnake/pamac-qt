@@ -36,8 +36,10 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
     view.setMinimumHeight(ok?minHeight:400);
     auto minWidth = object->property("minimumWidth").toInt(&ok);
     view.setMinimumWidth(ok?minWidth:600);
-int x = mainWindow->property("x").toInt()+(mainWindow->property("width").toInt()/2)-view.minimumWidth()/2;
-int y = mainWindow->property("y").toInt()+(mainWindow->property("height").toInt()/2)-view.minimumHeight()/2;
+
+    int x = mainWindow->property("x").toInt()+(mainWindow->property("width").toInt()/2)-view.minimumWidth()/2;
+    int y = mainWindow->property("y").toInt()+(mainWindow->property("height").toInt()/2)-view.minimumHeight()/2;
+
     view.setPosition(x,y);
 
     QEventLoop loop;

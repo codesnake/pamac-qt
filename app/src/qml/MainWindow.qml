@@ -35,9 +35,6 @@ ApplicationWindow {
     property var toLoad: []
     property var ignoreWhenUpdate: []
 
-    AboutDialog{
-        id:aboutDialog
-    }
 
     Transaction{
         id:transaction
@@ -162,7 +159,7 @@ ApplicationWindow {
                         Action {
                             text: "About"
                             onTriggered: {
-                                aboutDialog.open();
+                                DialogRunner.exec(Qt.resolvedUrl("AboutDialog.qml"));
                             }
                         }
                     }

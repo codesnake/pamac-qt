@@ -3,19 +3,14 @@ import QtQuick.Controls 2.12
 import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
 
-Window{
-    function open(){
-        visible=true
-    }
-
-    id: dialog
-    title: "About Pamac Qt"
-    width: 370
-    height: 300
     Pane {
         anchors.fill: parent
         id: item1
         padding: 2
+
+        property var title: "About Pamac Qt"
+        property var minimumWidth: 400
+        property var minimumHeight: 300
 
         Pane{
             anchors.topMargin: 4
@@ -113,12 +108,11 @@ Window{
         }
         Button{
             text:qsTr("OK")
-            onClicked: dialog.close();
+            onClicked: item1.close();
             anchors{
                 right: parent.right
                 bottom: parent.bottom
             }
         }
+        signal close
     }
-
-}
