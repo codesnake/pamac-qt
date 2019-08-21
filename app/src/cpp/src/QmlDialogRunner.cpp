@@ -4,7 +4,7 @@
 #include <QtDebug>
 #include <QEventLoop>
 #include <QQuickItem>
-#include <QQmlEngine>
+#include <QQmlApplicationEngine>
 QmlDialogRunner::QmlDialogRunner(QObject* parent) : QObject(parent)
 {
 
@@ -13,7 +13,11 @@ QmlDialogRunner::QmlDialogRunner(QObject* parent) : QObject(parent)
 QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propertiesMap)
 {
     CloseEventFilter filter;
-    QQuickView view(static_cast<QQmlEngine*>(parent()),nullptr);
+    auto engine = qobject_cast<QQmlApplicationEngine*>(parent());
+    auto mainWindow = engine->rootObjects()[0];
+
+
+    QQuickView view(engine,nullptr);
     view.installEventFilter(&filter);
     view.setSource(qmlFile);
     view.show();
@@ -32,6 +36,9 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
     view.setMinimumHeight(ok?minHeight:400);
     auto minWidth = object->property("minimumWidth").toInt(&ok);
     view.setMinimumWidth(ok?minWidth:600);
+int x = mainWindow->property("x").toInt()+(mainWindow->property("width").toInt()/2)-view.minimumWidth()/2;
+int y = mainWindow->property("y").toInt()+(mainWindow->property("height").toInt()/2)-view.minimumHeight()/2;
+    view.setPosition(x,y);
 
     QEventLoop loop;
     connect(&filter,&CloseEventFilter::closing,&loop,&QEventLoop::quit);
