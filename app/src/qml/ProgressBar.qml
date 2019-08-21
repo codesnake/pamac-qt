@@ -6,7 +6,6 @@ import "../js/JSUtils.js" as Utils
 
 Rectangle{
     Rectangle{
-        anchors.left: parent.left
         SequentialAnimation on x{
             loops: Animation.Infinite
             running: progressBar.indeterminate
@@ -35,4 +34,9 @@ Rectangle{
     property var value: transaction.progress
     property var from:0
     property var to:1
+    onIndeterminateChanged: {
+        if(!indeterminate){
+            progress.x = 0
+        }
+    }
 }
