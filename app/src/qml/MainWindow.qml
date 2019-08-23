@@ -6,7 +6,6 @@ import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
 import QPamac.Async 1.0
-import NotificationService 1.0
 import DialogRunner 1.0
 import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
@@ -52,17 +51,6 @@ ApplicationWindow {
         }
         Component.onDestruction: {
             transaction.quitDaemon();
-        }
-        onStartedChanged: {
-            NotificationService.setVisible(started);
-        }
-
-        onProgressChanged: {
-            NotificationService.setProgress(progress);
-        }
-
-        onEmitAction: {
-            NotificationService.setMessage(emitAction);
         }
 
         requestChooseProvider: (depend,list)=>{
@@ -303,11 +291,6 @@ ApplicationWindow {
             left:parent.left
             right:parent.right
         }
-
-    }
-    Component.onCompleted: {
-        //Init singleton
-        NotificationService;
 
     }
 }

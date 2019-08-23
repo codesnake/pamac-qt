@@ -30,8 +30,8 @@ Rectangle{
     }
     color: systemPalette.mid
     id:progressBar
-    property bool indeterminate:  transaction.indeterminate
-    property var value: transaction.progress
+    property bool indeterminate
+    property var value
     property var from:0
     property var to:1
     onIndeterminateChanged: {

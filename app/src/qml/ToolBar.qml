@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.3
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
 import QtQuick.Dialogs 1.2
+import NotificationServices 1.0
+
 import "../js/JSUtils.js" as JSUtils
 ToolBar {
     height: 40
@@ -126,8 +128,17 @@ ToolBar {
             Connections{
                 target: Database
                 onUpdatesReady: {
-                    updatesButton.updatesCount = upds.getReposUpdates().length
+                    let repoUpds = upds.getReposUpdates().length;
+                    updatesButton.updatesCount = repoUpds;
+                    if(repoUpds!==0)
+                        updatesNotification.show();
                 }
+            }
+            Notification{
+                id: updatesNotification
+                summary: "Updates available"
+                body: updatesButton.updatesCount+" new update(s)"
+                iconName: "system-software-install"
             }
         }
     }

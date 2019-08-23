@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import QPamac.Database 1.0
+import NotificationServices 1.0
 import "../js/JSUtils.js" as Utils
 import "./" as PamacQt
 
@@ -95,6 +96,12 @@ Pane {
             ]
         }
     ]
+    DesktopProgress{
+        visible: transaction.started
+        progress: transaction.progress
+        indeterminate: transaction.indeterminate
+    }
+
     RowLayout{
         ItemDelegate{
             id:detailsButton
@@ -116,11 +123,14 @@ Pane {
                 }
 
                 PamacQt.ProgressBar {
+                    value: transaction.progress
+                    indeterminate: transaction.indeterminate
                     id: progressBar
                     height: 6
                     width: parent.width
                 }
             }
+
             onClicked: {
                 if(!checked){
                     transaction.details = ""
