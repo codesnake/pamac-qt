@@ -55,66 +55,64 @@ LoaderDelegate{
     property bool highlighted:list.isSelected(row)
     
     
-    function packageAction(){
+    function packageActionRepos(){
         
         let el;
-        if(JSUtils.qmlTypeOf(modelData,"LibQPamac::Package"))
-            if(installedVersion!=""){
-                el = toRemove.indexOf(name);
-                if(el!==-1){
-                    toRemove.splice(el,1)
-                    toRemoveChanged();
-                }
-                else{
-                    toRemove.push(name);
-                    toRemoveChanged();
-                }
-            } else{
-                el = toInstall.indexOf(name);
-                if(el!==-1){
-                    toInstall.splice(el,1)
-                    toInstallChanged();
-                }
-                else{
-                    toInstall.push(name);
-                    toInstallChanged();
-                }
-                
+        if(installedVersion!=""){
+            el = toRemove.indexOf(name);
+            if(el!==-1){
+                toRemove.splice(el,1)
+                toRemoveChanged();
             }
-        else{
-            if(installedVersion!=""){
-                el = toRemove.indexOf(name);
-                if(el!==-1){
-                    toRemove.splice(el,1)
-                    toRemoveChanged();
-                }
-                else{
-                    toRemove.push(name);
-                    toRemoveChanged();
-                }
-            } else{
-                el = toBuild.indexOf(name);
-                if(el!==-1){
-                    toBuild.splice(el,1)
-                    toBuildChanged();
-                }
-                else{
-                    toBuild.push(name);
-                    toBuildChanged();
-                }
-                
+            else{
+                toRemove.push(name);
+                toRemoveChanged();
             }
+        } else{
+            el = toInstall.indexOf(name);
+            if(el!==-1){
+                toInstall.splice(el,1)
+                toInstallChanged();
+            }
+            else{
+                toInstall.push(name);
+                toInstallChanged();
+            }
+
         }
     }
-    
-    
-    
+    function packageActionAur(){
+        let el;
+        if(installedVersion!=""){
+            el = toRemove.indexOf(name);
+            if(el!==-1){
+                toRemove.splice(el,1)
+                toRemoveChanged();
+            }
+            else{
+                toRemove.push(name);
+                toRemoveChanged();
+            }
+        } else{
+            el = toBuild.indexOf(name);
+            if(el!==-1){
+                toBuild.splice(el,1)
+                toBuildChanged();
+            }
+            else{
+                toBuild.push(name);
+                toBuildChanged();
+            }
+
+        }
+    }
+
     function isPending(){
         if(installedVersion!=""){
             if(toRemove.indexOf(name)!=-1){
                 return true
             }
-            
+
             return false
         }
         if(JSUtils.qmlTypeOf(modelData,"LibQPamac::Package")){
@@ -131,7 +129,7 @@ LoaderDelegate{
                 return false
             }
         }
-        
+
     }
     columns: {
         if(stackView.currentItem.objectName == "updatesPage"){
@@ -167,17 +165,17 @@ LoaderDelegate{
                     height: width
                     source:(JSUtils.isAccessible(iconUrl) && iconUrl.toString().length)?Qt.resolvedUrl("file://"+iconUrl):"image://icons/package-x-generic"
                 }
-                
+
                 Column{
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width-packageIcon.width-5
                     Label {
-                        
+
                         width:parent.width
                         text:appName?appName+" ("+name+")":name
                         font.weight: Font.Bold
                         font.bold: true
-                        
+
                         elide: Text.ElideRight
                     }
                     Label {
@@ -194,7 +192,7 @@ LoaderDelegate{
                 text:version
             }
         }
-       property var repo: Component{
+        property var repo: Component{
             Label{
                 clip: true
                 text:repo
@@ -209,13 +207,13 @@ LoaderDelegate{
         property var installButton: Component{
             Item {
                 Button{
-                    
+
                     checkable: true
                     anchors.fill: parent
                     anchors.margins: 5
                     text: installedVersion!=""?"Remove":"Install"
                     checked: isPending()
-                    onClicked: packageAction()
+                    onClicked: packageActionRepos()
                 }
             }
         }
@@ -247,16 +245,16 @@ LoaderDelegate{
         property var buildButton: Component{
             Item {
                 Button{
-                    
+
                     checkable: true
                     anchors.fill: parent
                     anchors.margins: 5
                     text: installedVersion!=""?"Remove":"Build"
                     checked: isPending()
-                    onClicked: packageAction()
+                    onClicked: packageActionAur()
                 }
             }
         }
     }
-    
+
 }
