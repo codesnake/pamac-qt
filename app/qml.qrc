@@ -50,5 +50,6 @@
         <file>src/qml/ScreenshotViewerDialog.qml</file>
         <file>src/qml/PackageDelegate.qml</file>
         <file>src/qml/AskImportKeyDialog.qml</file>
+        <file>src/qml/TrayIcon.qml</file>
     </qresource>
 </RCC>

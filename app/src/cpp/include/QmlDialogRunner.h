@@ -5,6 +5,7 @@
 #include <QEvent>
 #include <QMap>
 #include <QVariant>
+#include <QQuickItem>
 class CloseEventFilter:public QObject{
     Q_OBJECT
 public:
@@ -22,6 +23,8 @@ class QmlDialogRunner:public QObject
 {
     Q_OBJECT
 public:
-    QmlDialogRunner(QObject* parent = nullptr);
+    QmlDialogRunner(QString  parentName, QObject* parent = nullptr);
     Q_INVOKABLE QVariantMap exec(const QUrl& qmlFile,const QVariantMap& properties = QVariantMap());
+private:
+    QString m_parentName;
 };

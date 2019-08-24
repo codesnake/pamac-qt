@@ -142,7 +142,6 @@ Pane {
 
         Button{
             id:cancelButton
-            visible: bottomPanel.width>(width+applyButton.width+detailsButton.width)
 
             enabled: !(transaction.started ||  (transaction.details.length!=0 && totalPending==0))
             text:qsTr("Cancel")
@@ -160,7 +159,6 @@ Pane {
 
         Button{
             id:applyButton
-            visible: bottomPanel.width>(width+cancelButton.width+detailsButton.width)
             enabled: !(transaction.started ||  (transaction.details.length!=0 && totalPending==0))
             text:qsTr("Apply")
             onClicked: {

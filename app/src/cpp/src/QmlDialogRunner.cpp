@@ -1,11 +1,13 @@
 #include "QmlDialogRunner.h"
+#include <utility>
 #include <QQmlComponent>
 #include <QQuickView>
 #include <QtDebug>
 #include <QEventLoop>
 #include <QQuickItem>
 #include <QQmlApplicationEngine>
-QmlDialogRunner::QmlDialogRunner(QObject* parent) : QObject(parent)
+#include <Application.h>
+QmlDialogRunner::QmlDialogRunner(QString  name, QObject* parent) : QObject(parent),m_parentName(std::move(name))
 {
 
 }
@@ -13,11 +15,9 @@ QmlDialogRunner::QmlDialogRunner(QObject* parent) : QObject(parent)
 QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propertiesMap)
 {
     CloseEventFilter filter;
-    auto engine = qobject_cast<QQmlApplicationEngine*>(parent());
-    auto mainWindow = engine->rootObjects()[0];
+    auto mainWindow = Application::m_objects[m_parentName];
 
-
-    QQuickView view(engine,nullptr);
+    QQuickView view(qobject_cast<QQmlEngine*>(parent()),nullptr);
     view.installEventFilter(&filter);
     view.setSource(qmlFile);
     view.show();

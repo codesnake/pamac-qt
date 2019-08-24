@@ -15,7 +15,6 @@ namespace LibQPamac {
 Database::Database(PamacDatabase *db, QObject *parent):
     QObject(parent)
 {
-    init();
 }
 
 Database::Database(const QString& configFile, QObject *parent):

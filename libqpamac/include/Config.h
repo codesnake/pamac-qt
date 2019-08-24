@@ -14,13 +14,25 @@ public:
     Config(PamacConfig* cfg)
     {
         m_handle = cfg;
+        g_object_ref(m_handle);
     }
     Config(const QString& str)
     {
         m_handle = pamac_config_new(str.toUtf8());
     }
     Config()=default;
-
+    Config(const Config& another){
+        m_handle=another.m_handle;
+        g_object_ref(m_handle);
+    }
+    Config operator =(const Config& another){
+        m_handle=another.m_handle;
+        g_object_ref(m_handle);
+        return *this;
+    }
+    ~Config(){
+        g_object_unref(m_handle);
+    }
     PAMAC_QT_STRING_PROPERTY_GET(confPath,pamac_config_get_conf_path(m_handle))
     PAMAC_QT_BOOL_PROPERTY_GET_SET(recurse,pamac_config_get_recurse(m_handle),
                                    setRecurse,pamac_config_set_recurse(m_handle,recurse))

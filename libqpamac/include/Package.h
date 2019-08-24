@@ -53,7 +53,6 @@ public:
 
 
     ~Package(){
-//        g_object_unref(m_handle);
     }
 
     operator PamacPackage*(){

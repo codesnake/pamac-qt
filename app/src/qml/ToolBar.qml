@@ -130,16 +130,10 @@ ToolBar {
                 onUpdatesReady: {
                     let repoUpds = upds.getReposUpdates().length;
                     updatesButton.updatesCount = repoUpds;
-                    if(repoUpds!==0)
-                        updatesNotification.show();
+
                 }
             }
-            Notification{
-                id: updatesNotification
-                summary: "Updates available"
-                body: updatesButton.updatesCount+" new update(s)"
-                iconName: "system-software-install"
-            }
+
         }
     }
 }

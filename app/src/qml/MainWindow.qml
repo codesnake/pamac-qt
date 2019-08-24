@@ -16,10 +16,6 @@ ApplicationWindow {
             stackView.push("UpdatesPage.qml");
     }
 
-    onClosing: {
-        if(transaction.started)
-            close.accepted = false
-    }
 
     function clear(){
         toInstall=[];
@@ -34,6 +30,11 @@ ApplicationWindow {
     property var toLoad: []
     property var ignoreWhenUpdate: []
 
+    onClosing: {
+        sClosing();
+    }
+
+    signal sClosing;
 
     Transaction{
         id:transaction
