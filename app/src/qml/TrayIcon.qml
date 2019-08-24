@@ -1,13 +1,21 @@
 import QtQuick 2.12
 import QPamac.Transaction 1.0
 import QPamac.Database 1.0
+
 import NotificationServices 1.0
 import Qt.labs.platform 1.1
 Item{
     objectName: "trayIcon"
-    Component.onCompleted: {
-        Database.getUpdatesAsync();
+    Timer{
+        interval: Database.config.refreshPeriod*3600000
+        repeat: true
+        running: true
+        triggeredOnStart: true
+        onTriggered: {
+            Database.getUpdatesAsync();
+        }
     }
+
     Connections{
         target: Database
         onUpdatesReady:{
