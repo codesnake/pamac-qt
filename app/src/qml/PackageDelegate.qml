@@ -148,7 +148,7 @@ LoaderDelegate{
         cellsPool.name,cellsPool.version,cellsPool.buildButton
     ]
     property var updateAurColumns: [
-        cellsPool.name,cellsPool.version,cellsPool.buildButton
+        cellsPool.name,cellsPool.version,cellsPool.updateButton
     ]
     Item {
         id: cellsPool
