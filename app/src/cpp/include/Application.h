@@ -20,7 +20,7 @@ private:
 private slots:
     void saveGeometry();
     void restoreGeometry();
-    void loadOpenWithDialog();
+    void loadOpenWithDialog(const QString& filename);
     void loadTrayIcon();
     void registerCommandLineOptions();
     void registerModules();

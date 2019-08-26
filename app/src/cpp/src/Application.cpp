@@ -18,7 +18,12 @@ Application::Application(QObject *parent):QObject(parent)
 
 int Application::exec()
 {
-    if(!registerDbusService()){
+    registerModules();
+    registerCommandLineOptions();
+
+    auto fileinfo = QFileInfo(m_parser.value("install"));
+
+    if(!registerDbusService() && !fileinfo.exists()){
         return 0;
     }
 
@@ -44,13 +49,13 @@ int Application::exec()
     QQuickStyle::setFallbackStyle("fusion");
     QQuickStyle::setStyle("org.kde.desktop");
 
-    registerModules();
-    registerCommandLineOptions();
 
-    loadTrayIcon();
-    if(QFileInfo::exists(m_parser.value("install"))){
-        loadOpenWithDialog();
+
+
+    if(fileinfo.exists()){
+        loadOpenWithDialog(fileinfo.absoluteFilePath());
     } else {
+        loadTrayIcon();
         if(!m_parser.isSet("tray-only")){
             loadMainWindow();
             if(m_parser.isSet("updates")){
@@ -92,6 +97,12 @@ void Application::restoreGeometry()
 
 void Application::loadMainWindow()
 {
+    qmlRegisterSingletonType<QmlDialogRunner>("DialogRunner",1,0,"DialogRunner",
+                                              [](QQmlEngine *m_engine, QJSEngine *scriptEngine)->QObject*{
+        Q_UNUSED(scriptEngine)
+
+        return new QmlDialogRunner("mainWindow", m_engine);
+    });
 
     if(m_objects["mainWindow"]!=nullptr){
         return;
@@ -107,9 +118,17 @@ void Application::loadMainWindow()
 
 }
 
-void Application::loadOpenWithDialog()
+void Application::loadOpenWithDialog(const QString &filename)
 {
+    qmlRegisterSingletonType<QmlDialogRunner>("DialogRunner",1,0,"DialogRunner",
+                                              [](QQmlEngine *m_engine, QJSEngine *scriptEngine)->QObject*{
+        Q_UNUSED(scriptEngine)
+
+        return new QmlDialogRunner("openWithDialog", m_engine);
+    });
+
     m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/OpenWithDialog.qml")));
+    QMetaObject::invokeMethod(m_objects["openWithDialog"],"start",Q_ARG(QVariant,filename));
 }
 
 void Application::loadTrayIcon()
@@ -121,7 +140,7 @@ void Application::loadTrayIcon()
     });
     connect(m_objects["trayIcon"],SIGNAL(showApp()),this,SLOT(loadMainWindow()));
     Utils::LambdaHelper::connect(m_objects["trayIcon"],SIGNAL(quitApp()),[=](){
-        if(this->m_objects["mainWindow"]!=nullptr){
+        if(m_objects["mainWindow"]!=nullptr){
             saveGeometry();
         }
         QApplication::quit();
@@ -155,12 +174,6 @@ void Application::registerModules()
     NotificationServiceModule notificationServiceModule("Pamac Qt");
     notificationServiceModule.registerTypes(nullptr);
 
-    qmlRegisterSingletonType<QmlDialogRunner>("DialogRunner",1,0,"DialogRunner",
-                                              [](QQmlEngine *m_engine, QJSEngine *scriptEngine)->QObject*{
-        Q_UNUSED(scriptEngine)
-
-        return new QmlDialogRunner("mainWindow", m_engine);
-    });
 
     m_engine.addImageProvider(QLatin1String("icons"), new XDGIconProvider);
 
