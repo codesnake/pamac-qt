@@ -11,6 +11,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES AUTORCC TRUE)
 add_definitions(-DQT_QML_DEBUG)
 target_include_directories(${PROJECT_NAME} PUBLIC "src/cpp/include")
 target_link_libraries(${PROJECT_NAME} libqpamac)
-target_link_libraries(${PROJECT_NAME} qtnotificationservice)
+target_link_libraries(${PROJECT_NAME} desktopnotificationservices)
 
 qt5_use_modules(${PROJECT_NAME} Core Qml Quick QuickControls2 Widgets)
