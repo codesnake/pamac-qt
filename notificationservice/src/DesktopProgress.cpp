@@ -61,7 +61,6 @@ void DesktopProgress::setIndeterminate(bool indeterminate)
     m_indeterminate = indeterminate;
     Q_EMIT indeterminateChanged(m_indeterminate);
 
-    send_unity_launcher_entry_message({{}});
 }
 DesktopProgress::DesktopProgress(QQuickItem* parent):QQuickItem(parent){
 }
