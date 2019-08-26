@@ -6,7 +6,6 @@ Page {
     property string key
     property string owner
     property bool ok
-    signal close;
 
     anchors.fill: parent
 
@@ -31,13 +30,14 @@ Page {
     }
     signal dialogAccepted
     onDialogAccepted: {
-        result = true;
+        ok = true;
         close();
     }
-    onDialogRejected: {
-        result = false;
-        close();
-    }
+
     signal dialogRejected
+    onDialogRejected: {
+        ok = false;
+        close();
+    }
     signal close
 }
