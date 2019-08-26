@@ -6,6 +6,7 @@ import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
 import QPamac.Async 1.0
+import Qt.labs.platform 1.0 as Labs
 import DialogRunner 1.0
 import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
@@ -133,10 +134,19 @@ ApplicationWindow {
                                 DialogRunner.exec("qrc:/src/qml/HistoryDialog.qml");
                             }
                         }
+                        Labs.FileDialog{
+                            id: fileDialog
+                            fileMode: Labs.FileDialog.OpenFiles
+                              nameFilters: ["ALPM packages (*.pkg.tar.*)"]
+                            onAccepted: {
+                                transaction.start([],[],fileDialog.files.map(value=>value.toString().replace("file://","")))
+                            }
+                        }
+
                         Action {
                             text: "Install local packages"
                             onTriggered: {
-                                fileDialog.visible = true;
+                                fileDialog.open()
                             }
                         }
                         Action {
