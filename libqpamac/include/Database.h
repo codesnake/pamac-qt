@@ -86,7 +86,7 @@ public:
     inline void refresh(){
         pamac_database_refresh(handle);
     }
-    Q_INVOKABLE QList<HistoryItem> getHistory();
+    Q_INVOKABLE QList<QVariant> getHistory();
 
 
 

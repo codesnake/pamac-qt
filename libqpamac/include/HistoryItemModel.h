@@ -1,5 +1,4 @@
-#ifndef HISTORYITEMMODEL_H
-#define HISTORYITEMMODEL_H
+#pragma once
 
 #include <QAbstractTableModel>
 #include <QString>
@@ -9,6 +8,11 @@ namespace LibQPamac {
 
 
 struct HistoryItem{
+    Q_GADGET
+    Q_PROPERTY(QString name MEMBER name)
+    Q_PROPERTY(QString version MEMBER version)
+    Q_PROPERTY(QDateTime time MEMBER time)
+public:
     enum Type{
         ALPMInstalled,
         ALPMRemoved,
@@ -40,7 +44,7 @@ struct HistoryItem{
         }
         return Unknown;
     }
-    static QList<HistoryItem> fromStringList(const QStringList& lst);
+    static QList<QVariant> fromStringList(const QStringList& lst);
     QDateTime time;
     Type type;
     QString name;
@@ -50,28 +54,28 @@ struct HistoryItem{
 class HistoryItemModel : public QAbstractTableModel
 {
     Q_OBJECT
-    Q_PROPERTY(QList<HistoryItem> historyList READ historyList WRITE setHistoryList NOTIFY historyListChanged)
+    Q_PROPERTY(QList<QVariant> historyList READ historyList WRITE setHistoryList NOTIFY historyListChanged)
     Q_PROPERTY(int columnCount READ columnCount CONSTANT)
     Q_PROPERTY(int rowCount READ rowCount CONSTANT)
 public:
     explicit HistoryItemModel(QObject *parent = nullptr);
 
-    QList<HistoryItem> historyList() const;
-    void setHistoryList(const QList<HistoryItem> &historyList);
+    QList<QVariant> historyList() const;
+    void setHistoryList(const QList<QVariant> &historyList);
 
 private:
-    QList<HistoryItem> m_historyList;
+    QList<QVariant> m_historyList;
 
     // QAbstractItemModel interface
 public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override
     {
-        Q_UNUSED(parent);
+        Q_UNUSED(parent)
         return m_historyList.length();
     }
     int columnCount(const QModelIndex &parent = QModelIndex()) const override
     {
-        Q_UNUSED(parent);
+        Q_UNUSED(parent)
         return 4;
     }
     QVariant data(const QModelIndex &index, int role) const override
@@ -79,19 +83,19 @@ public:
         if(role==Qt::DisplayRole){
             switch (index.column()) {
             case 2:
-                return m_historyList[index.row()].time.toString();
+                return m_historyList[index.row()].value<HistoryItem>().time.toString();
             case 1:
-                return HistoryItem::typeToString(m_historyList[index.row()].type);
+                return HistoryItem::typeToString(m_historyList[index.row()].value<HistoryItem>().type);
             case 0:
-                return m_historyList[index.row()].name;
+                return m_historyList[index.row()].value<HistoryItem>().name;
             case 3:
-                return m_historyList[index.row()].version;
+                return m_historyList[index.row()].value<HistoryItem>().version;
             }
         }
         return  QVariant::Invalid;
     }
 Q_SIGNALS:
-    void historyListChanged(const QList<HistoryItem>& historyList);
+    void historyListChanged(const QList<QVariant>& historyList);
 
     // QAbstractItemModel interface
 public:
@@ -104,9 +108,10 @@ public:
 public:
     Q_INVOKABLE QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 private:
-    QStringList list = {"Name","Action","Date","Size"};
+    QStringList list = {"Name","Action","Date","Version"};
     QList<QVariant> sizeList = {"fill","fill","fill","fill"};
 };
 
 }//namespace LibQPamac
-#endif // HISTORYITEMMODEL_H
+
+Q_DECLARE_METATYPE(LibQPamac::HistoryItem)

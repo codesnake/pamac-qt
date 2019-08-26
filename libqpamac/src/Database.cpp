@@ -216,7 +216,7 @@ bool Database::getCheckspace()
     return bool(pamac_database_get_checkspace(handle));
 }
 
-QList<HistoryItem> Database::getHistory(){
+QList<QVariant> Database::getHistory(){
     QFile file("/var/log/pacman.log");
     file.open(QFile::ReadOnly);
     QStringList list;

@@ -7,20 +7,21 @@ HistoryItemModel::HistoryItemModel(QObject *parent) : QAbstractTableModel(parent
 
 }
 
-QList<HistoryItem> HistoryItemModel::historyList() const
+QList<QVariant> HistoryItemModel::historyList() const
 {
     return m_historyList;
 }
 
-void HistoryItemModel::setHistoryList(const QList<HistoryItem> &historyList)
+void HistoryItemModel::setHistoryList(const QList<QVariant> &historyList)
 {
+    beginResetModel();
     m_historyList = historyList;
-
-    Q_EMIT historyListChanged(historyList);
+    endResetModel();
+    Q_EMIT historyListChanged(m_historyList);
 }
 
-QList<HistoryItem> HistoryItem::fromStringList(const QStringList &list){
-    QList<HistoryItem> result;
+QList<QVariant> HistoryItem::fromStringList(const QStringList &list){
+    QList<QVariant> result;
     const QRegularExpression exp("\\[(.+)\\] \\[ALPM\\] (\\S+) (\\S+) \\((.+)\\)");
     for(const QString& el:list){
         QRegularExpressionMatch match;
@@ -31,7 +32,7 @@ QList<HistoryItem> HistoryItem::fromStringList(const QStringList &list){
             item.name = match.captured(3);
             item.version = match.captured(4);
 
-            result.append(item);
+            result.append(QVariant::fromValue(item));
         }
     }
     return result;
