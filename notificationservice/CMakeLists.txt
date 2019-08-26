@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(qtnotificationservice)
+project(desktopnotificationservices)
 find_package(Qt5Core COMPONENTS Core Quick Qml)
 find_package(PkgConfig REQUIRED)
 
