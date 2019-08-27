@@ -46,14 +46,30 @@ Pane{
     function selectRow(row){
         var i = selectedRows.indexOf(row)
         if(i==-1){
+            forceActiveFocus();
             selectedRows.push(row);
             selectedRowsChanged();
         }
         else{
-            selectedRows.slice(i,1)
+            selectedRows.splice(i,1)
             selectedRowsChanged();
         }
     }
+    Keys.onDownPressed: {
+        let selectedRow = selectedRows[0];
+
+        selectRow(selectedRow);
+        selectRow(selectedRow+1);
+    }
+
+    Keys.onUpPressed: {
+        let selectedRow = selectedRows[0];
+
+        selectRow(selectedRow);
+        selectRow(selectedRow-1);
+    }
+    focus: true
+
     function selectAll(){
         for(var i =0;i<model.rowCount();i++){
             selectedRows.push(i);
@@ -73,6 +89,7 @@ Pane{
         columnWidthProvider:(column)=>{
                                 return header.customWidths[column];
                             }
+
         anchors{
             top:header.bottom
             bottom: parent.bottom
