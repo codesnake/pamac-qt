@@ -28,7 +28,7 @@ QList<QVariant> HistoryItem::fromStringList(const QStringList &list){
         if((match = exp.match(el)).hasMatch()){
             HistoryItem item;
             item.time = QDateTime::fromString(match.captured(1),Qt::ISODate);
-            item.type = typeFromString(match.captured(2));
+            item.m_type = typeFromString(match.captured(2));
             item.name = match.captured(3);
             item.version = match.captured(4);
 

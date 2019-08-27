@@ -11,7 +11,15 @@ Pane{
     id:historyDialog
     padding: 3
     anchors.fill: parent
+
     Pane{
+        Label{
+            text: qsTr("Filter options:")
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.leftMargin: -filters.padding
+            anchors.topMargin: -filters.padding
+        }
         anchors{
             top: parent.top
             left: parent.left
@@ -19,18 +27,49 @@ Pane{
         }
         height:  50
         id:filters
+        padding: 10
+
         GridLayout{
             anchors.fill: parent
-            Row{
+            RowLayout{
 
                 Label{
                     id: packageFilterLabel
                     text: qsTr("Package name:")
+                    padding: 5
                 }
                 TextArea{
-                    anchors.verticalCenter: packageFilterLabel.verticalCenter
+                    Layout.fillWidth: true
                     width: 100
                     id: packageFilter
+                }
+            }
+            RowLayout{
+                Label{
+                    id: actionChooserLabel
+                    text: qsTr("Actions:")
+                    padding: 5
+                }
+
+                CheckBox{
+                    id: installedCheckbox
+                    text:qsTr("Installed")
+                    checked: true
+                }
+                CheckBox{
+                    id: removedCheckbox
+                    text:qsTr("Removed")
+                    checked: true
+                }
+                CheckBox{
+                    id: upgradedCheckbox
+                    text:qsTr("Upgraded")
+                    checked: true
+                }
+                CheckBox{
+                    id: unknownCheckbox
+                    text:qsTr("Unknown")
+                    checked: true
                 }
             }
         }
@@ -52,11 +91,28 @@ Pane{
 
         model:HistoryModel{
             historyList: {
-                let result;
-                if(packageFilter.text!="")
-                    result = table.history.filter(value => value.name.includes(packageFilter.text));
+                let result = table.history;
 
+                if(packageFilter.text!="")
+                    result = result.filter(value => value.name.includes(packageFilter.text));
+
+                result = result.filter(value=>{
+                                           switch(value.type){
+                                               case "Installed":
+                                               return installedCheckbox.checked
+                                               case "Removed":
+                                               return removedCheckbox.checked
+                                               case "Upgraded":
+                                               return upgradedCheckbox.checked
+                                               case "Unknown":
+                                               return unknownCheckbox.checked
+                                           }
+                                           return true
+                                       });
                 return result
+            }
+            onHistoryListChanged:{
+                table.view.contentY=0
             }
         }
 

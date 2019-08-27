@@ -12,6 +12,7 @@ struct HistoryItem{
     Q_PROPERTY(QString name MEMBER name)
     Q_PROPERTY(QString version MEMBER version)
     Q_PROPERTY(QDateTime time MEMBER time)
+    Q_PROPERTY(QString type READ type WRITE setType)
 public:
     enum Type{
         ALPMInstalled,
@@ -44,9 +45,15 @@ public:
         }
         return Unknown;
     }
+    QString type(){
+        return typeToString(m_type);
+    }
+    void setType(const QString& type){
+        m_type = typeFromString(type);
+    }
     static QList<QVariant> fromStringList(const QStringList& lst);
     QDateTime time;
-    Type type;
+    Type m_type;
     QString name;
     QString version;
 };
@@ -85,7 +92,7 @@ public:
             case 2:
                 return m_historyList[index.row()].value<HistoryItem>().time.toString();
             case 1:
-                return HistoryItem::typeToString(m_historyList[index.row()].value<HistoryItem>().type);
+                return HistoryItem::typeToString(m_historyList[index.row()].value<HistoryItem>().m_type);
             case 0:
                 return m_historyList[index.row()].value<HistoryItem>().name;
             case 3:
