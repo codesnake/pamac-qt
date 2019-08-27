@@ -38,10 +38,8 @@ QList<QVariant> HistoryItem::fromStringList(const QStringList &list){
     return result;
 }
 
-} //namespace LibQPamac
 
-
-QVariant LibQPamac::HistoryItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant HistoryItemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if(section>=columnCount()) {
         return QVariant::Invalid;
@@ -57,3 +55,56 @@ QVariant LibQPamac::HistoryItemModel::headerData(int section, Qt::Orientation or
     }
     return QVariant::Invalid;
 }
+
+
+void HistoryItemModel::sort(int column, Qt::SortOrder order)
+{
+    auto sortFunction = std::function<bool(QVariant&,QVariant&)>();
+
+    switch(column){
+    case 2:
+        sortFunction = [order](QVariant& v1,QVariant& v2)->bool{
+            auto i1 = v1.value<HistoryItem>();
+            auto i2 = v2.value<HistoryItem>();
+            if(order == Qt::AscendingOrder){
+                return (i1.time>i2.time);
+            }
+            return (i1.time<i2.time);
+        };
+        break;
+    case 1:
+        sortFunction = [order](QVariant& v1,QVariant& v2)->bool{
+            auto i1 = v1.value<HistoryItem>();
+            auto i2 = v2.value<HistoryItem>();
+            if(order == Qt::AscendingOrder){
+                return (i1.type()>i2.type());
+            }
+            return (i1.type()<i2.type());
+        };
+        break;
+    case 0:
+        sortFunction = [order](QVariant& v1,QVariant& v2)->bool{
+            auto i1 = v1.value<HistoryItem>();
+            auto i2 = v2.value<HistoryItem>();
+            if(order == Qt::AscendingOrder){
+                return (i1.name>i2.name);
+            }
+            return (i1.name<i2.name);
+        };
+        break;
+    case 3:
+        sortFunction = [order](QVariant& v1,QVariant& v2)->bool{
+            auto i1 = v1.value<HistoryItem>();
+            auto i2 = v2.value<HistoryItem>();
+            if(order == Qt::AscendingOrder){
+                return (i1.version>i2.version);
+            }
+            return (i1.version<i2.version);
+        };
+        break;
+    }
+    beginResetModel();
+    std::sort(m_historyList.begin(),m_historyList.end(),sortFunction);
+    endResetModel();
+}
+} //namespace LibQPamac

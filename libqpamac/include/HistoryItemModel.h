@@ -114,9 +114,13 @@ public:
     // QAbstractItemModel interface
 public:
     Q_INVOKABLE QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    Q_INVOKABLE void sort(int column, Qt::SortOrder order) override;
+
+
 private:
     QStringList list = {"Name","Action","Date","Version"};
     QList<QVariant> sizeList = {"fill","fill","fill","fill"};
+
 };
 
 }//namespace LibQPamac
