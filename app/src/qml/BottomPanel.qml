@@ -109,33 +109,40 @@ Pane {
             checkable: true
             Layout.fillWidth: true
             padding: 5
-            Column{
-
+            RowLayout{
+                height: parent.height
                 anchors.fill: parent
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                Label{
-                    width: parent.width
+                Column{
+                    Layout.fillWidth: true
+                    Label{
+                        width: parent.width
 
-                    text: transaction.started?transaction.action:(sysUpgrade?calcTotalSize():totalPending + " pending")
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+                        text: transaction.started?transaction.action:(sysUpgrade?calcTotalSize():totalPending + " pending")
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+
+                    PamacQt.ProgressBar {
+                        value: transaction.progress
+                        indeterminate: transaction.indeterminate
+                        id: progressBar
+                        height: 6
+                        width: parent.width
+                    }
                 }
-
-                PamacQt.ProgressBar {
-                    value: transaction.progress
-                    indeterminate: transaction.indeterminate
-                    id: progressBar
-                    height: 6
-                    width: parent.width
+                Image {
+                    Layout.preferredHeight: parent.height/1.5
+                    Layout.preferredWidth: parent.height/1.5
+                    rotation: bottomPanel.state=="expanded"?270:90
+                    Behavior on rotation {
+                        NumberAnimation{}
+                    }
+                    source: "image://icon/go-previous"
                 }
             }
 
-            onClicked: {
-                if(!checked){
-                    transaction.details = ""
-                }
-            }
         }
 
 
