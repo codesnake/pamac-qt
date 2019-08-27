@@ -157,7 +157,10 @@ Pane {
                     stackView.pop();
                 }
 
-                toInstall = toRemove = toBuild = toLoad = [];
+                toInstall = [] ;
+                toRemove = [];
+                toBuild = [];
+                toLoad = [];
             }
         }
         anchors.margins: 5
