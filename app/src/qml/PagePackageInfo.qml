@@ -182,6 +182,7 @@ Page {
                         width: height * (sourceSize.width / sourceSize.height)
                         height: visible ? 200 : 0
                         asynchronous: true
+                        cache: false
                         fillMode: Image.PreserveAspectFit
                         source: pkg.screenshotUrl
                         MouseArea{
