@@ -29,13 +29,16 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
         }
     }
     view.setTitle(object->property("title").toString());
-    connect(object,SIGNAL(close()),&view,SLOT(close()));
+
+    if(object->metaObject()->indexOfSignal("close")>-1){
+        connect(object,SIGNAL(close()),&view,SLOT(close()));
+    }
 
     bool ok = false;
     auto minHeight = object->property("minimumHeight").toInt(&ok);
-    view.setMinimumHeight(ok?minHeight:400);
+    view.setMinimumHeight((ok && minHeight>0)?minHeight:400);
     auto minWidth = object->property("minimumWidth").toInt(&ok);
-    view.setMinimumWidth(ok?minWidth:600);
+    view.setMinimumWidth((ok && minWidth>0)?minWidth:600);
 
     int x = mainWindow->property("x").toInt()+(mainWindow->property("width").toInt()/2)-view.minimumWidth()/2;
     int y = mainWindow->property("y").toInt()+(mainWindow->property("height").toInt()/2)-view.minimumHeight()/2;
