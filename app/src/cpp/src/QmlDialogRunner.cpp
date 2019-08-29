@@ -30,7 +30,7 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
     }
     view.setTitle(object->property("title").toString());
 
-    if(object->metaObject()->indexOfSignal("close")>-1){
+    if(object->metaObject()->indexOfMethod("close()")>-1){
         connect(object,SIGNAL(close()),&view,SLOT(close()));
     }
 
