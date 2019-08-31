@@ -4,6 +4,7 @@ import QtGraphicalEffects 1.0
 import QPamac.Database 1.0
 import QPamac.Package 1.0
 import "../js/JSUtils.js" as JSUtils
+import "./" as PamacQt
 Page {
 
 
@@ -22,34 +23,42 @@ Page {
                 updatesDrawerListView.currentIndex=1
             if(!hasRepo && !hasAur){
                 progress.text = qsTr("System is up to date");
+            } else{
+                progress.text = qsTr("Showing updates")
             }
 
         }
         onGetUpdatesProgress:{
-            progress.text = qsTr("Checking for updates ")+percent+"%";
+            progress.text = qsTr("Checking for updates...");
+            progressBar.value = percent
         }
     }
     Column{
         width: implicitWidth
         height: implicitHeight
-        spacing: 1
+        spacing: progressBar.enabled?10:-5
         anchors.centerIn: parent
-        BusyIndicator{
-            anchors.horizontalCenter: parent.horizontalCenter
+        PamacQt.ProgressBar{
+            id:progressBar
             enabled: updates==undefined
-            height: enabled?width:0
-            width: progress.paintedWidth*0.5
-            running: true
+            height: enabled?5:0
+            width: progress.paintedWidth*2
+            from:0
+            to:100
             Behavior on height{
                 NumberAnimation{}
             }
         }
 
         Label{
+            anchors.horizontalCenter: progressBar.horizontalCenter
             id:progress
             text:qsTr("Checking for updates")
             font.weight: Font.Bold
             font.pointSize: 12
+        }
+        Behavior on spacing{
+            NumberAnimation{}
         }
     }
     Item{
