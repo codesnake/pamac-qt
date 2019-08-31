@@ -17,7 +17,7 @@ Pane {
                 top:parent.top
                 right: parent.right
             }
-            color: systemPalette.windowText
+            color: systemPalette.mid
         }
     }
     state:{
