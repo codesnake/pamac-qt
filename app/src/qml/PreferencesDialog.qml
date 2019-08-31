@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
+import Qt.labs.platform 1.0 as Labs
 import QPamac.Config 1.0
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
@@ -495,7 +496,7 @@ Page{
 
                 TextArea {
 
-                    text: config.aurBuildDirectory
+                    text: Utils.isAccessible(settingsState["pamac"]["BuildDirectory"])?settingsState["pamac"]["BuildDirectory"]:config.aurBuildDirectory
 
                     enabled: false
                     id: aurBuildDirTextArea
@@ -522,20 +523,18 @@ Page{
                         aurBuildDirDialog.open();
                     }
                 }
-                //                FileDialog{
-                //                    folder: encodeURIComponent(aurBuildDirTextArea.text)
-                //                    id:aurBuildDirDialog
-                //                    selectFolder:true
-                //                    selectMultiple: false
-                //                    selectExisting: true
-                //                    title: qsTr("Please choose a build directory")
-                //                    onAccepted: {
-                //                        var path = Utils.urlToPath(aurBuildDirDialog.fileUrl.toString());
+                Labs.FolderDialog{
+                    folder: encodeURIComponent(aurBuildDirTextArea.text)
+                    id:aurBuildDirDialog
+                    title: qsTr("Please choose a build directory")
 
-                //                        var obj = {"BuildDirectory":path};
-                //                        transaction.startWritePamacConfig(obj);
-                //                    }
-                //                }
+                    onAccepted: {
+                        var path = Utils.urlToPath(aurBuildDirDialog.folder.toString());
+
+                        settingsState["pamac"]["BuildDirectory"] = path;
+                        settingsStateChanged();
+                    }
+                }
                 RowLayout{
                     enabled: aurEnabledCheckBox.enabled
                     anchors.top: aurBuildDirTextArea.bottom
