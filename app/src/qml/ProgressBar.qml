@@ -27,6 +27,11 @@ Rectangle{
         height: parent.height
         width: parent.indeterminate?parent.width*0.1:parent.value*parent.width/(parent.to-parent.from)
         color: systemPalette.highlight
+        Behavior on width {
+            NumberAnimation{
+                easing.type: Easing.InOutQuart
+            }
+        }
     }
     color: systemPalette.mid
     id:progressBar
