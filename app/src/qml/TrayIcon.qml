@@ -35,7 +35,7 @@ Item{
     }
     SystemTrayIcon {
         icon.name: "system-software-install"
-        visible: true
+        visible: updatesNotification.updatesCount>0 || !Database.config.noUpdateHideIcon
         menu: Menu{
             visible: false
             MenuItem{
