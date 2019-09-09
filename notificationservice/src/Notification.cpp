@@ -81,6 +81,23 @@ void Notification::setDestroyOnClose(bool destroy)
 
 }
 
+void Notification::setActions(const QStringList &actions)
+{
+    if (m_actions == actions)
+        return;
+    notify_notification_clear_actions(m_handle);
+    for(auto& string : actions){
+        notify_notification_add_action(m_handle,string.toLower().toUtf8(),string.toUtf8(),[](NotifyNotification *notification,char* id,gpointer data){
+            auto that = reinterpret_cast<Notification*>(data);
+            Q_EMIT that->actionClicked(id);
+        },this,nullptr);
+    }
+
+
+    m_actions = actions;
+    Q_EMIT actionsChanged(m_actions);
+}
+
 void Notification::updateNotification()
 {
     if(m_handle==nullptr){

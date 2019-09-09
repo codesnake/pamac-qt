@@ -2,6 +2,7 @@
 
 #include <libnotify/notification.h>
 #include <QtQuick/QQuickItem>
+#include <QtQml/QJSValue>
 #include <QIcon>
 
 class Notification: public QQuickItem
@@ -11,6 +12,8 @@ class Notification: public QQuickItem
     Q_PROPERTY(QString summary READ summary WRITE setSummary NOTIFY summaryChanged)
     Q_PROPERTY(QString body READ body WRITE setBody NOTIFY bodyChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
+    Q_PROPERTY(QStringList actions READ actions WRITE setActions NOTIFY actionsChanged)
+
 
     Q_PROPERTY(int timeout READ timeout WRITE setTimeout NOTIFY timeoutChanged)
 
@@ -41,6 +44,11 @@ public:
         return m_timeout;
     }
 
+    QStringList actions() const
+    {
+        return m_actions;
+    }
+
 public Q_SLOTS:
     void setSummary(const QString& summary);
 
@@ -55,6 +63,8 @@ public Q_SLOTS:
 
     void setDestroyOnClose(bool destroy);
 
+    void setActions(const QStringList& actions);
+
 Q_SIGNALS:
     void summaryChanged(QString summary);
 
@@ -63,6 +73,10 @@ Q_SIGNALS:
     void iconNameChanged(QString iconName);
 
     void timeoutChanged(int timeout);
+
+    void actionClicked(QByteArray actionId);
+
+    void actionsChanged(QStringList actions);
 
 private:
     NotifyNotification* m_handle = nullptr;
@@ -74,4 +88,5 @@ private:
     int m_timeout;
 
     void updateNotification();
+    QStringList m_actions;
 };

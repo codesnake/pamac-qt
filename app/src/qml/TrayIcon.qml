@@ -32,6 +32,12 @@ Item{
         summary: qsTr("Updates available")
         body: updatesCount+" new update(s)"
         iconName: "system-software-update"
+        actions: ["Show"]
+        onActionClicked: {
+            if(actionId=="show"){
+                showUpdates();
+            }
+        }
     }
     SystemTrayIcon {
         icon.name: "system-software-install"
