@@ -18,7 +18,7 @@ void LibQPamac::Transaction::startWritePamacConfig(const QVariantMap &map){
         g_hash_table_insert(tabl,el,Utils::qVariantToGVariant(value));
     }
 
-    pamac_transaction_start_write_pamac_config(m_handle,tabl);
+//    pamac_transaction_write_pamac_config(m_handle,tabl);
     for(auto &el :keys){
         delete el;
     }
@@ -38,7 +38,7 @@ void LibQPamac::Transaction::startWriteAlpmConfig(const QVariantMap &map){
         g_hash_table_insert(tabl,el,Utils::qVariantToGVariant(value));
     }
 
-    pamac_transaction_start_write_alpm_config(m_handle,tabl);
+//    pamac_transaction_start_write_alpm_config(m_handle,tabl);
     for(auto &el :keys){
         delete el;
     }
@@ -47,29 +47,29 @@ void LibQPamac::Transaction::startWriteAlpmConfig(const QVariantMap &map){
 
 GenericQmlFuture LibQPamac::Transaction::getBuildFiles(const QString &pkgname){
     auto future = new QmlFutureImpl;
-    pamac_transaction_get_build_files(m_handle,pkgname.toUtf8(),
-                                      [](GObject* parent,GAsyncResult* res,gpointer futurePtr){
-        auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
-        if(future->isRunning()){
+//    pamac_transaction_get_build_files(m_handle,pkgname.toUtf8(),
+//                                      [](GObject* parent,GAsyncResult* res,gpointer futurePtr){
+//        auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
+//        if(future->isRunning()){
 
-            auto transaction = reinterpret_cast<PamacTransaction*>(parent);
-            int length = 0;
-            gchar** result = pamac_transaction_get_build_files_finish(transaction,res,&length);
-            QStringList resList;
+//            auto transaction = reinterpret_cast<PamacTransaction*>(parent);
+//            int length = 0;
+//            gchar** result = pamac_transaction_get_build_files_finish(transaction,res);
+//            QStringList resList;
 
-            for(int i =0;i<length;i++){
-                QFileInfo file(QString::fromUtf8(result[i]));
-                resList.append(file.fileName());
-                g_free(result[i]);
-            }
+//            for(int i =0;i<length;i++){
+//                QFileInfo file(QString::fromUtf8(result[i]));
+//                resList.append(file.fileName());
+//                g_free(result[i]);
+//            }
 
-            g_free(result);
-            future->setFuture(QVariant::fromValue(resList));
-        }
-        else {
-            delete future;
-        }
-    },future);
+//            g_free(result);
+//            future->setFuture(QVariant::fromValue(resList));
+//        }
+//        else {
+//            delete future;
+//        }
+//    },future);
     return GenericQmlFuture(future);
 
 }
@@ -86,12 +86,12 @@ void LibQPamac::Transaction::start(const QStringList& toInstall, const QStringLi
     auto ignore = qStringListToCStringVector(tempIgnore);
     auto overwrite = qStringListToCStringVector(overwriteFiles);
 
-    pamac_transaction_start(m_handle,install.data(),int(install.size()),
-                            remove.data(),int(remove.size()),
-                            load.data(),int(load.size()),
-                            build.data(),int(build.size()),
-                            ignore.data(),int(ignore.size()),
-                            overwrite.data(),int(overwrite.size()));
+//    pamac_transaction_start(m_handle,install.data(),int(install.size()),
+//                            remove.data(),int(remove.size()),
+//                            load.data(),int(load.size()),
+//                            build.data(),int(build.size()),
+//                            ignore.data(),int(ignore.size()),
+//                            overwrite.data(),int(overwrite.size()));
     setProperty("started",true);
 
 }
@@ -103,9 +103,9 @@ void LibQPamac::Transaction::startSysupgrade(bool forceRefresh, bool enableDowng
     auto ignore = qStringListToCStringVector(tempIgnore);
     auto overwrite = qStringListToCStringVector(overwriteFiles);
 
-    pamac_transaction_start_sysupgrade(m_handle,forceRefresh,enableDowngrade,
-                                       ignore.data(),int(ignore.size()),
-                                       overwrite.data(),int(overwrite.size()));
+//    pamac_transaction_start_sysupgrade(m_handle,forceRefresh,enableDowngrade,
+//                                       ignore.data(),int(ignore.size()),
+//                                       overwrite.data(),int(overwrite.size()));
 
     setProperty("started",true);
 }
@@ -132,49 +132,49 @@ void LibQPamac::Transaction::init()
                             this->m_requestCommit.call({engine->toScriptValue(TransactionSummary(summary))}))
                         .toBool());
     });
-    PAMAC_TRANSACTION_GET_CLASS(m_handle)->choose_optdeps=
-            Utils::cify([=](PamacTransaction* self, const gchar* pkgname, gchar** optdeps, int optdeps_length1)->GList*{
+//    PAMAC_TRANSACTION_GET_CLASS(m_handle)->choose_optdeps=
+//            Utils::cify([=](PamacTransaction* self, const gchar* pkgname, gchar** optdeps, int optdeps_length1)->GList*{
 
-        QStringList lst = Utils::cStringArrayToQStringList(optdeps,optdeps_length1);
+//        QStringList lst = Utils::cStringArrayToQStringList(optdeps,optdeps_length1);
 
-        auto engine = qmlEngine(this);
-        auto varList = engine->fromScriptValue<QList<bool>>(this->m_requestOptDepends.call({{QString::fromUtf8(pkgname),engine->toScriptValue(lst)}}));
+//        auto engine = qmlEngine(this);
+//        auto varList = engine->fromScriptValue<QList<bool>>(this->m_requestOptDepends.call({{QString::fromUtf8(pkgname),engine->toScriptValue(lst)}}));
 
-        GList* result = nullptr;
+//        GList* result = nullptr;
 
-        int minLength = std::min(optdeps_length1,varList.length());
+//        int minLength = std::min(optdeps_length1,varList.length());
 
-        for(int i =0;i<minLength;i++){
-            char* res = new char[lst[i].toUtf8().length()];
-            std::memcpy(res,lst[i].toUtf8(),lst[i].toUtf8().size());
-            result = g_list_prepend(result,res);
-        }
-
-
-        return result;
-    });
-    PAMAC_TRANSACTION_GET_CLASS(m_handle)->choose_provider=
-            Utils::cify([=](PamacTransaction* self, const gchar* depend, gchar** providers, int providers_length1)->gint{
-        QStringList lst = Utils::cStringArrayToQStringList(providers,providers_length1);
+//        for(int i =0;i<minLength;i++){
+//            char* res = new char[lst[i].toUtf8().length()];
+//            std::memcpy(res,lst[i].toUtf8(),lst[i].toUtf8().size());
+//            result = g_list_prepend(result,res);
+//        }
 
 
-        auto engine = qmlEngine(this);
+//        return result;
+//    });
+//    PAMAC_TRANSACTION_GET_CLASS(m_handle)->choose_provider=
+//            Utils::cify([=](PamacTransaction* self, const gchar* depend, gchar** providers, int providers_length1)->gint{
+//        QStringList lst = Utils::cStringArrayToQStringList(providers,providers_length1);
 
-        return engine->fromScriptValue<int>(this->m_requestChooseProvider.call({{QString::fromUtf8(depend),engine->toScriptValue(lst)}}));
-    });
 
-    PAMAC_TRANSACTION_GET_CLASS(m_handle)->ask_import_key=
-            Utils::cify([=](PamacTransaction* self, const gchar* pkgname, const gchar* key, const gchar* owner)->gboolean{
+//        auto engine = qmlEngine(this);
 
-        auto engine = qmlEngine(this);
-        return gboolean(engine->fromScriptValue<bool>(this->m_requestImportKey.call({{QString::fromUtf8(pkgname),QString::fromUtf8(key),QString::fromUtf8(owner)}})));
-    });
-    PAMAC_TRANSACTION_GET_CLASS(m_handle)->ask_edit_build_files =
-            Utils::cify([=](PamacTransaction* self, PamacTransactionSummary* summary)->gboolean{
-        auto engine = qmlEngine(this);
+//        return engine->fromScriptValue<int>(this->m_requestChooseProvider.call({{QString::fromUtf8(depend),engine->toScriptValue(lst)}}));
+//    });
 
-        return false;
-    });
+//    PAMAC_TRANSACTION_GET_CLASS(m_handle)->ask_import_key=
+//            Utils::cify([=](PamacTransaction* self, const gchar* pkgname, const gchar* key, const gchar* owner)->gboolean{
+
+//        auto engine = qmlEngine(this);
+//        return gboolean(engine->fromScriptValue<bool>(this->m_requestImportKey.call({{QString::fromUtf8(pkgname),QString::fromUtf8(key),QString::fromUtf8(owner)}})));
+//    });
+//    PAMAC_TRANSACTION_GET_CLASS(m_handle)->ask_edit_build_files =
+//            Utils::cify([=](PamacTransaction* self, PamacTransactionSummary* summary)->gboolean{
+//        auto engine = qmlEngine(this);
+
+//        return false;
+//    });
     g_signal_connect(static_cast<PamacTransaction*>(m_handle),"finished",
                      reinterpret_cast<GCallback>(+[](GObject* obj,bool success,Transaction* t){
                          Q_UNUSED(obj);

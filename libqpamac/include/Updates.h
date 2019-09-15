@@ -15,7 +15,7 @@ public:
         return Utils::gListToQList<QVariant>(pamac_updates_get_repos_updates(m_updates.get()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
     }
     inline Q_INVOKABLE QVariantList getAurUpdates(){
-        return Utils::gListToQList<QVariant>(pamac_updates_get_aur_updates(m_updates.get()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AURPackage));
+        return Utils::gListToQList<QVariant>(pamac_updates_get_aur_updates(m_updates.get()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AurPackage));
     }
 private:
     std::shared_ptr<PamacUpdates> m_updates;

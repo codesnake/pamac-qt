@@ -10,6 +10,8 @@ extern "C"{
 #include <Config.h>
 #include <Updates.h>
 #include <HistoryItemModel.h>
+#include <AlpmPackage.h>
+#include <AurPackage.h>
 
 
 namespace LibQPamac {
@@ -18,8 +20,6 @@ class Database:public QObject
     Q_OBJECT
     Q_PROPERTY(Config config READ config WRITE setConfig NOTIFY configChanged)
 
-    Q_PROPERTY(bool checkspace READ getCheckspace CONSTANT)
-    Q_PROPERTY(bool asynchronous MEMBER m_asynchronous)
 public:
 
     enum InstalledPackageTypes{
@@ -39,9 +39,7 @@ public:
     Database(PamacDatabase* m_db,QObject* parent = nullptr);
     Database(const QString &configFile, QObject* parent = nullptr);
 
-    Q_INVOKABLE PackageDetails getPkgDetails(const QString &pkgname,const QString &app_name = "",bool useSyncDB = false);
-    Q_INVOKABLE GenericQmlFuture getAurPkgDetails(const QString &pkgname);
-    Q_INVOKABLE GenericQmlFuture cloneBuildFiles(const QString& pkgname,bool overwrite = true);
+//    Q_INVOKABLE QFile cloneBuildFiles(const QString& pkgname,bool overwrite = true) const;
 
 
     Q_INVOKABLE QStringList getRepos();
@@ -49,15 +47,15 @@ public:
 
 
     Q_INVOKABLE QStringList getIgnorePkgs();
-    Q_INVOKABLE GenericQmlFuture searchPkgsInAurAsync(const QString &name);
+    Q_INVOKABLE QList<AurPackage> searchPkgsInAurAsync(const QString &name);
 
-    Q_INVOKABLE GenericQmlFuture getCategoryPackagesAsync(const QString &category);
-    Q_INVOKABLE GenericQmlFuture searchPkgsAsync(const QString &name);
-    Q_INVOKABLE GenericQmlFuture getGroupPackagesAsync(const QString &group);
-    Q_INVOKABLE GenericQmlFuture getRepoPackagesAsync(const QString &repo);
-    Q_INVOKABLE GenericQmlFuture getInstalledAppsAsync();
-    Q_INVOKABLE GenericQmlFuture getInstalledPackagesAsync(InstalledPackageTypes type);
-    Q_INVOKABLE GenericQmlFuture getAurPackages(const QStringList &nameList);
+    Q_INVOKABLE QList<AlpmPackage> getCategoryPackagesAsync(const QString &category);
+    Q_INVOKABLE QList<AlpmPackage> searchPkgs(const QString &name);
+    Q_INVOKABLE QList<AlpmPackage> getGroupPackagesAsync(const QString &group);
+    Q_INVOKABLE QList<AlpmPackage> getRepoPackagesAsync(const QString &repo);
+    Q_INVOKABLE QList<AlpmPackage> getInstalledAppsAsync();
+    Q_INVOKABLE QList<AlpmPackage> getInstalledPackagesAsync(InstalledPackageTypes type);
+    Q_INVOKABLE QList<AurPackage> getAurPackages(const QStringList &nameList);
 
     Q_INVOKABLE QStringList getPkgFiles(const QString &name);
 
@@ -72,16 +70,15 @@ public:
     Q_INVOKABLE QStringList getMirrorsCountries();
     Q_INVOKABLE QString getMirrorsChoosenCountry();
 
-    Q_INVOKABLE void getUpdatesAsync();
+    Q_INVOKABLE Updates getUpdatesAsync();
 
     Q_INVOKABLE Package getInstalledPackage(const QString& name);
 
     Q_INVOKABLE Package getSyncPackage(const QString& name);
-    Q_INVOKABLE GenericQmlFuture getAurPackage(const QString& name);
+    Q_INVOKABLE AurPackage getAurPackage(const QString& name);
 
     Q_INVOKABLE QVariantList findPackagesByName(const QStringList& names);
 
-    bool getCheckspace();
 
     inline void refresh(){
         pamac_database_refresh(handle);

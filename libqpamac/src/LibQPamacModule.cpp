@@ -14,8 +14,8 @@
 void LibQPamacModule::registerTypes(const char *uri)
 {
     using namespace LibQPamac;
-    qRegisterMetaType<AURPackage>("AURPackage");
-    qRegisterMetaType<PackageDetails>("PackageDetails");
+    qRegisterMetaType<AurPackage>("AURPackage");
+    qRegisterMetaType<AlpmPackage>("AlpmPackage");
     qRegisterMetaType<Package>("Package");
     qRegisterMetaType<Updates>("Updates");
     qRegisterMetaType<Config>("Config");
@@ -34,8 +34,8 @@ void LibQPamacModule::registerTypes(const char *uri)
     qmlRegisterType<QmlFutureWatcher>("QPamac.Async",1,0,"FutureWatcher");
 
     qmlRegisterType<HistoryItemModel>("QPamac.History",1,0,"HistoryModel");
-    qmlRegisterUncreatableType<AURPackage>("QPamac.AUR.Package",1,0,"AURPackage","");
-    qmlRegisterUncreatableType<PackageDetails>("QPamac.Package",1,0,"PackageDetails","");
+    qmlRegisterUncreatableType<AurPackage>("QPamac.AUR.Package",1,0,"AURPackage","");
+    qmlRegisterUncreatableType<AurPackage>("QPamac.Package",1,0,"AlpmPackage","");
     qmlRegisterUncreatableType<Package>("QPamac.Package",1,0,"Package","");
     qmlRegisterType<PackageModel>("QPamac.PackageModel",1,0,"PackageModel");
     qmlRegisterType<AurPackageModel>("QPamac.AUR.PackageModel",1,0,"AURPackageModel");

@@ -59,12 +59,9 @@ class Transaction : public QObject
 
 public:
     Transaction(QObject * parent = nullptr):QObject(parent){}
-    Q_INVOKABLE void startGetAuthorization(){
-        pamac_transaction_start_get_authorization(m_handle);
-    }
 
     inline Q_INVOKABLE void getAuthorization(){
-        pamac_transaction_start_get_authorization(m_handle);
+        pamac_transaction_get_authorization(m_handle);
     }
     Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
     Q_INVOKABLE void startWriteAlpmConfig(const QVariantMap &map);
@@ -76,11 +73,11 @@ public:
         return m_database;
     }
 
-    Q_INVOKABLE void startGenerateMirrorsList(const QString& country = "all"){
-        pamac_transaction_start_generate_mirrors_list(m_handle,country.toUtf8());
+    Q_INVOKABLE void generateMirrorsList(const QString& country = "all"){
+        pamac_transaction_generate_mirrors_list(m_handle,country.toUtf8());
     }
-    Q_INVOKABLE void cleanCache(int cleanKeepNumPkgs,bool cleanRmOnlyInstalled){
-        pamac_transaction_start_clean_cache(m_handle,uint64_t(cleanKeepNumPkgs),gboolean(cleanRmOnlyInstalled));
+    Q_INVOKABLE void cleanCache(){
+        pamac_transaction_clean_cache(m_handle);
     }
     Q_INVOKABLE void quitDaemon(){
         pamac_transaction_quit_daemon(m_handle);

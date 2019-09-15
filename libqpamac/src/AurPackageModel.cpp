@@ -13,7 +13,7 @@ QHash<int, QByteArray> LibQPamac::AurPackageModel::roleNames() const {
 
 QVariant LibQPamac::AurPackageModel::data(const QModelIndex &index, int role) const
 {
-    auto package = m_packageList[index.row()].value<AURPackage>();
+    auto package = m_packageList[index.row()].value<AurPackage>();
     switch (role) {
     case AurPackageModel::NameRole:
         return package.name();
@@ -37,8 +37,8 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
     switch (column) {
     case 0:
         sortingFunction = [order](QVariant &v1, QVariant &v2)->bool{
-            auto p1 = v1.value<AURPackage>();
-            auto p2 = v2.value<AURPackage>();
+            auto p1 = v1.value<AurPackage>();
+            auto p2 = v2.value<AurPackage>();
 
             if(order == Qt::AscendingOrder){
                 return (!p2.installedVersion().isEmpty() && p1.installedVersion().isEmpty()) ||
@@ -52,8 +52,8 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
         break;
     case 1:
         sortingFunction = [order]( QVariant &v1,QVariant &v2)->bool{
-            auto p1 = v1.value<AURPackage>();
-            auto p2 = v2.value<AURPackage>();
+            auto p1 = v1.value<AurPackage>();
+            auto p2 = v2.value<AurPackage>();
 
             if(order == Qt::AscendingOrder){
                 return (p1.name()>p2.name());
@@ -63,8 +63,8 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
         break;
     case 2:
         sortingFunction = [order]( QVariant &v1,QVariant &v2)->bool{
-            auto p1 = v1.value<AURPackage>();
-            auto p2 = v2.value<AURPackage>();
+            auto p1 = v1.value<AurPackage>();
+            auto p2 = v2.value<AurPackage>();
 
             if(order == Qt::AscendingOrder){
                 return (p1.version()>p2.version()) ||
@@ -77,8 +77,8 @@ void LibQPamac::AurPackageModel::sort(int column, Qt::SortOrder order){
         break;
     case 3:
         sortingFunction = [order](QVariant &v1,QVariant &v2)->bool{
-            auto p1 = v1.value<AURPackage>();
-            auto p2 = v2.value<AURPackage>();
+            auto p1 = v1.value<AurPackage>();
+            auto p2 = v2.value<AurPackage>();
 
             if(order == Qt::AscendingOrder){
                 return (p1.popularity()>p2.popularity()) ||
