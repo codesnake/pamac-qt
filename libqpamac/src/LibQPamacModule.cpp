@@ -23,6 +23,10 @@ void LibQPamacModule::registerTypes(const char *uri)
     qRegisterMetaType<GenericQmlFuture>("Future");
     qRegisterMetaType<QList<HistoryItem>>("QList<HistoryItem>");
 
+    qRegisterMetaType<QList<Package>>("QList<Package>");
+    qRegisterMetaType<QList<AlpmPackage>>("QList<AlpmPackage>");
+    qRegisterMetaType<QList<AurPackage>>("QList<AurPackage>");
+
     qmlRegisterSingletonType<LibQPamac::Database>("QPamac.Database",1,0,"Database",
                                                 [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject* {
         Q_UNUSED(scriptEngine)

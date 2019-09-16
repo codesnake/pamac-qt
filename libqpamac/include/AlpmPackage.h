@@ -9,20 +9,25 @@ class AlpmPackage : public Package
 public:
     AlpmPackage(PamacAlpmPackage* package){
         m_handle=package;
+        Package::m_handle = &m_handle->parent_instance;
+
         g_object_ref(m_handle);
 
     }
     AlpmPackage(const AlpmPackage& another){
         m_handle=another.m_handle;
+        Package::m_handle = &m_handle->parent_instance;
         g_object_ref(m_handle);
     }
     AlpmPackage operator =(const AlpmPackage& another){
         m_handle=another.m_handle;
+        Package::m_handle = &m_handle->parent_instance;
         g_object_ref(m_handle);
         return *this;
     }
     AlpmPackage(void* packageData){
         m_handle=reinterpret_cast<PamacAlpmPackage*>(packageData);
+        Package::m_handle = &m_handle->parent_instance;
         g_object_ref(m_handle);
     }
 AlpmPackage() = default;

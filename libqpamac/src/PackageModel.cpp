@@ -17,7 +17,7 @@ QHash<int, QByteArray> LibQPamac::PackageModel::roleNames() const {
 
 QVariant LibQPamac::PackageModel::data(const QModelIndex &index, int role) const
 {
-    auto package = m_packageList[index.row()].value<LibQPamac::Package>();
+    auto package = m_packageList[index.row()];
 
     switch (role) {
     case PackageModel::NameRole:
@@ -110,7 +110,7 @@ void LibQPamac::PackageModel::sort(int column, Qt::SortOrder order){
         };
         break;
     }
-    std::sort(m_packageList.begin(),m_packageList.end(),sortingFunction);
+//    std::sort(m_packageList.begin(),m_packageList.end(),sortingFunction);
 
     endResetModel();
 }

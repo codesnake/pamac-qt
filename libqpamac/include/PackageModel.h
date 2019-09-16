@@ -1,5 +1,5 @@
 #pragma once
-#include "Package.h"
+#include <AlpmPackage.h>
 #include <QObject>
 #include <QAbstractTableModel>
 #include <QJSValue>
@@ -7,7 +7,7 @@ namespace LibQPamac {
 class PackageModel : public QAbstractTableModel
 {
     Q_OBJECT
-    Q_PROPERTY(QList<QVariant> packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
+    Q_PROPERTY(QList<AlpmPackage> packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
     Q_PROPERTY(int columnCount READ columnCount CONSTANT)
 
 public:
@@ -23,7 +23,7 @@ public:
         DownloadSizeRole
     };
 
-    PackageModel(QList<QVariant>& packageList, QObject *parent = Q_NULLPTR):QAbstractTableModel (parent),m_packageList(packageList){}
+    PackageModel(QList<AlpmPackage>& packageList, QObject *parent = Q_NULLPTR):QAbstractTableModel (parent),m_packageList(packageList){}
     PackageModel(QObject *parent = Q_NULLPTR):QAbstractTableModel(parent){}
 
     QHash<int, QByteArray>  roleNames() const override;
@@ -35,7 +35,7 @@ public:
         Q_UNUSED(parent)
         return 5;
     }
-    inline QList<QVariant> packageList() const
+    inline QList<AlpmPackage> packageList() const
     {
         return m_packageList;
     }
@@ -43,7 +43,7 @@ public:
     Q_INVOKABLE void sort(int column,Qt::SortOrder order = Qt::AscendingOrder) override;
 
 public Q_SLOTS:
-    inline void setPackageList(QList<QVariant> packageList)
+    inline void setPackageList(QList<AlpmPackage> packageList)
     {
         beginResetModel();
         m_packageList = std::move(packageList);
@@ -54,12 +54,12 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 
-    void packageListChanged(QList<QVariant> packageList);
+    void packageListChanged(QList<AlpmPackage> packageList);
 
 private:
     QStringList list = {"Name","Version","Repository","Size","State"};
     QList<QVariant> sizeList = {"fill",40,50,60,70};
-    QList<QVariant> m_packageList;
+    QList<AlpmPackage> m_packageList;
 
 };
 } //namespace LibQPamac

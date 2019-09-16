@@ -13,8 +13,14 @@ import "./" as PamacQt
 import "../js/JSUtils.js" as JSUtils
 
 LoaderDelegate{
+    implicitHeight: 65
     background: Rectangle{
-        
+        Rectangle{
+            width: parent.width
+            height: 1
+            color: systemPalette.mid
+        }
+
         width: packageDelegate.width+5
         property var hovered:hoveredRow==row
         color: {
@@ -161,7 +167,7 @@ LoaderDelegate{
                 Image{
                     anchors.verticalCenter: parent.verticalCenter
                     id:packageIcon
-                    width: 25
+                    width: 45
                     height: width
                     source:(JSUtils.isAccessible(iconUrl) && iconUrl.toString().length)?Qt.resolvedUrl("file://"+iconUrl):"image://icons/package-x-generic"
                 }
@@ -177,39 +183,40 @@ LoaderDelegate{
                         font.bold: true
 
                         elide: Text.ElideRight
+
+
                     }
                     Label {
                         width:parent.width
                         text:desc
                         elide: Text.ElideRight
                     }
+                    Label{
+                        clip: true
+                        text:repo
+                    }
                 }
             }
         }
         property var version: Component{
-            Label{
-                clip: true
-                text:version
-            }
+            Item{}
         }
         property var repo: Component{
-            Label{
-                clip: true
-                text:repo
-            }
+Item{}
         }
         property var size: Component{
-            Label{
-                clip: true
-                text:size.toString()
-            }
+            Item{}
+//            Label{
+//                clip: true
+//                text:size.toString()
+//            }
         }
         property var installButton: Component{
             Item {
                 Button{
-
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width
                     checkable: true
-                    anchors.fill: parent
                     anchors.margins: 5
                     text: installedVersion!=""?"Remove":"Install"
                     checked: isPending()

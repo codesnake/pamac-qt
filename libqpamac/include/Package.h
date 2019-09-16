@@ -65,7 +65,7 @@ public:
     operator PamacPackage*(){
         return this->m_handle;
     }
-private:
+protected:
     PamacPackage* m_handle;
 };
 
