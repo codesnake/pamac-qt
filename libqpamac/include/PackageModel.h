@@ -7,7 +7,7 @@ namespace LibQPamac {
 class PackageModel : public QAbstractTableModel
 {
     Q_OBJECT
-    Q_PROPERTY(QList<AlpmPackage> packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
+    Q_PROPERTY(QVariantList packageList READ packageList WRITE setPackageList NOTIFY packageListChanged)
     Q_PROPERTY(int columnCount READ columnCount CONSTANT)
 
 public:
@@ -35,26 +35,31 @@ public:
         Q_UNUSED(parent)
         return 5;
     }
-    inline QList<AlpmPackage> packageList() const
+    inline QVariantList packageList() const
     {
-        return m_packageList;
+        QVariantList result;
+        std::transform(m_packageList.begin(),m_packageList.end(),result.begin(),[](const AlpmPackage& value){return QVariant::fromValue(value);});
+        return result;
     }
 
     Q_INVOKABLE void sort(int column,Qt::SortOrder order = Qt::AscendingOrder) override;
 
 public Q_SLOTS:
-    inline void setPackageList(QList<AlpmPackage> packageList)
+    inline void setPackageList(const QVariantList& packageList)
     {
         beginResetModel();
-        m_packageList = std::move(packageList);
+        m_packageList.clear();
+        for(auto& var : packageList){
+            m_packageList<<var.value<AlpmPackage>();
+        }
         sort(1,Qt::DescendingOrder);
         endResetModel();
-        Q_EMIT packageListChanged(m_packageList);
+        Q_EMIT packageListChanged(packageList);
     }
 
 Q_SIGNALS:
 
-    void packageListChanged(QList<AlpmPackage> packageList);
+    void packageListChanged(QVariantList packageList);
 
 private:
     QStringList list = {"Name","Version","Repository","Size","State"};

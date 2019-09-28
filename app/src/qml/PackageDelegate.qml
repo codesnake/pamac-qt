@@ -43,10 +43,10 @@ LoaderDelegate{
             hoveredRow=-1
     }
     onDoubleClicked: {
-        if( list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::Package")))
-            stackView.push("PagePackageInfo.qml",{pkg:Database.getPkgDetails(name,appName,false)})
+        if( list.packageList.every(value=>JSUtils.qmlTypeOf(value,"AlpmPackage")))
+            stackView.push("PagePackageInfo.qml",{pkg: modelData})
         else
-            stackView.push("PageAURPackageInfo.qml",{packageFuture:Database.getAurPkgDetails(name)})
+            stackView.push("PageAURPackageInfo.qml",{pkg: modelData})
     }
     onClicked: {
         list.selectedRows = [];

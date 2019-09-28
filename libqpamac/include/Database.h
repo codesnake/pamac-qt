@@ -1,8 +1,4 @@
 #pragma once
-
-extern "C"{
-#include "pamac.h"
-}
 #include <QObject>
 #include <Package.h>
 #include <AsyncHelpers.h>
@@ -12,7 +8,7 @@ extern "C"{
 #include <HistoryItemModel.h>
 #include <AlpmPackage.h>
 #include <AurPackage.h>
-
+#include <pamac.h>
 
 namespace LibQPamac {
 class Database:public QObject
@@ -47,15 +43,15 @@ public:
 
 
     Q_INVOKABLE QStringList getIgnorePkgs();
-    Q_INVOKABLE QList<AurPackage> searchPkgsInAurAsync(const QString &name);
+    Q_INVOKABLE QVariantList searchPkgsInAur(const QString &name);
 
-    Q_INVOKABLE QList<AlpmPackage> getCategoryPackagesAsync(const QString &category);
-    Q_INVOKABLE QList<AlpmPackage> searchPkgs(const QString &name);
-    Q_INVOKABLE QList<AlpmPackage> getGroupPackagesAsync(const QString &group);
-    Q_INVOKABLE QList<AlpmPackage> getRepoPackagesAsync(const QString &repo);
-    Q_INVOKABLE QList<AlpmPackage> getInstalledAppsAsync();
-    Q_INVOKABLE QList<AlpmPackage> getInstalledPackagesAsync(InstalledPackageTypes type);
-    Q_INVOKABLE QList<AurPackage> getAurPackages(const QStringList &nameList);
+    Q_INVOKABLE QVariantList getCategoryPackages(const QString &category);
+    Q_INVOKABLE QVariantList searchPkgs(const QString &name);
+    Q_INVOKABLE QVariantList getGroupPackages(const QString &group);
+    Q_INVOKABLE QVariantList getRepoPackages(const QString &repo);
+    Q_INVOKABLE QVariantList getInstalledApps();
+    Q_INVOKABLE QVariantList getInstalledPackages(InstalledPackageTypes type);
+    Q_INVOKABLE QVariantList getAurPackages(const QStringList &nameList);
 
     Q_INVOKABLE QStringList getPkgFiles(const QString &name);
 
@@ -70,7 +66,7 @@ public:
     Q_INVOKABLE QStringList getMirrorsCountries();
     Q_INVOKABLE QString getMirrorsChoosenCountry();
 
-    Q_INVOKABLE Updates getUpdatesAsync();
+    Q_INVOKABLE Updates getUpdates();
 
     Q_INVOKABLE Package getInstalledPackage(const QString& name);
 

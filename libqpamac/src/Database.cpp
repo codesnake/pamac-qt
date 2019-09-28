@@ -1,16 +1,6 @@
 #include "Database.h"
 #include <functional>
 
-GAsyncReadyCallback asyncCallback(){
-    return ([](GObject* parent,GAsyncResult* result,void* lambdaPtr){
-
-        auto function = reinterpret_cast<std::function<void(PamacDatabase*,GAsyncResult*)>*>(lambdaPtr);
-        auto object = reinterpret_cast<PamacDatabase*>(parent);
-        (*function)(object,result);
-        delete function;
-    });
-}
-
 namespace LibQPamac {
 Database::Database(PamacDatabase *db, QObject *parent):
     QObject(parent)
@@ -46,35 +36,35 @@ QStringList Database::getIgnorePkgs()
 //    return Utils::gListToQStringList(pamac_database_get_ignorepkgs(handle),true);
 }
 
-QList<AurPackage> Database::searchPkgsInAurAsync(const QString &name)
+QVariantList Database::searchPkgsInAur(const QString &name)
 {
 
-    return Utils::gListToQList<AurPackage>(pamac_database_search_aur_pkgs(handle,name.toUtf8()),[](void* data){return AurPackage(data);});
+    return Utils::gListToQList<QVariant>(pamac_database_search_aur_pkgs(handle,name.toUtf8()),[](void* data){return QVariant::fromValue(AurPackage(data));});
 }
 
-QList<AlpmPackage> Database::getCategoryPackagesAsync(const QString &category)
+QVariantList Database::getCategoryPackages(const QString &category)
 {
-    return Utils::gListToQList<AlpmPackage>(pamac_database_get_category_pkgs(handle,category.toUtf8()),[](void* data){return AlpmPackage(data);});
+    return Utils::gListToQList<QVariant>(pamac_database_get_category_pkgs(handle,category.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
 }
 
-QList<AlpmPackage> Database::searchPkgs(const QString &name)
+QVariantList Database::searchPkgs(const QString &name)
 {
-    return Utils::gListToQList<AlpmPackage>(pamac_database_search_pkgs(handle,name.toUtf8()),[](void* data){return AlpmPackage(data);});
+    return Utils::gListToQList<QVariant>(pamac_database_search_pkgs(handle,name.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
 }
 
-QList<AlpmPackage> Database::getGroupPackagesAsync(const QString &group)
+QVariantList Database::getGroupPackages(const QString &group)
 {
-    return Utils::gListToQList<AlpmPackage>(pamac_database_get_group_pkgs(handle,group.toUtf8()),[](void* data){return AlpmPackage(data);});
+    return Utils::gListToQList<QVariant>(pamac_database_get_group_pkgs(handle,group.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
 }
 
-QList<AlpmPackage> Database::getRepoPackagesAsync(const QString &repo)
+QVariantList Database::getRepoPackages(const QString &repo)
 {
-    return Utils::gListToQList<AlpmPackage>(pamac_database_get_repo_pkgs(handle,repo.toUtf8()),[](void* data){return AlpmPackage(data);});
+    return Utils::gListToQList<QVariant>(pamac_database_get_repo_pkgs(handle,repo.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
 
 }
 
-QList<AlpmPackage> Database::getInstalledAppsAsync(){
-    return Utils::gListToQList<AlpmPackage>(pamac_database_get_installed_apps(handle),[](void* data){return AlpmPackage(data);});
+QVariantList Database::getInstalledApps(){
+    return Utils::gListToQList<QVariant>(pamac_database_get_installed_apps(handle),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
 }
 
 QStringList Database::getPkgFiles(const QString &name){
@@ -95,7 +85,7 @@ QString Database::getMirrorsChoosenCountry(){
 
 }
 
-Updates Database::getUpdatesAsync(){
+Updates Database::getUpdates(){
 
     return Updates(pamac_database_get_updates(handle));
 
@@ -162,7 +152,7 @@ void Database::init()
                      }),this);
 }
 
-QList<AlpmPackage> LibQPamac::Database::getInstalledPackagesAsync(Database::InstalledPackageTypes type){
+QVariantList LibQPamac::Database::getInstalledPackages(Database::InstalledPackageTypes type){
     GList* result;
     switch (type) {
     case Installed:
@@ -179,20 +169,20 @@ QList<AlpmPackage> LibQPamac::Database::getInstalledPackagesAsync(Database::Inst
         break;
     }
 
-    return LibQPamac::Utils::gListToQList<AlpmPackage>(result,[](void* value)->AlpmPackage{return AlpmPackage(value);});
+    return LibQPamac::Utils::gListToQList<QVariant>(result,[](void* value){return QVariant::fromValue(AlpmPackage(value));});
 }
 
 
 
-QList<AurPackage> Database::getAurPackages(const QStringList &nameList)
+QVariantList Database::getAurPackages(const QStringList &nameList)
 {
 
     auto list = new std::vector<char*>(Utils::qStringListToCStringVector(nameList));
 
     auto resultGlist = pamac_database_get_aur_pkgs(handle,list->data(),list->size());
-    QList<AurPackage> result;
+    QVariantList result;
     for(auto el = g_hash_table_get_values(resultGlist);el!=nullptr;el=el->next){
-        result.append(AurPackage(el->data));
+        result.append(QVariant::fromValue(AurPackage(el->data)));
     }
     return result;
 }

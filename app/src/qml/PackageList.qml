@@ -20,7 +20,7 @@ Table{
     model:modelLoader.item
     Loader{
         id: modelLoader
-        sourceComponent: (JSUtils.isAccessible(packageList) && list.packageList.every((item)=>JSUtils.qmlTypeOf(item,"LibQPamac::Package")))?
+        sourceComponent: (JSUtils.isAccessible(packageList) && list.packageList.every((item)=>JSUtils.qmlTypeOf(item,"AlpmPackage")))?
                               repoPackageModelComponent:aurPackageModelComponent
     }
     Component{

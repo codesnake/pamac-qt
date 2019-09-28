@@ -36,7 +36,6 @@ int Application::exec()
         }
     });
 
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication::setOrganizationName("LordTermor");
     QApplication::setApplicationName("Pamac Qt");
