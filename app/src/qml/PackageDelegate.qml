@@ -44,9 +44,9 @@ LoaderDelegate{
     }
     onDoubleClicked: {
         if( list.packageList.every(value=>JSUtils.qmlTypeOf(value,"AlpmPackage")))
-            stackView.push("PagePackageInfo.qml",{pkg: modelData})
+            stackView.push("PagePackageInfo.qml",{pkg: packageList[index]})
         else
-            stackView.push("PageAURPackageInfo.qml",{pkg: modelData})
+            stackView.push("PageAURPackageInfo.qml",{pkg: packageList[index]})
     }
     onClicked: {
         list.selectedRows = [];

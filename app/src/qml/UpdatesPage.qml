@@ -13,21 +13,6 @@ Page {
 
     Connections{
         target: Database
-        onUpdatesReady:{
-            updates = upds;
-            let hasRepo = updates.getReposUpdates().length>0;
-            let hasAur = updates.getAurUpdates().length>0;
-            drawerListViewModel.setProperty(0,"enable",hasRepo);
-            drawerListViewModel.setProperty(1,"enable",hasAur);
-            if(!hasRepo)
-                updatesDrawerListView.currentIndex=1
-            if(!hasRepo && !hasAur){
-                progress.text = qsTr("System is up to date");
-            } else{
-                progress.text = qsTr("Showing updates")
-            }
-
-        }
         onGetUpdatesProgress:{
             progress.text = qsTr("Checking for updates...");
             progressBar.value = percent
@@ -155,8 +140,19 @@ Page {
     }
 
     function reset(){
-        updates=undefined
-        Database.getUpdatesAsync()
+        updates = Database.getUpdates();
+        let hasRepo = updates.getReposUpdates().length>0;
+        let hasAur = updates.getAurUpdates().length>0;
+        console.log(updates.getReposUpdates())
+        drawerListViewModel.setProperty(0,"enable",hasRepo);
+        drawerListViewModel.setProperty(1,"enable",hasAur);
+        if(!hasRepo)
+            updatesDrawerListView.currentIndex=1
+        if(!hasRepo && !hasAur){
+            progress.text = qsTr("System is up to date");
+        } else{
+            progress.text = qsTr("Showing updates")
+        }
     }
 
     Connections{

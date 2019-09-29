@@ -12,19 +12,12 @@ Item{
         running: true
         triggeredOnStart: true
         onTriggered: {
-            Database.getUpdatesAsync();
-        }
-    }
-
-    Connections{
-        target: Database
-        onUpdatesReady:{
+            let upds = Database.getUpdates();
             updatesNotification.updatesCount =  upds.getReposUpdates().length;
             if(updatesNotification.updatesCount!==0){
                 updatesNotification.show();
             }
         }
-
     }
     Notification{
         property var updatesCount

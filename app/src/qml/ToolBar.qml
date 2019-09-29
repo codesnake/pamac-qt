@@ -123,15 +123,9 @@ ToolBar {
                 }
             }
             Component.onCompleted: {
-                Database.getUpdatesAsync();
-            }
-            Connections{
-                target: Database
-                onUpdatesReady: {
-                    let repoUpds = upds.getReposUpdates().length;
-                    updatesButton.updatesCount = repoUpds;
-
-                }
+                let upds = Database.getUpdates();
+                let repoUpds = upds.getReposUpdates().length;
+                updatesButton.updatesCount = repoUpds;
             }
 
         }
