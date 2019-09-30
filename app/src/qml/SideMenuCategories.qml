@@ -9,50 +9,42 @@ ListView {
     }
     model:ListModel{
         ListElement{
-            readableName:qsTr("Accessories")
-            categoryName:"Utility"
+            readableName:qsTr("Featured")
+            categoryName:"Featured"
+        }
+
+        ListElement{
+            readableName:qsTr("Utilities")
+            categoryName:"Utilities"
         }
         ListElement{
-            readableName:qsTr("Audio & Video")
-            categoryName:"AudioVideo"
+            readableName:qsTr("Music & Audio")
+            categoryName:"Music & Audio"
         }
         ListElement{
             readableName:qsTr("Development")
             categoryName:"Development"
         }
         ListElement{
-            readableName:qsTr("Internet")
-            categoryName:"Network"
+            readableName:qsTr("Education & Science")
+            categoryName:"Education & Science"
         }
         ListElement{
-            readableName:qsTr("Education")
-            categoryName:"Education"
-        }
-        ListElement{
-            readableName:qsTr("Settings")
-            categoryName:"Settings"
-        }
-        ListElement{
-            readableName:qsTr("Science")
-            categoryName:"Science"
+            readableName:qsTr("Productivity")
+            categoryName:"Productivity"
         }
         ListElement{
             readableName:qsTr("Games")
-            categoryName:"Game"
+            categoryName:"Games"
         }
         ListElement{
-            readableName:qsTr("Office")
-            categoryName:"Office"
+            readableName:qsTr("Communication & News")
+            categoryName:"Communication & News"
         }
         ListElement{
-            readableName:qsTr("System Tools")
-            categoryName:"System"
+            readableName:qsTr("Photo & Video")
+            categoryName:"Photo & Video"
         }
-        ListElement{
-            readableName:qsTr("Graphics")
-            categoryName:"Graphics"
-        }
-
     }
     delegate: MenuItemDelegate{
         text:readableName
