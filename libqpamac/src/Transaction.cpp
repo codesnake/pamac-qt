@@ -79,19 +79,31 @@ void LibQPamac::Transaction::start(const QStringList& toInstall, const QStringLi
 {
     using Utils::qStringListToCStringVector;
 
-    auto install = qStringListToCStringVector(toInstall);
-    auto remove = qStringListToCStringVector(toRemove);
-    auto load = qStringListToCStringVector(toLoad);
-    auto build = qStringListToCStringVector(toBuild);
-    auto ignore = qStringListToCStringVector(tempIgnore);
-    auto overwrite = qStringListToCStringVector(overwriteFiles);
+    for(auto& name : toInstall){
+        pamac_transaction_add_pkg_to_install(m_handle,name.toUtf8());
+    }
 
-//    pamac_transaction_start(m_handle,install.data(),int(install.size()),
-//                            remove.data(),int(remove.size()),
-//                            load.data(),int(load.size()),
-//                            build.data(),int(build.size()),
-//                            ignore.data(),int(ignore.size()),
-//                            overwrite.data(),int(overwrite.size()));
+    for(auto& name : toRemove){
+        pamac_transaction_add_pkg_to_remove(m_handle,name.toUtf8());
+    }
+
+    for(auto& name : toLoad){
+        pamac_transaction_add_path_to_load(m_handle,name.toUtf8());
+    }
+
+    for(auto& name : toBuild){
+        pamac_transaction_add_aur_pkg_to_build(m_handle,name.toUtf8());
+    }
+
+    for(auto& name : tempIgnore){
+        pamac_transaction_add_temporary_ignore_pkg(m_handle,name.toUtf8());
+    }
+
+    for(auto& name : overwriteFiles){
+        pamac_transaction_add_overwrite_file(m_handle,name.toUtf8());
+    }
+
+    pamac_transaction_run(m_handle);
     setProperty("started",true);
 
 }
