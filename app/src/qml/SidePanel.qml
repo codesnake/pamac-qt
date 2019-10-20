@@ -27,23 +27,26 @@ Page{
             icon.name: "application-menu"
             font.pixelSize: Qt.application.font.pixelSize * 1.4
             anchors.verticalCenter: parent.verticalCenter
-            
-            
+
+
             Menu {
                 onClosed: toolButton1.checked=false
-                
-                
+
+
                 visible: toolButton1.checked
                 y: toolButton1.height
                 id: contextMenu
                 Action {
+                    icon.name: "view-refresh-symbolic"
                     text: "Refresh databases"
                     onTriggered: {
                         transaction.startSysupgrade(true,false,[],[]);
-                        
+
                     }
                 }
-                Action { text: "View History"
+                Action {
+                    icon.name: "edit-undo-history"
+                    text: "View History"
                     onTriggered: {
                         DialogRunner.exec("qrc:/src/qml/HistoryDialog.qml");
                     }
@@ -56,20 +59,23 @@ Page{
                         transaction.start([],[],fileDialog.files.map(value=>value.toString().replace("file://","")))
                     }
                 }
-                
+
                 Action {
+                    icon.name: "package-x-generic"
                     text: "Install local packages"
                     onTriggered: {
                         fileDialog.open()
                     }
                 }
                 Action {
+                    icon.name: "settings-configure"
                     text: "Preferences"
                     onTriggered: {
                         DialogRunner.exec(Qt.resolvedUrl("PreferencesDialog.qml"),{"transaction":transaction})
                     }
                 }
                 Action {
+                    icon.name: "help-about-symbolic"
                     text: "About"
                     onTriggered: {
                         DialogRunner.exec(Qt.resolvedUrl("AboutDialog.qml"));
@@ -83,7 +89,7 @@ Page{
             anchors.right: parent.right
             height: parent.height-5
             id: searchPane
-            
+
         }
 
     }
@@ -116,7 +122,7 @@ Page{
             ]
         }]
     MenuItemDelegate{
-        
+
         leftPadding: backButtonIcon.x+backButtonIcon.width
         id:backMenuItem
         anchors.top: parent.top
@@ -135,7 +141,7 @@ Page{
         }
         Behavior on anchors.topMargin {
             SequentialAnimation{
-                
+
                 PauseAnimation {
                     duration: 300
                 }
@@ -144,7 +150,7 @@ Page{
                 }
             }
         }
-        
+
         onClicked: {
             if(drawer.currentItem.objectName=="sideMenuSearch"){
                 searchPane.text = "";
