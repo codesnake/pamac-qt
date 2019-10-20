@@ -7,7 +7,7 @@ ItemDelegate {
         id:systemPalette
     }
 
-    property color backgroundColor: systemPalette.window
+    property color backgroundColor: 'transparent'
     background: Rectangle{
         Behavior on color{
 
@@ -38,7 +38,7 @@ ItemDelegate {
     }
     highlighted: typeof(index) !== "undefined" && index===currentIndex
     width: parent.width
-    height:35
+    height:30
     leftPadding: 15
     font.pixelSize: 12
 }

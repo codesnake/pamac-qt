@@ -3,7 +3,6 @@ import QtQuick.Controls 2.6
 import QtQuick.Layouts 1.3
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
-import QtQuick.Dialogs 1.2
 import NotificationServices 1.0
 
 import "../js/JSUtils.js" as JSUtils

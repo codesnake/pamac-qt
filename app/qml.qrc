@@ -51,5 +51,6 @@
         <file>src/qml/PackageDelegate.qml</file>
         <file>src/qml/AskImportKeyDialog.qml</file>
         <file>src/qml/TrayIcon.qml</file>
+        <file>src/qml/SidePanel.qml</file>
     </qresource>
 </RCC>

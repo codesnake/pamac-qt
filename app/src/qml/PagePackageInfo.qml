@@ -6,6 +6,10 @@ import QtQuick.Layouts 1.3
 import DialogRunner 1.0
 
 Page {
+    background: Rectangle{
+        color: systemPalette.base
+    }
+
     objectName: "packageInfoPage"
     Connections{
         target: transaction
@@ -16,7 +20,7 @@ Page {
 
     SideBar {
         background: Rectangle {
-            color: systemPalette.alternateBase
+            color: systemPalette.base
         }
 
         id: drawer
@@ -368,8 +372,7 @@ Page {
                         height: contentHeight
                         boundsBehavior: Flickable.StopAtBounds
                         model: pkg.depends
-                        delegate: ItemDelegate {
-
+                        delegate: MenuItemDelegate {
                             height: 25
                             text: modelData
 
