@@ -107,7 +107,7 @@ void Application::loadMainWindow()
         return;
     }
 
-    m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/MainWindow.qml")));
+    m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/Pages/MainWindow.qml")));
     restoreGeometry();
 
     Utils::LambdaHelper::connect(m_objects["mainWindow"],SIGNAL(sClosing()),[&](){
@@ -126,13 +126,13 @@ void Application::loadOpenWithDialog(const QString &filename)
         return new QmlDialogRunner("openWithDialog", m_engine);
     });
 
-    m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/OpenWithDialog.qml")));
+    m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/Dialogs/OpenWithDialog.qml")));
     QMetaObject::invokeMethod(m_objects["openWithDialog"],"start",Q_ARG(QVariant,filename));
 }
 
 void Application::loadTrayIcon()
 {
-    m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/TrayIcon.qml")));
+    m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/Components/TrayIcon.qml")));
     Utils::LambdaHelper::connect(m_objects["trayIcon"],SIGNAL(showUpdates()),[&](){
         QMetaObject::invokeMethod(m_objects["trayIcon"],"showApp");
         QMetaObject::invokeMethod(m_objects["mainWindow"],"showUpdates");

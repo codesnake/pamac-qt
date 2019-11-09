@@ -110,14 +110,16 @@ void LibQPamac::Transaction::start(const QStringList& toInstall, const QStringLi
 
 void LibQPamac::Transaction::startSysupgrade(bool forceRefresh, bool enableDowngrade, const QStringList &tempIgnore, const QStringList &overwriteFiles)
 {
-    using Utils::qStringListToCStringVector;
 
-    auto ignore = qStringListToCStringVector(tempIgnore);
-    auto overwrite = qStringListToCStringVector(overwriteFiles);
+    for(auto& name : tempIgnore){
+        pamac_transaction_add_temporary_ignore_pkg(m_handle,name.toUtf8());
+    }
 
-//    pamac_transaction_start_sysupgrade(m_handle,forceRefresh,enableDowngrade,
-//                                       ignore.data(),int(ignore.size()),
-//                                       overwrite.data(),int(overwrite.size()));
+    for(auto& name : overwriteFiles){
+        pamac_transaction_add_overwrite_file(m_handle,name.toUtf8());
+    }
+
+    pamac_transaction_run(m_handle);
 
     setProperty("started",true);
 }
