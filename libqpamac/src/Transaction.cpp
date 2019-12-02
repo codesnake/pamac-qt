@@ -102,9 +102,10 @@ void LibQPamac::Transaction::start(const QStringList& toInstall, const QStringLi
     for(auto& name : overwriteFiles){
         pamac_transaction_add_overwrite_file(m_handle,name.toUtf8());
     }
-
+  setProperty("started",true);
     pamac_transaction_run(m_handle);
-    setProperty("started",true);
+    this->setProperty("progress",0);
+    this->setProperty("started",false);
 
 }
 
@@ -118,10 +119,11 @@ void LibQPamac::Transaction::startSysupgrade(bool forceRefresh, bool enableDowng
     for(auto& name : overwriteFiles){
         pamac_transaction_add_overwrite_file(m_handle,name.toUtf8());
     }
-
+setProperty("started",true);
     pamac_transaction_run(m_handle);
+    this->setProperty("progress",0);
+    this->setProperty("started",false);
 
-    setProperty("started",true);
 }
 
 void LibQPamac::Transaction::setDatabase(LibQPamac::Database *database)
@@ -189,13 +191,8 @@ void LibQPamac::Transaction::init()
 
 //        return false;
 //    });
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"finished",
-                     reinterpret_cast<GCallback>(+[](GObject* obj,bool success,Transaction* t){
-                         Q_UNUSED(obj);
-                         Q_EMIT t->finished(success);
-                     }),this);
 
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"emit-action",
+    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"emit_action",
                      reinterpret_cast<GCallback>(+Utils::cify([this](GObject* obj,char* action){
                          Q_UNUSED(obj);
                          Q_EMIT this->emitAction(QString::fromUtf8(action));
@@ -241,26 +238,9 @@ void LibQPamac::Transaction::init()
                          Q_UNUSED(obj);
                          Q_EMIT t->importantDetailsOutput(message);
                      }),this);
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"sysupgrade_finished",
-                     reinterpret_cast<GCallback>(+[](GObject* obj,bool success,Transaction* t){
-                         Q_UNUSED(obj);
-                         Q_EMIT t->finished(success);
-                     }),this);
 
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"write_alpm_config_finished",
-                     reinterpret_cast<GCallback>(+[](GObject* obj,bool checkspace,Transaction* t){
-                         Q_UNUSED(obj);
-                         Q_EMIT t->writeAlpmConfigFinished();
-                     }),this);
 
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"write_pamac_config_finished",
-                     reinterpret_cast<GCallback>(+[](GObject* obj,bool recurse, uint64_t refresh_period, bool no_update_hide_icon,
-                                                 bool enable_aur, char* aur_build_dir, bool check_aur_updates,
-                                                 bool check_aur_vcs_updates, bool download_updates
-                                                 ,Transaction* t){
-                         Q_UNUSED(obj);
-                         Q_EMIT t->writePamacConfigFinished();
-                     }),this);
+
 
 
     g_signal_connect(static_cast<PamacTransaction*>(m_handle),"start_waiting",reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
@@ -280,27 +260,6 @@ void LibQPamac::Transaction::init()
                      }),this);
     g_signal_connect(static_cast<PamacTransaction*>(m_handle),"stop_building",reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
                          Q_EMIT t->stopBuilding();
-                     }),this);
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"downloading_updates_finished",reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
-                         Q_EMIT t->downloadingUpdatesFinished();
-                     }),this);
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"sysupgrade_finished",reinterpret_cast<GCallback>(+[](GObject* obj, bool success,Transaction* t){
-                         Q_EMIT t->sysupgradeFinished(success);
-                     }),this);
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"start_generating_mirrors_list",reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
-                         Q_EMIT t->startGeneratingMirrorsList();
-                     }),this);
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"generate_mirrors_list_finished",reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
-                         Q_EMIT t->generateMirrorsListFinished();
-                     }),this);
-
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"clean_cache_finished",reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
-                         Q_EMIT t->cleanCacheFinished();
-                     }),this);
-
-
-    g_signal_connect(static_cast<PamacTransaction*>(m_handle),"clean_build_files_finished",reinterpret_cast<GCallback>(+[](GObject* obj,Transaction* t){
-                         Q_EMIT t->cleanBuildFilesFinished();
                      }),this);
 
     for(auto signal : {&Transaction::startWaiting,&Transaction::startBuilding,&Transaction::startPreparing,&Transaction::startDownloading}){
@@ -333,8 +292,7 @@ void LibQPamac::Transaction::init()
     });
     connect(this,&Transaction::finished,[=](bool success){
         Q_UNUSED(success)
-        this->setProperty("progress",0);
-        this->setProperty("started",false);
+
     });
     connect(this,&Transaction::emitScriptOutput,[=](QString message){
         QString details = this->property("details").toString();

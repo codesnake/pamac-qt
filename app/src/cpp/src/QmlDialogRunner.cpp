@@ -20,7 +20,6 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
     QQuickView view(qobject_cast<QQmlEngine*>(parent()),nullptr);
     view.installEventFilter(&filter);
     view.setSource(qmlFile);
-    view.show();
     QObject *object = view.rootObject();
 
     for (auto it = propertiesMap.keyValueBegin();it!=propertiesMap.keyValueEnd();++it) {
@@ -29,6 +28,7 @@ QVariantMap QmlDialogRunner::exec(const QUrl &qmlFile,const QVariantMap& propert
         }
     }
     view.setTitle(object->property("title").toString());
+    view.show();
 
     if(object->metaObject()->indexOfMethod("close()")>-1){
         connect(object,SIGNAL(close()),&view,SLOT(close()));

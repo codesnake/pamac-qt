@@ -3,12 +3,15 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import QPamac.PackageModel 1.0
 
+import "../Components" as Components
+
 Page{
-    property var summary:null
+    property var summary
     property var result
     anchors.fill: parent
     width: 600
     height: 400
+    id:dialog
     Flickable{
         clip: true
         boundsBehavior: Flickable.StopAtBounds
@@ -27,30 +30,29 @@ Page{
             id:column
             height: childrenRect.height
             width: parent.width
-            SummaryCategoryListView {
+            Components.SummaryCategoryListView {
                 visible: summary.toInstall.length>0
                 text: qsTr("To Install:")
                 packageList: summary.toInstall
 
             }
-            SummaryCategoryListView {
+            Components.SummaryCategoryListView {
                 visible: summary.toRemove.length>0
                 text: qsTr("To Remove:")
                 packageList: summary.toRemove
-
             }
-            SummaryCategoryListView {
+            Components.SummaryCategoryListView {
                 visible: summary.toReinstall.length>0
                 text: qsTr("To Reinstall:")
                 packageList: summary.toReinstall
 
             }
-            SummaryCategoryListView {
+            Components.SummaryCategoryListView {
                 visible: summary.toUpgrade.length>0
                 text: qsTr("To Upgrade:")
                 packageList: summary.toUpgrade
             }
-            SummaryCategoryListView {
+            Components.SummaryCategoryListView {
                 visible: summary.toBuild.length>0
                 text: qsTr("To Build:")
                 packageList: summary.toBuild

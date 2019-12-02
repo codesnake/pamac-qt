@@ -8,6 +8,7 @@ import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
 
 import "../../js/JSUtils.js" as Utils
+import "../Components" as Components
 Page{
     title: qsTr("Preferences")
     signal dialogAccepted
@@ -94,7 +95,7 @@ Page{
                     }
                 }
                 delegate:
-                    MenuItemDelegate{
+                    Components.MenuItemDelegate{
                     backgroundColor: systemPalette.alternateBase
                     highlighted: tabBar.currentIndex==index
                     text: itemText
@@ -140,7 +141,7 @@ Page{
                         text: qsTr("Remove unrequired dependecies")
                     }
 
-                    PreferencesCheckBox {
+                    Components.PreferencesCheckBox {
                         settingName: "RemoveUnrequiredDeps"
                         checked: config.recurse
                         id: checkBox
@@ -153,7 +154,7 @@ Page{
                         text: qsTr("Check available disk space")
                     }
 
-                    PreferencesCheckBox {
+                    Components.PreferencesCheckBox {
                         settingName: "CheckSpace"
                         checked: Database.checkspace
                         id: checkBox1
@@ -185,7 +186,7 @@ Page{
                         text: qsTr("Enable downgrade")
                     }
 
-                    PreferencesCheckBox {
+                    Components.PreferencesCheckBox {
                         checked: config.enableDowngrade
                         id: checkBoxDowngrade
 
@@ -197,7 +198,7 @@ Page{
                         text: qsTr("Check for updates")
                     }
 
-                    PreferencesCheckBox {
+                    Components.PreferencesCheckBox {
                         checked: config.downloadUpdates
                         id: checkBox2
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
@@ -239,7 +240,7 @@ Page{
                     }
 
 
-                    PreferencesCheckBox {
+                    Components.PreferencesCheckBox {
                         checked: config.downloadUpdates
                         id: checkBox3
                         x: 0
@@ -251,7 +252,7 @@ Page{
                         settingName: "DownloadUpdates"
                     }
 
-                    PreferencesCheckBox {
+                    Components.PreferencesCheckBox {
                         checked: config.noUpdateHideIcon
                         id: checkBox4
                         x: 0
@@ -448,7 +449,7 @@ Page{
                     anchors.topMargin: 0
                 }
 
-                PreferencesCheckBox {
+                Components.PreferencesCheckBox {
                     checked: config.enableAur
                     id: aurEnabledCheckBox
                     x: 465
@@ -459,7 +460,7 @@ Page{
                     settingName: "EnableAUR"
                 }
 
-                PreferencesCheckBox {
+                Components.PreferencesCheckBox {
                     enabled: aurEnabledCheckBox.enabled
                     checked: config.checkAurUpdates
                     id: checkBox6
@@ -470,7 +471,7 @@ Page{
                     anchors.leftMargin: 30
                     settingName: "CheckAURUpdates"
                 }
-                PreferencesCheckBox {
+                Components.PreferencesCheckBox {
                     enabled: aurEnabledCheckBox.enabled
                     checked: config.checkAurVCSUpdates
                     id: checkBoxVCSUpdates
@@ -593,7 +594,7 @@ Page{
                     anchors.topMargin: 6
                 }
 
-                PreferencesCheckBox {
+                Components.PreferencesCheckBox {
                     checked: config.cleanRmOnlyUninstalled
                     id: checkBox7
                     text: qsTr("Remove only the versions of uninstalled packages")

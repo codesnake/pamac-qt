@@ -13,7 +13,7 @@ import "../../js/JSUtils.js" as JSUtils
 
 Table{
     property var packageList: []
-
+    showHeader: false
     property alias packageListFuture:packageModelWatcher.future
 
     model:modelLoader.item
@@ -47,7 +47,7 @@ Table{
     }
 
 
-    showHeader: JSUtils.isAccessible(packageList) && packageList.length>0
+
 
     Column{
         width: implicitWidth

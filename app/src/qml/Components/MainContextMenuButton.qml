@@ -34,7 +34,7 @@ ToolButton {
             icon.name: "edit-undo-history"
             text: "View History"
             onTriggered: {
-                DialogRunner.exec("qrc:/src/qml/HistoryDialog.qml");
+                DialogRunner.exec(Qt.resolvedUrl("../Dialogs/HistoryDialog.qml"));
             }
         }
         Labs.FileDialog{
@@ -57,14 +57,14 @@ ToolButton {
             icon.name: "settings-configure"
             text: "Preferences"
             onTriggered: {
-                DialogRunner.exec(Qt.resolvedUrl("PreferencesDialog.qml"),{"transaction":transaction})
+                DialogRunner.exec(Qt.resolvedUrl("../Dialogs/PreferencesDialog.qml"),{"transaction":transaction})
             }
         }
         Action {
             icon.name: "help-about-symbolic"
             text: "About"
             onTriggered: {
-                DialogRunner.exec(Qt.resolvedUrl("AboutDialog.qml"));
+                DialogRunner.exec(Qt.resolvedUrl("../Dialogs/AboutDialog.qml"));
             }
         }
     }

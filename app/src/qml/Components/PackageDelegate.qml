@@ -41,7 +41,7 @@ LoaderDelegate{
             hoveredRow=-1
     }
     onDoubleClicked: {
-        if( list.packageList.every(value=>JSUtils.qmlTypeOf(value,"AlpmPackage")))
+        if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"AlpmPackage")))
             stackView.push("../Pages/PagePackageInfo.qml",{pkg: packageList[index]})
         else
             stackView.push("../Pages/PageAURPackageInfo.qml",{pkg: packageList[index]})
@@ -168,6 +168,11 @@ LoaderDelegate{
                     width: 45
                     height: width
                     source:(JSUtils.isAccessible(iconUrl) && iconUrl.toString().length)?Qt.resolvedUrl("file://"+iconUrl):"image://icons/package-x-generic"
+                    onStatusChanged: {
+                        if (status==Image.Error){
+                            source="image://icons/package-x-generic"
+                        }
+                    }
                 }
 
                 Column{

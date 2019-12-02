@@ -13,71 +13,72 @@ import "../../js/JSUtils.js" as JSUtils
 ApplicationWindow {
 
 
-//    function showUpdates(){
-//        if(stackView.currentItem.objectName!=="updatesPage")
-//            stackView.push("UpdatesPage.qml");
-//    }
+    function showUpdates(){
+        if(stackView.currentItem.objectName!=="updatesPage")
+            stackView.push("UpdatesPage.qml");
+    }
 
 
-//    function clear(){
-//        toInstall=[];
-//        toRemove=[];
-//        toBuild=[];
-//        toLoad=[];
-//    }
+    function clear(){
+        toInstall=[];
+        toRemove=[];
+        toBuild=[];
+        toLoad=[];
+    }
 
-//    property var toInstall: []
-//    property var toRemove: []
-//    property var toBuild: []
-//    property var toLoad: []
-//    property var ignoreWhenUpdate: []
+    property var toInstall: []
+    property var toRemove: []
+    property var toBuild: []
+    property var toLoad: []
+    property var ignoreWhenUpdate: []
 
-//    onClosing: {
-//        sClosing();
-//    }
+    onClosing: {
+        sClosing();
+    }
 
-//    signal sClosing;
+    signal sClosing;
 
-//    Transaction{
-//        id:transaction
-//        database: Database
-//        onStartPreparing: {
-//            if(started){
-//                details = "";
-//            }
-//        }
+    Transaction{
+        id:transaction
+        database: Database
+        onStartPreparing: {
+            if(started){
+                details = "";
+            }
+        }
 
-//        onFinished:{
-//            if(success){
-//                clear();
-//            }
-//        }
-//        Component.onDestruction: {
-//            transaction.quitDaemon();
-//        }
+        onFinished:{
+            if(success){
+                clear();
+            }
+        }
+        Component.onDestruction: {
+            transaction.quitDaemon();
+        }
 
-//        requestChooseProvider: (depend,list)=>{
-//                                   let objects = {"depend":depend,"lst":list,"provider":undefined}
-//                                   objects = DialogRunner.exec("qrc:/src/qml/ChooseProviderDialog.qml",objects)
-//                                   return objects["provider"]
-//                               }
+        requestChooseProvider: (depend,list)=>{
+                                   let objects = {"depend":depend,"lst":list,"provider":undefined}
+                                   objects = DialogRunner.exec(Qt.resolvedUrl("../Dialogs/ChooseProviderDialog.qml"),objects)
+                                   return objects["provider"]
+                               }
 
-//        requestOptDepends: (pkgname,lst)=>{
-//                               let result = DialogRunner.exec("qrc:/src/qml/TransactionOptDependsDialog.qml",{"pkgName":pkgname,"opDeps":lst,"opted":undefined});
-//                               return objects["opted"];
-//                           }
+        requestOptDepends: (pkgname,lst)=>{
+                               let result = DialogRunner.exec(Qt.resolvedUrl("../Dialogs/TransactionOptDependsDialog.qml"),{"pkgName":pkgname,"opDeps":lst,"opted":undefined});
+                               return objects["opted"];
+                           }
 
-//        requestImportKey: (pkgname,key,owner)=>{
-//                              let objects = {"pkgName":pkgname,"key":key,"owner":owner,"ok":undefined}
-//                              objects = DialogRunner.exec("qrc:/src/qml/AskImportKeyDialog.qml",objects);
-//                              return objects["ok"];
-//                          }
-//        requestCommit: summary=>{
+        requestImportKey: (pkgname,key,owner)=>{
+                              let objects = {"pkgName":pkgname,"key":key,"owner":owner,"ok":undefined}
+                              objects = DialogRunner.exec(Qt.resolvedUrl("../Dialogs/AskImportKeyDialog.qml"),objects);
+                              return objects["ok"];
+                          }
+        requestCommit: summary=>{
 //                           let objects = {"summary":summary,"result":undefined}
-//                           objects =  DialogRunner.exec("qrc:/src/qml/TransactionSummaryDialog.qml",objects);
+//                           objects =  DialogRunner.exec(Qt.resolvedUrl("../Dialogs/TransactionSummaryDialog.qml"),objects);
 //                           return objects["result"]
-//                       }
-//    }
+                           return true
+                       }
+    }
 
     id: mainWindow
     visible: true
@@ -137,13 +138,13 @@ ApplicationWindow {
         }
 
     }
-//    Components.Footer{
-//        id:bottomPanel
-//        anchors{
-//            bottom:parent.bottom
-//            left:parent.left
-//            right:parent.right
-//        }
+    Components.Footer{
+        id:bottomPanel
+        anchors{
+            bottom:parent.bottom
+            left:parent.left
+            right:parent.right
+        }
 
-//    }
+    }
 }

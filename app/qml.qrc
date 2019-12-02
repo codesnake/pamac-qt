@@ -23,7 +23,6 @@
         <file>src/qml/Dialogs/ScreenshotViewerDialog.qml</file>
         <file>src/qml/Dialogs/TransactionOptDependsDialog.qml</file>
         <file>src/qml/Dialogs/TransactionSummaryDialog.qml</file>
-        <file>src/qml/Dialogs/TransactionSummaryDialog.qml.orig</file>
         <file>src/qml/Pages/PageAURPackageInfo.qml</file>
         <file>src/qml/Pages/PagePackageInfo.qml</file>
         <file>src/qml/Pages/UpdatesPage.qml</file>

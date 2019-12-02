@@ -5,6 +5,8 @@ import QPamac.Database 1.0
 import NotificationServices 1.0
 import "../../js/JSUtils.js" as Utils
 import "./SideMenu" as SideMenu
+import "./" as Components
+
 
 Pane {
     background: Pane{
@@ -124,7 +126,7 @@ Pane {
                         horizontalAlignment: Text.AlignHCenter
                     }
 
-                    ProgressBar {
+                    Components.ProgressBar {
                         value: transaction.progress
                         indeterminate: transaction.indeterminate
                         id: progressBar

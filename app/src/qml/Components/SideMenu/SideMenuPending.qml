@@ -17,7 +17,7 @@ ListView{
 
         }
     }
-    delegate:MenuItemDelegate {
+    delegate:Components.MenuItemDelegate {
         text: name
         onClicked:{
             currentIndex=index
