@@ -8,9 +8,10 @@ Database::Database(PamacDatabase *db, QObject *parent):
 }
 
 Database::Database(const QString& configFile, QObject *parent):
-    QObject(parent){
-    m_config = Config(configFile);
-    handle = pamac_database_new(m_config);
+    QObject(parent)
+    {
+    m_config = new Config(configFile,this);
+    handle = pamac_database_new(m_config->handle());
     init();
 }
 
@@ -29,11 +30,6 @@ QStringList Database::getRepos()
 QStringList Database::getGroups()
 {
     return Utils::gListToQStringList(pamac_database_get_groups_names(handle),true);
-}
-
-QStringList Database::getIgnorePkgs()
-{
-//    return Utils::gListToQStringList(pamac_database_get_ignorepkgs(handle),true);
 }
 
 QVariantList Database::searchPkgsInAur(const QString &name)
@@ -134,7 +130,7 @@ QList<QVariant> Database::getHistory(){
     return HistoryItem::fromStringList(list);
 }
 
-void Database::setConfig(const Config &config)
+void Database::setConfig(Config *config)
 {
     m_config = config;
     Q_EMIT configChanged(config);

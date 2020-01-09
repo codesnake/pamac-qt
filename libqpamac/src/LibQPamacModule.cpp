@@ -18,7 +18,6 @@ void LibQPamacModule::registerTypes(const char *uri)
     qRegisterMetaType<AlpmPackage>("AlpmPackage");
     qRegisterMetaType<Package>("Package");
     qRegisterMetaType<Updates>("Updates");
-    qRegisterMetaType<Config>("Config");
     qRegisterMetaType<TransactionSummary>("TransactionSummary");
     qRegisterMetaType<GenericQmlFuture>("Future");
     qRegisterMetaType<QList<HistoryItem>>("QList<HistoryItem>");
@@ -41,6 +40,5 @@ void LibQPamacModule::registerTypes(const char *uri)
     qmlRegisterType<AurPackageModel>("QPamac.AUR.PackageModel",1,0,"AURPackageModel");
     qmlRegisterUncreatableType<Updates>("QPamac.Database",1,0,"Updates","");
     qmlRegisterType<Transaction>("QPamac.Transaction",1,0,"Transaction");
-    qmlRegisterUncreatableType<Config>("QPamac.Config",1,0,"Config","");
     qmlRegisterUncreatableType<TransactionSummary>("QPamac.Transaction",1,0,"TransactionSummary","");
 }

@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import Qt.labs.platform 1.0 as Labs
-import QPamac.Config 1.0
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
@@ -311,11 +310,11 @@ Page{
                                 text: modelData
                             }
 
-                            model:Database.getIgnorePkgs()
+                            model:config.getIgnorePkgs()
                             Connections{
                                 target: transaction
                                 onWriteAlpmConfigFinished:{
-                                    listView.model=Database.getIgnorePkgs();
+                                    listView.model=config.getIgnorePkgs();
                                 }
                             }
                         }
@@ -361,7 +360,7 @@ Page{
                                 Button{
                                     icon.name: "list-remove"
                                     onClicked: {
-                                        var list = Database.getIgnorePkgs();
+                                        var list = config.getIgnorePkgs();
                                         list.splice(listView.currentIndex,1);
 
                                         var string = list.join(" ");

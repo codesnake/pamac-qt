@@ -117,6 +117,27 @@ QList<T> gListToQList(GList* list,std::function<T(void*)> wrapFunction,GDestroyN
 
     return result;
 }
+template <typename T1,typename T2>
+QMap<T1,T2> gHashToQMap(GHashTable* table,std::function<QPair<T1,T2>(void*,void*)> wrapFunction,GHRFunc freeFunc = nullptr)
+{
+    QMap<T1,T2> result;
+    GList* list = g_hash_table_get_keys(table);
+
+    for(auto el = list;el!=nullptr;el=el->next)
+    {
+        QPair<T1,T2> pair = wrapFunction(el->data,g_hash_table_lookup(table,el->data));
+        result[pair.first] = pair.second;
+    }
+
+    if(freeFunc){
+        g_hash_table_foreach_remove(table,freeFunc,nullptr);
+    }
+
+    return result;
+}
+
+
+
 #define PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(PackageType)\
     [](void* data){return QVariant::fromValue(PackageType(data));}
 

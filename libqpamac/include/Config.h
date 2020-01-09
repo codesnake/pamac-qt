@@ -7,28 +7,17 @@
 
 namespace LibQPamac{
 
-class Config
+class Config : public QObject
 {
-    Q_GADGET
+    Q_OBJECT
 public:
+    Config(const QString& str,QObject* parent = nullptr):QObject(parent){
+        m_handle = pamac_config_new(str.toUtf8());
+    }
     Config(PamacConfig* cfg)
     {
         m_handle = cfg;
         g_object_ref(m_handle);
-    }
-    Config(const QString& str)
-    {
-        m_handle = pamac_config_new(str.toUtf8());
-    }
-    Config()=default;
-    Config(const Config& another){
-        m_handle=another.m_handle;
-        g_object_ref(m_handle);
-    }
-    Config operator =(const Config& another){
-        m_handle=another.m_handle;
-        g_object_ref(m_handle);
-        return *this;
     }
     ~Config(){
         g_object_unref(m_handle);
@@ -63,9 +52,13 @@ public:
 
     PAMAC_QT_STRING_PROPERTY_GET_SET(aurBuildDirectory,pamac_config_get_aur_build_dir(m_handle),
                                      setAurBuildDirectory,pamac_config_set_aur_build_dir(m_handle,aurBuildDirectory.toUtf8()))
-    operator PamacConfig*(){
+
+    Q_INVOKABLE QStringList getIgnorePkgs();
+
+    PamacConfig* handle(){
         return m_handle;
     }
+
     private:
         PamacConfig* m_handle;
 };

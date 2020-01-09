@@ -14,7 +14,7 @@ namespace LibQPamac {
 class Database:public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Config config READ config WRITE setConfig NOTIFY configChanged)
+    Q_PROPERTY(Config* config READ config WRITE setConfig NOTIFY configChanged)
 
 public:
 
@@ -41,8 +41,6 @@ public:
     Q_INVOKABLE QStringList getRepos();
     Q_INVOKABLE QStringList getGroups();
 
-
-    Q_INVOKABLE QStringList getIgnorePkgs();
     Q_INVOKABLE QVariantList searchPkgsInAur(const QString &name);
 
     Q_INVOKABLE QVariantList getCategoryPackages(const QString &category);
@@ -55,7 +53,7 @@ public:
 
     Q_INVOKABLE QStringList getPkgFiles(const QString &name);
 
-    Config config() const
+    Config* config()
     {
         return m_config;
     }
@@ -79,12 +77,13 @@ public:
     inline void refresh(){
         pamac_database_refresh(handle);
     }
+
     Q_INVOKABLE QList<QVariant> getHistory();
 
 
 
 public Q_SLOTS:
-    void setConfig(const Config& config);
+    void setConfig(Config *config);
 
 Q_SIGNALS:
     void updatesReady(Updates upds);
@@ -93,13 +92,13 @@ Q_SIGNALS:
 
     void checkspaceChanged(bool checkspace);
 
-    void configChanged(Config config);
+    void configChanged(Config* config);
 
 
 private:
     PamacDatabase* handle;
     void init();
-    Config m_config;
+    Config* m_config = nullptr;
     bool m_asynchronous;
 };
 
