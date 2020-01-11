@@ -14,7 +14,6 @@ import "../../js/JSUtils.js" as JSUtils
 Table{
     property var packageList: []
     showHeader: false
-    property alias packageListFuture:packageModelWatcher.future
 
     model:modelLoader.item
     Loader{
@@ -38,14 +37,6 @@ Table{
             packageList: list.packageList
         }
     }
-
-    property var watcher: FutureWatcher{
-        id:packageModelWatcher
-        onFinished: {
-            list.packageList = result;
-        }
-    }
-
 
 
 
@@ -81,10 +72,6 @@ Table{
         list.selectedRows = [];
         view.contentY=0;
     }
-    onPackageListFutureChanged: {
-        opacity = 0;
-    }
-
     Behavior on opacity {
         NumberAnimation{}
     }

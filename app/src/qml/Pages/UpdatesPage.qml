@@ -4,7 +4,8 @@ import QtGraphicalEffects 1.0
 import QPamac.Database 1.0
 import QPamac.Package 1.0
 import "../../js/JSUtils.js" as JSUtils
-import "./" as PamacQt
+import "../Components" as Components
+import "../Components/SideMenu" as SideMenu
 Page {
 
 
@@ -23,7 +24,7 @@ Page {
         height: implicitHeight
         spacing: progressBar.enabled?10:-5
         anchors.centerIn: parent
-        PamacQt.ProgressBar{
+        Components.ProgressBar{
             id:progressBar
             enabled: updates==undefined
             height: enabled?5:0
@@ -53,7 +54,7 @@ Page {
         }
 
         anchors.fill: parent
-        SideBar{
+        SideMenu.Drawer{
             visible: updates!==undefined
             states: [
                 State{
@@ -95,7 +96,7 @@ Page {
 
                 }
 
-                delegate:MenuItemDelegate {
+                delegate:Components.MenuItemDelegate {
                     highlighted:updatesDrawerListView.currentIndex==index
                     text: name
                     enabled: enable
@@ -106,7 +107,7 @@ Page {
                 }
             }
         }
-        PackageList{
+        Components.PackageList{
             layer.enabled: true
             layer.effect: DropShadow {
                 transparentBorder: true
@@ -132,9 +133,10 @@ Page {
     }
     StackView.onActivating: {
         sidePanel.state = "hidden";
+    }
+    StackView.onActivated: {
         reset();
     }
-
     StackView.onDeactivating: {
         sidePanel.state = "opened";
     }
