@@ -17,31 +17,23 @@ ListView{
     height: childrenRect.height
     width: parent.width
     interactive:false
-    model: PackageModel{
-        id:packageModel
-        packageList: listView.packageList
-    }
+    model: packageList
 
-    delegate:Label{
+    delegate: RowLayout{
         width: parent.width
-        height: childrenRect.height
-        RowLayout{
-            width: parent.width
-            Label{
-                text:name
-                Layout.fillWidth: true
-            }
-            Label{
-                text:version
-            }
-            Label{
-                text:repo
-            }
-            Label{
-                text:downloadSize?downloadSize.toString():0
-                visible: downloadSize>0
-            }
-            
+        Label{
+            text:modelData.name
+            Layout.fillWidth: true
+        }
+        Label{
+            text:modelData.version
+        }
+        Label{
+            text:modelData.repo
+        }
+        Label{
+            text:downloadSize?downloadSize.toString():0
+            visible: modelData.downloadSize>0
         }
     }
 }
