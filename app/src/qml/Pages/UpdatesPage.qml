@@ -15,7 +15,6 @@ Page {
     Connections{
         target: Database
         onGetUpdatesProgress:{
-            progress.text = qsTr("Checking for updates...");
             progressBar.value = percent
         }
     }
@@ -26,7 +25,7 @@ Page {
         anchors.centerIn: parent
         Components.ProgressBar{
             id:progressBar
-            enabled: updates==undefined
+            enabled: updates===undefined
             height: enabled?5:0
             width: progress.paintedWidth*2
             from:0
@@ -37,7 +36,7 @@ Page {
         }
 
         Label{
-            anchors.horizontalCenter: progressBar.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             id:progress
             text:qsTr("Checking for updates")
             font.weight: Font.Bold
@@ -55,7 +54,18 @@ Page {
 
         anchors.fill: parent
         SideMenu.Drawer{
-            visible: updates!==undefined
+            visible: {
+                if (updates===undefined){
+                    return false
+                }
+
+                let result = updates.getReposUpdates().length>0
+
+                if(Database.config.enableAur){
+                    result |= updates.getAurUpdates().length>0
+                }
+                return result;
+            }
             states: [
                 State{
                     name:"opened"
@@ -72,11 +82,10 @@ Page {
                     }
                 }
             ]
-            state:JSUtils.isAccessible(updates) && Database.config.checkAurUpdates?"opened":"hidden"
+            state:updatesDrawer.visible?"opened":"hidden"
             id:updatesDrawer
             anchors.left: parent.left
             height: parent.height
-            width: 170
             initialItem: ListView{
                 id:updatesDrawerListView
                 currentIndex: 0
@@ -142,10 +151,10 @@ Page {
     }
 
     function reset(){
+        progress.text = qsTr("Checking for updates...");
         updates = Database.getUpdates();
         let hasRepo = updates.getReposUpdates().length>0;
         let hasAur = updates.getAurUpdates().length>0;
-        console.log(updates.getReposUpdates())
         drawerListViewModel.setProperty(0,"enable",hasRepo);
         drawerListViewModel.setProperty(1,"enable",hasAur);
         if(!hasRepo)
@@ -160,7 +169,7 @@ Page {
     Connections{
         target: transaction
         onFinished:{
-            Database.getUpdatesAsync();
+            reset()
         }
     }
 }
