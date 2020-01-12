@@ -379,7 +379,7 @@ Page {
 
                             onClicked: {
 
-                                stackView.push("PagePackageInfo.qml", {"pkg" : Database.getPkgDetails(modelData)});
+                                stackView.push("PagePackageInfo.qml", {"pkg" : Database.getPkg(modelData)});
                             }
                         }
                     }
@@ -398,7 +398,7 @@ Page {
                             text: modelData
 
                             onClicked: {
-                                stackView.push("PagePackageInfo.qml",{"pkg" : Database.getPkgDetails(modelData.split(":")[0])});
+                                stackView.push("PagePackageInfo.qml",{"pkg" : Database.getPkg(modelData.split(":")[0])});
                             }
                         }
                         model: pkg.optDepends

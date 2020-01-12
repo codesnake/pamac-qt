@@ -183,4 +183,9 @@ QVariantList Database::getAurPackages(const QStringList &nameList)
     return result;
 }
 
+AlpmPackage Database::getPkg(const QString &name)
+{
+   return AlpmPackage(pamac_database_get_pkg(handle,name.toUtf8()));
+}
+
 } // namespace LibQPamac

@@ -50,6 +50,7 @@ public:
     Q_INVOKABLE QVariantList getInstalledApps();
     Q_INVOKABLE QVariantList getInstalledPackages(InstalledPackageTypes type);
     Q_INVOKABLE QVariantList getAurPackages(const QStringList &nameList);
+    Q_INVOKABLE AlpmPackage getPkg(const QString& name);
 
     Q_INVOKABLE QStringList getPkgFiles(const QString &name);
 
