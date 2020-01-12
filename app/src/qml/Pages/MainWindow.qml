@@ -47,11 +47,6 @@ ApplicationWindow {
             }
         }
 
-        onFinished:{
-            if(success){
-                clear();
-            }
-        }
         Component.onDestruction: {
             transaction.quitDaemon();
         }
@@ -73,10 +68,9 @@ ApplicationWindow {
                               return objects["ok"];
                           }
         requestCommit: summary=>{
-//                           let objects = {"summary":summary,"result":undefined}
-//                           objects =  DialogRunner.exec(Qt.resolvedUrl("../Dialogs/TransactionSummaryDialog.qml"),objects);
-//                           return objects["result"]
-                           return true
+                           let objects = {"summary":summary,"result":undefined}
+                           objects =  DialogRunner.exec(Qt.resolvedUrl("../Dialogs/TransactionSummaryDialog.qml"),objects);
+                           return objects["result"]
                        }
     }
 

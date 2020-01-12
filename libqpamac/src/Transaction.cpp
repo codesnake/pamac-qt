@@ -74,10 +74,9 @@ GenericQmlFuture LibQPamac::Transaction::getBuildFiles(const QString &pkgname){
 
 }
 
-void LibQPamac::Transaction::start(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
+bool LibQPamac::Transaction::run(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
                                    const QStringList& toBuild, const QStringList& tempIgnore, const QStringList& overwriteFiles)
 {
-    using Utils::qStringListToCStringVector;
 
     for(auto& name : toInstall){
         pamac_transaction_add_pkg_to_install(m_handle,name.toUtf8());
@@ -102,28 +101,23 @@ void LibQPamac::Transaction::start(const QStringList& toInstall, const QStringLi
     for(auto& name : overwriteFiles){
         pamac_transaction_add_overwrite_file(m_handle,name.toUtf8());
     }
-  setProperty("started",true);
-    pamac_transaction_run(m_handle);
+    setProperty("started",true);
+    auto result = bool(pamac_transaction_run(m_handle));
     this->setProperty("progress",0);
     this->setProperty("started",false);
-
+    return result;
 }
 
-void LibQPamac::Transaction::startSysupgrade(bool forceRefresh, bool enableDowngrade, const QStringList &tempIgnore, const QStringList &overwriteFiles)
+bool LibQPamac::Transaction::runSysupgrade(bool forceRefresh)
 {
+    pamac_transaction_add_pkgs_to_upgrade(m_handle,forceRefresh);
 
-    for(auto& name : tempIgnore){
-        pamac_transaction_add_temporary_ignore_pkg(m_handle,name.toUtf8());
-    }
+    setProperty("started",true);
+    auto result = bool(pamac_transaction_run(m_handle));
 
-    for(auto& name : overwriteFiles){
-        pamac_transaction_add_overwrite_file(m_handle,name.toUtf8());
-    }
-setProperty("started",true);
-    pamac_transaction_run(m_handle);
     this->setProperty("progress",0);
     this->setProperty("started",false);
-
+    return result;
 }
 
 void LibQPamac::Transaction::setDatabase(LibQPamac::Database *database)

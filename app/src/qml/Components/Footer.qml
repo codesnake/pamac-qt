@@ -174,10 +174,15 @@ Pane {
             enabled: !(transaction.started ||  (transaction.details.length!=0 && totalPending==0))
             text:qsTr("Apply")
             onClicked: {
+                let success = false;
                 if(!sysUpgrade)
-                    transaction.start(toInstall,toRemove,toLoad,toBuild,[],[]);
+                    success = transaction.run(toInstall,toRemove,toLoad,toBuild,[],[]);
                 else
-                    transaction.startSysupgrade(true,false,ignoreWhenUpdate,[]);
+                    success = transaction.runSysupgrade(true);
+
+                if (success){
+                    mainWindow.clear();
+                }
             }
 
         }

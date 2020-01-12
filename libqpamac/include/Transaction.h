@@ -83,10 +83,10 @@ public:
         pamac_transaction_quit_daemon(m_handle);
     }
 
-    Q_INVOKABLE void start(const QStringList& toInstall = QStringList(), const QStringList& toRemove = QStringList(), const QStringList& toLoad = QStringList(),
+    Q_INVOKABLE bool run(const QStringList& toInstall = QStringList(), const QStringList& toRemove = QStringList(), const QStringList& toLoad = QStringList(),
                            const QStringList& toBuild = QStringList(), const QStringList& tempIgnore = QStringList(), const QStringList& overwriteFiles = QStringList());
-    Q_INVOKABLE void startSysupgrade(bool forceRefresh,bool enableDowngrade,const QStringList& tempIgnore = QStringList(),const QStringList& overwriteFiles = QStringList());
 
+    Q_INVOKABLE bool runSysupgrade(bool forceRefresh);
 
 
 public Q_SLOTS:
