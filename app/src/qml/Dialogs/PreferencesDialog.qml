@@ -407,7 +407,7 @@ Page{
                     text: qsTr("Refresh mirror list")
                     anchors.right: parent.right
                     onClicked: {
-                        transaction.startGenerateMirrorsList(comboBox.currentText=="Worldwide"?"all":comboBox.currentText)
+                        transaction.generateMirrorsList(comboBox.currentText=="Worldwide"?"all":comboBox.currentText)
                     }
                 }
             }
