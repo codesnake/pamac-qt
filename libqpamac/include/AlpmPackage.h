@@ -2,9 +2,9 @@
 #include <pamac.h>
 #include <Package.h>
 #include <Utils.h>
-//namespace LibQPamac {
+namespace LibQPamac {
 
-class AlpmPackage : public LibQPamac::Package
+class AlpmPackage : public Package
 {
     Q_GADGET
 public:
@@ -47,9 +47,9 @@ AlpmPackage() = default;
 
     PAMAC_QT_STRINGLIST_PROPERTY_GET(licenses,pamac_alpm_package_get_licenses(m_handle))
 
-private:
+protected:
     PamacAlpmPackage* m_handle;
 };
 
-//} // namespace LibQPamac
-Q_DECLARE_METATYPE(AlpmPackage)
+} // namespace LibQPamac
+Q_DECLARE_METATYPE(LibQPamac::AlpmPackage)

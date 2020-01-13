@@ -17,7 +17,7 @@ Pane{
                 if(currentIndex==Database.Repos){
                     pendingPackageList.packageList = Database.findPackagesByName(toInstall.concat(toRemove));
                 } else{
-                    pendingPackageList.packageListFuture = Database.getAurPackages(toBuild);
+                    pendingPackageList.packageList = Database.getAurPackages(toBuild);
                 }
             }
         }

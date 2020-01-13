@@ -5,6 +5,7 @@ import QPamac.Database 1.0
 import QPamac.Async 1.0
 import QtQuick.Layouts 1.3
 import "../../js/JSUtils.js" as Utils
+import "../Components/SideMenu" as SideMenu
 
 Page {
     FutureWatcher{
@@ -25,13 +26,13 @@ Page {
         }
     }
 
-    SideBar {
+    SideMenu.Drawer {
         background: Rectangle {
             color: systemPalette.alternateBase
         }
 
         id: drawer
-        initialItem: SideMenuAURPackageInfo {
+        initialItem: SideMenu.SideMenuAURPackageInfo {
         }
     }
     title: pkg.name

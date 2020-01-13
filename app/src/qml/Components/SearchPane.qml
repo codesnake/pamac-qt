@@ -78,7 +78,7 @@ Pane{
 
         onTextChanged: {
             if(tempModel===undefined){
-                drawer.push("SideMenuSearch.qml")
+                drawer.push("SideMenu/SideMenuSearch.qml")
                 tempModel = mainView.packageList;
             }
             if(text.length!=0){

@@ -196,7 +196,7 @@ LoaderDelegate{
                     }
                     Label{
                         clip: true
-                        text:repo
+                        text:JSUtils.isAccessible(repo)?repo:"AUR"
                     }
                 }
             }
@@ -205,7 +205,7 @@ LoaderDelegate{
             Item{}
         }
         property var repo: Component{
-Item{}
+            Item{}
         }
         property var size: Component{
             Item{}
@@ -255,9 +255,9 @@ Item{}
         property var buildButton: Component{
             Item {
                 Button{
-
+                    width: parent.width
                     checkable: true
-                    anchors.fill: parent
+                    anchors.verticalCenter: parent.verticalCenter
                     anchors.margins: 5
                     text: installedVersion!=""?"Remove":"Build"
                     checked: isPending()

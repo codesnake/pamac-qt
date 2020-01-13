@@ -2,15 +2,18 @@
 #include "pamac.h"
 #include "Utils.h"
 #include <memory>
-#include <Package.h>
+#include <AlpmPackage.h>
 namespace LibQPamac {
-class AurPackage : public Package
+class AurPackage : public AlpmPackage
 {
     Q_GADGET
 public:
-    AurPackage(PamacAURPackage* package){m_handle = package;}
-    AurPackage(void* packageData){
-        m_handle = reinterpret_cast<PamacAURPackage*>(packageData);
+    AurPackage(PamacAURPackage* package):
+        m_handle(package),
+        AlpmPackage(&package->parent_instance){}
+    AurPackage(void* packageData):
+    m_handle(reinterpret_cast<PamacAURPackage*>(packageData)),
+    AlpmPackage(&reinterpret_cast<PamacAURPackage*>(packageData)->parent_instance){
     }
     AurPackage() = default;
 
