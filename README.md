@@ -9,10 +9,6 @@ Wrapper library for libpamac interaction with Qt/QML
 
 Classes that expose various DE-specific notification/progress features to QML
 
-### QmlTable
-
-Qml component based on Qt Quick TableView to ease header and sorting managing
-
 ### Pamac-Qt App
 
 Qt GUI Frontend for libpamac that supports managing ALPM packages and AUR building pipeline

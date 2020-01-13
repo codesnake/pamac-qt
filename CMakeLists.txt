@@ -3,7 +3,6 @@ project(pamac-qt)
 
 
 add_subdirectory(libqpamac)
-add_subdirectory(qmltable)
 add_subdirectory(notificationservice)
 if(NOT DEFINED VERSION)
 execute_process(COMMAND git --git-dir ./.git --work-tree ./ describe --always --tags
