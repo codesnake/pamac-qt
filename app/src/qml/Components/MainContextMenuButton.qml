@@ -26,7 +26,7 @@ ToolButton {
             icon.name: "view-refresh-symbolic"
             text: "Refresh databases"
             onTriggered: {
-                transaction.startSysupgrade(true,false,[],[]);
+                transaction.runSysupgrade(true);
                 
             }
         }
