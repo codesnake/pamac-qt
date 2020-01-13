@@ -37,8 +37,8 @@ int Application::exec()
     });
 
 
-    QApplication::setOrganizationName("LordTermor");
-    QApplication::setApplicationName("Pamac Qt");
+    QApplication::setOrganizationName("manjaro");
+    QApplication::setApplicationName("pamac-qt");
     QApplication::setApplicationVersion(QString(VERSION));
     QApplication::setWindowIcon(QIcon::fromTheme("system-software-install"));
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
