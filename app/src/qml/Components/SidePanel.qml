@@ -14,6 +14,7 @@ import "../../js/JSUtils.js" as JSUtils
 Page{
     id:sidePanel
     width:Math.min(175,parent.width*0.3)
+    property var drawer: drawer
     header:ToolBar{
         padding: 5
         height: toolBar.height

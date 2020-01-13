@@ -94,7 +94,7 @@ ToolBar {
             onClicked: {
                 if(checked){
                     prevSideMenuState = drawer.currentItem;
-                    drawer.push("SideMenuInstalled.qml");
+                    drawer.push("SideMenu/SideMenuInstalled.qml");
                 }
                 else{
                     drawer.pop(prevSideMenuState);

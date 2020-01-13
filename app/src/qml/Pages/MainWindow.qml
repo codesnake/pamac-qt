@@ -17,6 +17,7 @@ ApplicationWindow {
         if(stackView.currentItem.objectName!=="updatesPage")
             stackView.push("UpdatesPage.qml");
     }
+    property var drawer: sidePanel.drawer
 
 
     function clear(){
