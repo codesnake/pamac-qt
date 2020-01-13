@@ -63,8 +63,6 @@ public:
     inline Q_INVOKABLE void getAuthorization(){
         pamac_transaction_get_authorization(m_handle);
     }
-    Q_INVOKABLE void startWritePamacConfig(const QVariantMap &map);
-    Q_INVOKABLE void startWriteAlpmConfig(const QVariantMap &map);
 
     Q_INVOKABLE GenericQmlFuture getBuildFiles(const QString& pkgname);
 

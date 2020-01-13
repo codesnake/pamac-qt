@@ -91,7 +91,6 @@ Q_SIGNALS:
     void getUpdatesProgress(uint percent);
 
 
-    void checkspaceChanged(bool checkspace);
 
     void configChanged(Config* config);
 

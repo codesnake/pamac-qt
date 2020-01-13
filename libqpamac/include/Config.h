@@ -53,7 +53,12 @@ public:
     PAMAC_QT_STRING_PROPERTY_GET_SET(aurBuildDirectory,pamac_config_get_aur_build_dir(m_handle),
                                      setAurBuildDirectory,pamac_config_set_aur_build_dir(m_handle,aurBuildDirectory.toUtf8()))
 
+    PAMAC_QT_BOOL_PROPERTY_GET_SET(checkspace, pamac_config_get_checkspace(m_handle),
+                                     setCheckspace, pamac_config_set_checkspace(m_handle,checkspace))
+
     Q_INVOKABLE QStringList getIgnorePkgs();
+    Q_INVOKABLE void save();
+    Q_INVOKABLE void reload();
 
     PamacConfig* handle(){
         return m_handle;

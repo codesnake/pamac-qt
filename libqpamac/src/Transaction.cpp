@@ -4,47 +4,6 @@
 #include <atomic>
 #include <QVariant>
 
-
-void LibQPamac::Transaction::startWritePamacConfig(const QVariantMap &map){
-    GHashTable* tabl = g_hash_table_new(g_str_hash,
-                                        g_str_equal);
-    auto keys = Utils::qStringListToCStringVector(map.keys());
-    for(auto& el :keys){
-        auto value = map[el];
-        if(value.type()==QVariant::Int){
-            value.convert(QVariant::ULongLong);
-        }
-
-        g_hash_table_insert(tabl,el,Utils::qVariantToGVariant(value));
-    }
-
-//    pamac_transaction_write_pamac_config(m_handle,tabl);
-    for(auto &el :keys){
-        delete el;
-    }
-
-}
-
-void LibQPamac::Transaction::startWriteAlpmConfig(const QVariantMap &map){
-    GHashTable* tabl = g_hash_table_new(g_str_hash,
-                                        g_str_equal);
-    auto keys = Utils::qStringListToCStringVector(map.keys());
-    for(auto& el :keys){
-        auto value = map[el];
-        if(value.type()==QVariant::Int){
-            value.convert(QVariant::ULongLong);
-        }
-
-        g_hash_table_insert(tabl,el,Utils::qVariantToGVariant(value));
-    }
-
-//    pamac_transaction_start_write_alpm_config(m_handle,tabl);
-    for(auto &el :keys){
-        delete el;
-    }
-
-}
-
 GenericQmlFuture LibQPamac::Transaction::getBuildFiles(const QString &pkgname){
     auto future = new QmlFutureImpl;
 //    pamac_transaction_get_build_files(m_handle,pkgname.toUtf8(),

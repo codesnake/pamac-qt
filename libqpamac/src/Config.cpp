@@ -10,3 +10,13 @@ QStringList LibQPamac::Config::getIgnorePkgs()
         return QPair(keyString,valueString);
     }).values();
 }
+
+void LibQPamac::Config::save()
+{
+    pamac_config_save(m_handle);
+}
+
+void LibQPamac::Config::reload()
+{
+    pamac_config_reload(m_handle);
+}

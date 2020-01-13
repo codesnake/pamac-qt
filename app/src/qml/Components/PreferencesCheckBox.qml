@@ -9,6 +9,6 @@ CheckBox {
     id: checkBox
     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
     onClicked: {
-        settingsState["pamac"][settingName]=checked;
+        settingsState[settingName]=checked;
     }
 }

@@ -20,15 +20,14 @@ Page{
 
     property Transaction transaction
 
-    property var settingsState: {
-        "pamac":{},
-        "alpm":{}
-    }
+    property var settingsState: ({})
+
     function applySettings(){
-        if(Object.entries(settingsState["pamac"]).length !== 0)
-            transaction.startWritePamacConfig(settingsState["pamac"]);
-        if(Object.entries(settingsState["alpm"]).length !== 0)
-            transaction.startWriteAlpmConfig(settingsState["alpm"])
+        for (const [key, value] of Object.entries(settingsState)) {
+                config[key] = value
+        }
+        config.save()
+
     }
 
     width: 600
@@ -141,7 +140,7 @@ Page{
                     }
 
                     Components.PreferencesCheckBox {
-                        settingName: "RemoveUnrequiredDeps"
+                        settingName: "recurse"
                         checked: config.recurse
                         id: checkBox
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
@@ -154,14 +153,11 @@ Page{
                     }
 
                     Components.PreferencesCheckBox {
-                        settingName: "CheckSpace"
+                        settingName: "checkspace"
                         checked: Database.checkspace
                         id: checkBox1
                         tristate: false
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                        onClicked: {
-                            settingsState["alpm"][settingName] = pref
-                        }
                     }
 
 
@@ -176,7 +172,7 @@ Page{
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                         value: config.maxParallelDownloads
                         onValueModified: {
-                            settingsState["pamac"]["MaxParallelDownloads"]=value;
+                            settingsState["maxParallelDownloads"]=value;
                         }
                     }
 
@@ -190,7 +186,7 @@ Page{
                         id: checkBoxDowngrade
 
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                        settingName: "EnableDowngrade"
+                        settingName: "enableDowngrade"
                     }
                     Label {
                         id: label2
@@ -201,7 +197,7 @@ Page{
                         checked: config.downloadUpdates
                         id: checkBox2
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                        settingName: "DownloadUpdates"
+                        settingName: "downloadUpdates"
                     }
                 }
 
@@ -233,7 +229,7 @@ Page{
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                         value:config.refreshPeriod
                         onValueModified: {
-                            settingsState["pamac"]["RefreshPeriod"]=value;
+                            settingsState["refreshPeriod"]=value;
 
                         }
                     }
@@ -248,7 +244,7 @@ Page{
                         anchors.topMargin: 6
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         Layout.fillWidth: true
-                        settingName: "DownloadUpdates"
+                        settingName: "downloadUpdates"
                     }
 
                     Components.PreferencesCheckBox {
@@ -260,7 +256,7 @@ Page{
                         anchors.topMargin: 6
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        settingName: "NoUpdateHideIcon"
+                        settingName: "noUpdateHideIcon"
                     }
 
                     Label {
@@ -311,12 +307,7 @@ Page{
                             }
 
                             model:config.getIgnorePkgs()
-                            Connections{
-                                target: transaction
-                                onWriteAlpmConfigFinished:{
-                                    listView.model=config.getIgnorePkgs();
-                                }
-                            }
+
                         }
                         Pane{
                             padding: 0
@@ -339,7 +330,7 @@ Page{
 
                                     var string = list.join(" ");
 
-                                    settingsState["alpm"]["IgnorePkg"]=string;
+                                    settingsState["ignorePkgs"]=string;
 
                                 }
                             }
@@ -365,7 +356,7 @@ Page{
 
                                         var string = list.join(" ");
 
-                                        settingsState["alpm"]["IgnorePkg"]=string;
+                                        settingsState["ignorePkg"]=string;
                                     }
                                 }
                             }
@@ -456,7 +447,7 @@ Page{
                     anchors.rightMargin: 6
                     anchors.top: label6.bottom
                     anchors.topMargin: 16
-                    settingName: "EnableAUR"
+                    settingName: "enableAur"
                 }
 
                 Components.PreferencesCheckBox {
@@ -468,7 +459,7 @@ Page{
                     anchors.topMargin: 0
                     anchors.left: parent.left
                     anchors.leftMargin: 30
-                    settingName: "CheckAURUpdates"
+                    settingName: "checkAURUpdates"
                 }
                 Components.PreferencesCheckBox {
                     enabled: aurEnabledCheckBox.enabled
@@ -479,7 +470,7 @@ Page{
                     anchors.topMargin: 0
                     anchors.left: parent.left
                     anchors.leftMargin: 30
-                    settingName: "CheckAURVCSUpdates"
+                    settingName: "checkAurVCSUpdates"
                 }
 
                 Label {
@@ -496,7 +487,7 @@ Page{
 
                 TextArea {
 
-                    text: Utils.isAccessible(settingsState["pamac"]["BuildDirectory"])?settingsState["pamac"]["BuildDirectory"]:config.aurBuildDirectory
+                    text: Utils.isAccessible(settingsState["aurBuildDirectory"])?settingsState["aurBuildDirectory"]:config.aurBuildDirectory
 
                     enabled: false
                     id: aurBuildDirTextArea
@@ -531,7 +522,7 @@ Page{
                     onAccepted: {
                         var path = Utils.urlToPath(aurBuildDirDialog.folder.toString());
 
-                        settingsState["pamac"]["BuildDirectory"] = path;
+                        settingsState["aurBuildDirectory"] = path;
                         settingsStateChanged();
                     }
                 }
@@ -548,7 +539,7 @@ Page{
                         onClicked: {
                             var path = "/var/tmp"
 
-                            settingsState["pamac"]["BuildDirectory"]=path;
+                            settingsState["aurBuildDirectory"]=path;
                         }
                     }
                     Button{
@@ -559,7 +550,7 @@ Page{
                         onClicked: {
                             var path = Utils.urlToPath(StandardPaths.standardLocations(StandardPaths.TempLocation)[0]);
 
-                            settingsState["pamac"]["BuildDirectory"]=path;
+                            settingsState["aurBuildDirectory"]=path;
                         }
                     }
                 }
@@ -582,7 +573,7 @@ Page{
 
                 SpinBox {
                     onValueModified: {
-                        settingsState["pamac"]["KeepNumPackages"]=value
+                        settingsState["cleanKeepNumPkgs"]=value
                     }
                     value: config.cleanKeepNumPkgs
                     id: spinBox1
@@ -601,7 +592,7 @@ Page{
                     anchors.topMargin: 6
                     anchors.left: parent.left
                     anchors.leftMargin: 30
-                    settingName: "OnlyRmUninstalled"
+                    settingName: "cleanRmOnlyUninstalled"
                 }
 
                 Button {
