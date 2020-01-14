@@ -41,7 +41,7 @@ LoaderDelegate{
             hoveredRow=-1
     }
     onDoubleClicked: {
-        if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"AlpmPackage")))
+        if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::AlpmPackage")))
             stackView.push("../Pages/PagePackageInfo.qml",{pkg: packageList[index]})
         else
             stackView.push("../Pages/PageAURPackageInfo.qml",{pkg: packageList[index]})
