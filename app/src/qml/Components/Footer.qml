@@ -102,6 +102,7 @@ Pane {
         visible: transaction.started
         progress: transaction.progress
         indeterminate: transaction.indeterminate
+        infoMessage: transaction.action
     }
 
     RowLayout{
