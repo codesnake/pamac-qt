@@ -106,7 +106,8 @@ Page{
         clip: true
         anchors.top: backMenuItem.bottom
         anchors.bottom: parent.bottom
-        width: parent.width
+        anchors.left: parent.left
+        width: parent.width-1
         id: drawer
         initialItem: SideMenu.SideMenuMain{
             height: parent.height

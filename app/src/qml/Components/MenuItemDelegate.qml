@@ -7,7 +7,10 @@ ItemDelegate {
         id:systemPalette
     }
 
-    property color backgroundColor: 'transparent'
+    property color backgroundColor: Qt.rgba(systemPalette.window.r,
+                                            systemPalette.window.g,
+                                            systemPalette.window.b,
+                                            0)
     background: Rectangle{
         Behavior on color{
 
@@ -18,18 +21,15 @@ ItemDelegate {
 
         color: {
             if(highlighted){
-                if(hovered){
-                    return Qt.darker(systemPalette.highlight,1.1);
-                }
                 return systemPalette.highlight;
             }
 
             if(down){
-                return systemPalette.highlight;
+                return systemPalette.dark;
             }
 
             if(hovered){
-                return Qt.lighter(systemPalette.highlight,1.99)
+                return Qt.tint(systemPalette.highlight,systemPalette.window)
             }
 
             return backgroundColor;
@@ -40,5 +40,5 @@ ItemDelegate {
     width: parent.width
     height:30
     leftPadding: 15
-    font.pixelSize: 12
+    font.pointSize: 9
 }

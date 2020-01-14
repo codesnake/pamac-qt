@@ -27,7 +27,7 @@ LoaderDelegate{
             }
             if(hovered || packageDelegate.containsMouse)
             {
-                return systemPalette.midlight;
+                return Qt.tint(systemPalette.highlight,systemPalette.window);
             }
             return systemPalette.base;
         }
