@@ -71,7 +71,7 @@ ToolBar {
 
     Label {
         text: stackView.currentItem.title!==undefined?stackView.currentItem.title:""
-        font.pointSize: 12
+        font.pixelSize: Qt.application.font.pixelSize*0.9
         anchors.left: toolButton.right
         anchors.verticalCenter: parent.verticalCenter
     }
