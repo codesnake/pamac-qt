@@ -181,12 +181,12 @@ void Application::registerModules()
 
 bool Application::registerDbusService()
 {
-    QDBusInterface interface("LordTermor.PamacQt", "/", "", QDBusConnection::sessionBus());
+    QDBusInterface interface("org.manjaro.PamacQt", "/", "", QDBusConnection::sessionBus());
     if(interface.isValid()){
         interface.call("loadMainWindow");
         return false;
     }
-    QDBusConnection::sessionBus().registerService("LordTermor.PamacQt");
+    QDBusConnection::sessionBus().registerService("org.manjaro.PamacQt");
     QDBusConnection::sessionBus().registerObject("/",this,QDBusConnection::ExportAllSlots);
     return true;
 
