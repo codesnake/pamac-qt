@@ -128,6 +128,7 @@ Pane {
                     }
 
                     Components.ProgressBar {
+                        visible: transaction.started
                         value: transaction.progress
                         indeterminate: transaction.indeterminate
                         id: progressBar
