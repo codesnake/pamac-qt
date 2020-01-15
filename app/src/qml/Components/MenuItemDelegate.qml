@@ -40,5 +40,4 @@ ItemDelegate {
     width: parent.width
     height:30
     leftPadding: 15
-    font.pixelSize: Qt.application.font.pixelSize*0.8
 }
