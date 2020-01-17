@@ -9,7 +9,7 @@ import QtQuick.Layouts 1.12
         padding: 2
 
         property var title: "About Pamac Qt"
-        property var minimumWidth: 400
+        property var minimumWidth: tabs.implicitWidth
         property var minimumHeight: 300
 
         Pane{
@@ -75,32 +75,26 @@ import QtQuick.Layouts 1.12
 
                     id: label
                     text: qsTr("A Qt5 frontend for libpamac\n(Work in progress)")
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
+                    verticalAlignment: Qt.AlignVCenter
+                    horizontalAlignment: Qt.AlignHCenter
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 Label {
                     id: label1
-                    text: qsTr("Artem Grinev\n(aka LordTermor)")
+                    text: qsTr("• Artem Grinev\n  (aka LordTermor)")
                     Layout.fillHeight: true
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
                     Layout.fillWidth: true
 
                 }
                 Label{
-                    text:qsTr("Guillaume Benoit\nPamac GTK and libpamac author")
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                    text:qsTr("• Guillaume Benoit\n  Pamac GTK and libpamac author")
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
 
                 Label{
-                    text:qsTr("- Qt\n- libpamac\n- libqpamac")
-                    verticalAlignment: Text.AlignVCenter
+                    text:qsTr("• Qt\n• libpamac\n• libqpamac")
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
@@ -110,6 +104,8 @@ import QtQuick.Layouts 1.12
             text:qsTr("OK")
             onClicked: item1.close();
             anchors{
+                rightMargin: 10
+                bottomMargin: 10
                 right: parent.right
                 bottom: parent.bottom
             }
