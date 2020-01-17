@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QPamac.Transaction 1.0
 import QPamac.Database 1.0
 import DialogRunner 1.0
+import "../Components" as Components
 ApplicationWindow {
     SystemPalette{
         id:systemPalette
@@ -14,9 +15,9 @@ ApplicationWindow {
     objectName: "openWithDialog"
     title: qsTr("Install local package")
     function start(packageToLoadName){
-        transaction.start([],[],[packageToLoadName])
+        transaction.run([],[],[packageToLoadName])
     }
-    TransactionDetails{
+    Components.TransactionDetails{
         anchors.fill: parent
     }
 
@@ -33,23 +34,23 @@ ApplicationWindow {
 
         requestChooseProvider: (depend,list)=>{
                                    let objects = {"depend":depend,"lst":list,"provider":undefined}
-                                   objects = DialogRunner.exec("qrc:/src/qml/ChooseProviderDialog.qml",objects)
+                                   objects = DialogRunner.exec("qrc:/src/qml/Dialogs/ChooseProviderDialog.qml",objects)
                                    return objects["provider"]
                                }
 
         requestOptDepends: (pkgname,lst)=>{
-                               let result = DialogRunner.exec("qrc:/src/qml/TransactionOptDependsDialog.qml",{"pkgName":pkgname,"opDeps":lst,"opted":undefined});
+                               let result = DialogRunner.exec("qrc:/src/qml/Dialogs/TransactionOptDependsDialog.qml",{"pkgName":pkgname,"opDeps":lst,"opted":undefined});
                                return objects["opted"];
                            }
 
         requestImportKey: (pkgname,key,owner)=>{
                               let objects = {"pkgName":pkgname,"key":key,"owner":owner,"ok":undefined}
-                              objects = DialogRunner.exec("qrc:/src/qml/AskImportKeyDialog.qml",objects);
+                              objects = DialogRunner.exec("qrc:/src/qml/Dialogs/AskImportKeyDialog.qml",objects);
                               return objects["ok"];
                           }
         requestCommit: summary=>{
                            let objects = {"summary":summary,"result":undefined}
-                           objects =  DialogRunner.exec("qrc:/src/qml/TransactionSummaryDialog.qml",objects);
+                           objects =  DialogRunner.exec("qrc:/src/qml/Dialogs/TransactionSummaryDialog.qml",objects);
                            return objects["result"]
                        }
     }
