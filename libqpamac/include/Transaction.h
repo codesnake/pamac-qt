@@ -5,6 +5,8 @@
 #include <memory>
 #include <cstring>
 #include "Database.h"
+
+#include <SnapPackage.h>
 namespace LibQPamac{
 class Database;
 class TransactionSummary{
@@ -82,7 +84,8 @@ public:
     }
 
     Q_INVOKABLE bool run(const QStringList& toInstall = QStringList(), const QStringList& toRemove = QStringList(), const QStringList& toLoad = QStringList(),
-                           const QStringList& toBuild = QStringList(), const QStringList& tempIgnore = QStringList(), const QStringList& overwriteFiles = QStringList());
+                           const QStringList& toBuild = QStringList(), const QStringList& tempIgnore = QStringList(), const QStringList& overwriteFiles = QStringList(),
+                         const QList<SnapPackage>& toInstallSnap = QList<SnapPackage>(), const QList<SnapPackage>& toRemoveSnap = QList<SnapPackage>());
 
     Q_INVOKABLE bool runSysupgrade(bool forceRefresh);
 

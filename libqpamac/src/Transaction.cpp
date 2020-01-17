@@ -34,7 +34,8 @@ GenericQmlFuture LibQPamac::Transaction::getBuildFiles(const QString &pkgname){
 }
 
 bool LibQPamac::Transaction::run(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
-                                   const QStringList& toBuild, const QStringList& tempIgnore, const QStringList& overwriteFiles)
+                                   const QStringList& toBuild, const QStringList& tempIgnore, const QStringList& overwriteFiles,
+                                 const QList<SnapPackage>& toInstallSnap, const QList<SnapPackage>& toRemoveSnap)
 {
 
     for(auto& name : toInstall){
@@ -60,6 +61,14 @@ bool LibQPamac::Transaction::run(const QStringList& toInstall, const QStringList
     for(auto& name : overwriteFiles){
         pamac_transaction_add_overwrite_file(m_handle,name.toUtf8());
     }
+
+    for(auto& pkg :toInstallSnap){
+        pamac_transaction_add_snap_to_install(m_handle,pkg.handle());
+    }
+    for(auto& pkg: toRemoveSnap){
+        pamac_transaction_add_snap_to_remove(m_handle,pkg.handle());
+    }
+
     setProperty("started",true);
     auto result = bool(pamac_transaction_run(m_handle));
     this->setProperty("progress",0);
