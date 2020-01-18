@@ -15,7 +15,9 @@ class SnapPackage: public Package{
 
 public:
     SnapPackage() = default;
-    SnapPackage(PamacSnapPackage* pkg):m_handle(pkg){}
+    SnapPackage(PamacSnapPackage* pkg):
+        Package(&pkg->parent_instance),
+        m_handle(pkg){}
 
     static SnapPackage fromData(void* data){return {reinterpret_cast<PamacSnapPackage*>(data)};};
 

@@ -16,21 +16,10 @@ public:
 
     Package(PamacPackage* package){
         m_handle=package;
-        g_object_ref(m_handle);
+    }
 
-    }
-    Package(const Package& another){
-        m_handle=another.m_handle;
-        g_object_ref(m_handle);
-    }
-    Package operator =(const Package& another){
-        m_handle=another.m_handle;
-        g_object_ref(m_handle);
-        return *this;
-    }
-    Package(void* packageData){
-        m_handle=reinterpret_cast<PamacPackage*>(packageData);
-        g_object_ref(m_handle);
+    static Package fromData(void* data){
+        return Package(reinterpret_cast<PamacPackage*>(data));
     }
 
     PAMAC_QT_STRING_PROPERTY_GET(name,pamac_package_get_name(m_handle))
@@ -59,12 +48,9 @@ public:
 
     PAMAC_QT_DATETIME_PROPERTY_GET(installDate,pamac_package_get_installdate(m_handle))
 
-    ~Package(){
-    }
 
-    operator PamacPackage*(){
-        return this->m_handle;
-    }
+    PamacPackage* handle(){return m_handle;}
+
 protected:
     PamacPackage* m_handle;
 };

@@ -35,32 +35,32 @@ QStringList Database::getGroups()
 QVariantList Database::searchPkgsInAur(const QString &name)
 {
 
-    return Utils::gListToQList<QVariant>(pamac_database_search_aur_pkgs(handle,name.toUtf8()),[](void* data){return QVariant::fromValue(AurPackage(data));});
+    return Utils::gListToQList<QVariant>(pamac_database_search_aur_pkgs(handle,name.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AurPackage));
 }
 
 QVariantList Database::getCategoryPackages(const QString &category)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_get_category_pkgs(handle,category.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
+    return Utils::gListToQList<QVariant>(pamac_database_get_category_pkgs(handle,category.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QVariantList Database::searchPkgs(const QString &name)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_search_pkgs(handle,name.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
+    return Utils::gListToQList<QVariant>(pamac_database_search_pkgs(handle,name.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QVariantList Database::getGroupPackages(const QString &group)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_get_group_pkgs(handle,group.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
+    return Utils::gListToQList<QVariant>(pamac_database_get_group_pkgs(handle,group.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QVariantList Database::getRepoPackages(const QString &repo)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_get_repo_pkgs(handle,repo.toUtf8()),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
+    return Utils::gListToQList<QVariant>(pamac_database_get_repo_pkgs(handle,repo.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 
 }
 
 QVariantList Database::getInstalledApps(){
-    return Utils::gListToQList<QVariant>(pamac_database_get_installed_apps(handle),[](void* data){return QVariant::fromValue(AlpmPackage(data));});
+    return Utils::gListToQList<QVariant>(pamac_database_get_installed_apps(handle),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QStringList Database::getPkgFiles(const QString &name){
@@ -82,21 +82,19 @@ QString Database::getMirrorsChoosenCountry(){
 }
 
 Updates Database::getUpdates(){
-
-    return Updates(pamac_database_get_updates(handle));
-
+    return {pamac_database_get_updates(handle)};
 }
 
-Package Database::getInstalledPackage(const QString &name){
+AlpmPackage Database::getInstalledPackage(const QString &name){
     return {pamac_database_get_installed_pkg(handle,name.toUtf8())};
 }
 
-Package Database::getSyncPackage(const QString &name){
+AlpmPackage Database::getSyncPackage(const QString &name){
     return {pamac_database_get_sync_pkg(handle,name.toUtf8())};
 }
 
 AurPackage Database::getAurPackage(const QString &name){
-    return AurPackage(pamac_database_get_aur_pkg(handle,name.toUtf8()));
+    return {pamac_database_get_aur_pkg(handle,name.toUtf8())};
 }
 
 QVariantList Database::findPackagesByName(const QStringList &names)
@@ -165,7 +163,7 @@ QVariantList LibQPamac::Database::getInstalledPackages(Database::InstalledPackag
         break;
     }
 
-    return LibQPamac::Utils::gListToQList<QVariant>(result,[](void* value){return QVariant::fromValue(AlpmPackage(value));});
+    return LibQPamac::Utils::gListToQList<QVariant>(result,PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 
@@ -178,14 +176,14 @@ QVariantList Database::getAurPackages(const QStringList &nameList)
     auto resultGlist = pamac_database_get_aur_pkgs(handle,list->data(),list->size());
     QVariantList result;
     for(auto el = g_hash_table_get_values(resultGlist);el!=nullptr;el=el->next){
-        result.append(QVariant::fromValue(AurPackage(el->data)));
+        result.append(QVariant::fromValue(AurPackage::fromData(el->data)));
     }
     return result;
 }
 
 AlpmPackage Database::getPkg(const QString &name)
 {
-   return AlpmPackage(pamac_database_get_pkg(handle,name.toUtf8()));
+   return {pamac_database_get_pkg(handle,name.toUtf8())};
 }
 
 } // namespace LibQPamac

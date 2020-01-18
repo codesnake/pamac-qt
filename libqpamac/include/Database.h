@@ -67,9 +67,9 @@ public:
 
     Q_INVOKABLE Updates getUpdates();
 
-    Q_INVOKABLE Package getInstalledPackage(const QString& name);
+    Q_INVOKABLE AlpmPackage getInstalledPackage(const QString& name);
 
-    Q_INVOKABLE Package getSyncPackage(const QString& name);
+    Q_INVOKABLE AlpmPackage getSyncPackage(const QString& name);
     Q_INVOKABLE AurPackage getAurPackage(const QString& name);
 
     Q_INVOKABLE QVariantList findPackagesByName(const QStringList& names);

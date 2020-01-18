@@ -8,30 +8,15 @@ class AlpmPackage : public Package
 {
     Q_GADGET
 public:
-    AlpmPackage(PamacAlpmPackage* package){
-        m_handle=package;
-        Package::m_handle = &m_handle->parent_instance;
+    AlpmPackage(PamacAlpmPackage* package)
+        :Package(&package->parent_instance),
+          m_handle(package)
+    {
+    }
 
-        g_object_ref(m_handle);
+    static AlpmPackage fromData(void* data){return AlpmPackage(reinterpret_cast<PamacAlpmPackage*>(data));}
 
-    }
-    AlpmPackage(const AlpmPackage& another){
-        m_handle=another.m_handle;
-        Package::m_handle = &m_handle->parent_instance;
-        g_object_ref(m_handle);
-    }
-    AlpmPackage operator =(const AlpmPackage& another){
-        m_handle=another.m_handle;
-        Package::m_handle = &m_handle->parent_instance;
-        g_object_ref(m_handle);
-        return *this;
-    }
-    AlpmPackage(void* packageData){
-        m_handle=reinterpret_cast<PamacAlpmPackage*>(packageData);
-        Package::m_handle = &m_handle->parent_instance;
-        g_object_ref(m_handle);
-    }
-AlpmPackage() = default;
+    AlpmPackage() = default;
 
     PAMAC_QT_STRING_PROPERTY_GET(packager,pamac_alpm_package_get_packager(m_handle))
 
@@ -46,6 +31,8 @@ AlpmPackage() = default;
     PAMAC_QT_STRINGLIST_PROPERTY_GET(optDepends,pamac_alpm_package_get_optdepends(m_handle))
 
     PAMAC_QT_STRINGLIST_PROPERTY_GET(licenses,pamac_alpm_package_get_licenses(m_handle))
+
+    PamacAlpmPackage* handle(){return m_handle;}
 
 protected:
     PamacAlpmPackage* m_handle;

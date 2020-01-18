@@ -9,13 +9,15 @@ class AurPackage : public AlpmPackage
     Q_GADGET
 public:
     AurPackage(PamacAURPackage* package):
-        m_handle(package),
-        AlpmPackage(&package->parent_instance){}
-    AurPackage(void* packageData):
-    m_handle(reinterpret_cast<PamacAURPackage*>(packageData)),
-    AlpmPackage(&reinterpret_cast<PamacAURPackage*>(packageData)->parent_instance){
-    }
+        AlpmPackage(&package->parent_instance),
+        m_handle(package)
+        {}
+
     AurPackage() = default;
+
+    static AurPackage fromData(void* data){
+        return AurPackage(reinterpret_cast<PamacAURPackage*>(data));
+    }
 
     PAMAC_QT_STRING_PROPERTY_GET(packageBase,pamac_aur_package_get_packagebase(m_handle))
     PAMAC_QT_DATETIME_PROPERTY_GET(outOfDate,pamac_aur_package_get_outofdate(m_handle))

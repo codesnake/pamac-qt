@@ -139,7 +139,7 @@ QMap<T1,T2> gHashToQMap(GHashTable* table,std::function<QPair<T1,T2>(void*,void*
 
 
 #define PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(PackageType)\
-    [](void* data){return QVariant::fromValue(PackageType(data));}
+    [](void* data){return QVariant::fromValue(PackageType::fromData(data));}
 
 
 // https://stackoverflow.com/a/48368508
