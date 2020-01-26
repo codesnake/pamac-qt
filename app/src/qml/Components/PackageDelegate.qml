@@ -42,9 +42,9 @@ LoaderDelegate{
     }
     onDoubleClicked: {
         if(list.packageList.every(value=>JSUtils.qmlTypeOf(value,"LibQPamac::AlpmPackage")))
-            stackView.push("../Pages/PagePackageInfo.qml",{pkg: packageList[index]})
+            stackView.push("../Pages/PagePackageInfo.qml",{pkg: packageList.filter((value)=>value.name===model.name)[0]})
         else
-            stackView.push("../Pages/PageAURPackageInfo.qml",{pkg: packageList[index]})
+            stackView.push("../Pages/PageAURPackageInfo.qml",{pkg: packageList.filter((value)=>value.name===model.name)[0]})
     }
     onClicked: {
         list.selectedRows = [];

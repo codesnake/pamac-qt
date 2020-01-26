@@ -6,8 +6,12 @@ import QPamac.Async 1.0
 import QtQuick.Layouts 1.3
 import "../../js/JSUtils.js" as Utils
 import "../Components/SideMenu" as SideMenu
+import "../Components" as Components
 
 Page {
+    background: Rectangle{
+        color: systemPalette.base
+    }
     FutureWatcher{
         id:detailsFutureWatcher
 
@@ -27,10 +31,6 @@ Page {
     }
 
     SideMenu.Drawer {
-        background: Rectangle {
-            color: systemPalette.alternateBase
-        }
-
         id: drawer
         initialItem: SideMenu.SideMenuAURPackageInfo {
         }
@@ -273,7 +273,7 @@ Page {
                         height: contentHeight
                         boundsBehavior: Flickable.StopAtBounds
                         model: pkg.depends
-                        delegate: ItemDelegate {
+                        delegate: Components.MenuItemDelegate {
 
                             height: 25
                             text: modelData
@@ -294,9 +294,10 @@ Page {
                         boundsBehavior: Flickable.StopAtBounds
                         width: 110
                         height: contentHeight
-                        delegate: ItemDelegate {
+                        delegate: Components.MenuItemDelegate {
                             height: 25
                             text: modelData
+                            backgroundColor: systemPalette.base
 
                             onClicked: {
 
@@ -308,6 +309,9 @@ Page {
                 }
             }
             Pane{
+                background: Rectangle{
+                    color: systemPalette.base
+                }
                 id:buildFilesPage
                 anchors.fill: parent
                 property var buildFolder

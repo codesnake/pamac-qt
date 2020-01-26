@@ -180,25 +180,31 @@ Page {
                         anchors.leftMargin: 0
                         wrapMode: Text.WordWrap
                     }
-
-                    Image {
-                        visible: source
-                        id: screenshot
-                        width: height * (sourceSize.width / sourceSize.height)
+                    RowLayout{
+                        visible: screenshotRepeater.model
                         height: visible ? 200 : 0
-                        asynchronous: true
-                        cache: false
-                        fillMode: Image.PreserveAspectFit
-                        source: pkg.screenshotUrl
-                        MouseArea{
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                DialogRunner.exec("qrc:/src/qml/ScreenshotViewerDialog.qml",{source:screenshot.source})
+                        Repeater{
+                            id:screenshotRepeater
+                            model: pkg.screenshots
+                        Image {
+
+                            id: screenshot
+                            width: height * (sourceSize.width / sourceSize.height)
+
+                            asynchronous: true
+                            cache: false
+                            fillMode: Image.PreserveAspectFit
+                            source: modelData
+                            MouseArea{
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    DialogRunner.exec("qrc:/src/qml/ScreenshotViewerDialog.qml",{source:screenshot.source})
+                                }
                             }
                         }
+                        }
                     }
-
                     Grid {
                         anchors.right: parent.right
                         anchors.rightMargin: 0
@@ -376,9 +382,8 @@ Page {
                         delegate: Components.MenuItemDelegate {
                             height: 25
                             text: modelData
-
+                            backgroundColor: systemPalette.base
                             onClicked: {
-
                                 stackView.push("PagePackageInfo.qml", {"pkg" : Database.getPkg(modelData)});
                             }
                         }
@@ -394,6 +399,7 @@ Page {
                         width: 110
                         height: contentHeight
                         delegate: Components.MenuItemDelegate {
+                            backgroundColor: systemPalette.base
                             height: 25
                             text: modelData
 

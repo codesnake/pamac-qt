@@ -96,6 +96,9 @@ void Application::restoreGeometry()
 
 void Application::loadMainWindow()
 {
+    if(m_objects["mainWindow"]!=nullptr){
+        return;
+    }
     qmlRegisterSingletonType<QmlDialogRunner>("DialogRunner",1,0,"DialogRunner",
                                               [](QQmlEngine *m_engine, QJSEngine *scriptEngine)->QObject*{
         Q_UNUSED(scriptEngine)
@@ -103,9 +106,6 @@ void Application::loadMainWindow()
         return new QmlDialogRunner("mainWindow", m_engine);
     });
 
-    if(m_objects["mainWindow"]!=nullptr){
-        return;
-    }
 
     m_engine.load(QUrl(QStringLiteral("qrc:/src/qml/Pages/MainWindow.qml")));
     restoreGeometry();
@@ -114,7 +114,6 @@ void Application::loadMainWindow()
         saveGeometry();
         m_objects.take("mainWindow")->deleteLater();
     });
-
 }
 
 void Application::loadOpenWithDialog(const QString &filename)

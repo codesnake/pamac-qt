@@ -6,7 +6,6 @@ ListView {
     boundsBehavior: Flickable.StopAtBounds
     model: ["Description","Dependecies","Build files"]
     delegate: Components.MenuItemDelegate{
-        backgroundColor: systemPalette.alternateBase
         id:packageInfoDelegate
         text:modelData
         onClicked: {
