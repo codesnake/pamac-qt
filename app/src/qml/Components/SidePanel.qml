@@ -5,7 +5,7 @@ import QtGraphicalEffects 1.0
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
-import QPamac.Async 1.0
+
 import Qt.labs.platform 1.0 as Labs
 import DialogRunner 1.0
 import "./SideMenu" as SideMenu

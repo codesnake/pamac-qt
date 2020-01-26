@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.4
 import QPamac.PackageModel 1.0
 import QPamac.Database 1.0
-import QPamac.Async 1.0
+
 import QtQuick.Shapes 1.11
 Pane{
     padding: 0

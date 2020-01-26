@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QPamac.Package 1.0
 import QPamac.Database 1.0
-import QPamac.Async 1.0
+
 import QtQuick.Layouts 1.3
 import "../../js/JSUtils.js" as Utils
 import "../Components/SideMenu" as SideMenu

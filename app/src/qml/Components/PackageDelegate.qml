@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import QPamac.Database 1.0
 import QPamac.PackageModel 1.0
 import QPamac.Transaction 1.0
-import QPamac.Async 1.0
+
 import QPamac.AUR.PackageModel 1.0
 import QPamac.Package 1.0
 import "./" as PamacQt
