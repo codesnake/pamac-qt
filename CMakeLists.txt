@@ -14,4 +14,4 @@ endif(NOT DEFINED VERSION)
 add_subdirectory(app)
 
 
-install(TARGETS libqpamac desktopnotificationservices pamac-qt-app)
+install(TARGETS libqpamac desktopnotificationservices pamac-qt)

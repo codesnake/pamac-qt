@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(pamac-qt-app)
+project(pamac-qt)
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5QuickCompiler)
@@ -14,3 +14,8 @@ target_link_libraries(${PROJECT_NAME} libqpamac)
 target_link_libraries(${PROJECT_NAME} desktopnotificationservices)
 
 qt5_use_modules(${PROJECT_NAME} Core Qml Quick QuickControls2 Widgets)
+configure_file(data/applications/pamac-qt.desktop.in data/applications/pamac-qt.desktop)
+configure_file(data/applications/pamac-qt-tray.desktop.in data/applications/pamac-qt-tray.desktop)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/applications/pamac-qt.desktop DESTINATION share/applications/ )
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/applications/pamac-qt-tray.desktop DESTINATION /etc/xdg/autostart/ )
