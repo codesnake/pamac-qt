@@ -5,6 +5,7 @@ import QPamac.Database 1.0
 import NotificationServices 1.0
 import Qt.labs.platform 1.1
 Item{
+    property var updatesCount
     objectName: "trayIcon"
     Timer{
         interval: Database.config.refreshPeriod*3600000
@@ -13,17 +14,22 @@ Item{
         triggeredOnStart: true
         onTriggered: {
             let upds = Database.getUpdates();
-            updatesNotification.updatesCount =  upds.getReposUpdates().length;
-            if(updatesNotification.updatesCount!==0){
+            updatesCount =  upds.getReposUpdates().length;
+            if(updatesCount!==0){
                 updatesNotification.show();
             }
         }
     }
     Notification{
-        property var updatesCount
         id: updatesNotification
         summary: qsTr("Updates available")
-        body: updatesCount+" new update(s)"
+        body: {
+            if(updatesCount>1){
+                return updatesCount+" new updates";
+            }
+            return "New update";
+        }
+
         iconName: "system-software-update"
         actions: ["Show"]
         onActionClicked: {
@@ -33,9 +39,9 @@ Item{
         }
     }
     SystemTrayIcon {
-        icon.name: updatesNotification.updatesCount>0?"update-low":"update-none"
+        icon.name: updatesCount>0?"update-low":"update-none"
 
-        visible: updatesNotification.updatesCount>0 || !Database.config.noUpdateHideIcon
+        visible: updatesCount>0 || !Database.config.noUpdateHideIcon
         menu: Menu{
             visible: false
             MenuItem{
@@ -47,7 +53,7 @@ Item{
                 onTriggered: quitApp();
             }
         }
-        onActivated: showApp();
+        onActivated: updatesCount>0?showUpdates():showApp()
     }
     signal showUpdates();
     signal showApp();
