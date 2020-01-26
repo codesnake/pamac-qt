@@ -7,7 +7,7 @@ find_package(Qt5QuickCompiler)
 
 if ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
     qt5_add_resources(RESOURCES qml.qrc)
-elseif ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+else ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
     qtquick_compiler_add_resources(RESOURCES qml.qrc)
 endif ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 
