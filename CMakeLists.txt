@@ -5,9 +5,9 @@ if(NOT DEFINED VERSION)
     execute_process(COMMAND git --git-dir ./.git --work-tree ./ describe --always --tags
                     OUTPUT_VARIABLE RES
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-    string(STRIP ${RES} RES)
-    add_definitions(-DVERSION=\"${RES}\")
+    string(STRIP ${RES} VERSION)
 endif(NOT DEFINED VERSION)
+add_definitions(-DVERSION=\"${VERSION}\")
 
 
 add_subdirectory(app)
