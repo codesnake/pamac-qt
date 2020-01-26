@@ -30,7 +30,6 @@ void LibQPamacModule::registerTypes(const char *uri)
     qmlRegisterType<HistoryItemModel>("QPamac.History",1,0,"HistoryModel");
     qmlRegisterUncreatableType<AurPackage>("QPamac.AUR.Package",1,0,"AURPackage","");
     qmlRegisterUncreatableType<AlpmPackage>("QPamac.Package",1,0,"AlpmPackage","");
-    qmlRegisterType<Package>();
     qmlRegisterType<PackageModel>("QPamac.PackageModel",1,0,"PackageModel");
     qmlRegisterType<AurPackageModel>("QPamac.AUR.PackageModel",1,0,"AURPackageModel");
     qmlRegisterUncreatableType<Updates>("QPamac.Database",1,0,"Updates","");

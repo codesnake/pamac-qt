@@ -18,9 +18,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     AUTOMOC TRUE
     CXX_STANDARD 17
     CXX_EXTENSIONS ON)
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+
+
+target_include_directories(${PROJECT_NAME} PUBLIC include ${GLIB2_INCLUDE_DIRS} ${PAMAC_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${GLIB2_LIBRARIES} ${PAMAC_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${GLIB2_INCLUDE_DIRS} ${PAMAC_INCLUDE_DIRS})
 target_compile_options(${PROJECT_NAME} PUBLIC ${GLIB2_CFLAGS_OTHER} )
 
 
