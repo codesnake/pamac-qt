@@ -34,6 +34,11 @@ ApplicationWindow {
     property var ignoreWhenUpdate: []
 
     onClosing: {
+        if(transaction.started){
+            close.accepted = false;
+            return;
+        }
+
         sClosing();
     }
 
