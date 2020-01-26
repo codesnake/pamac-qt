@@ -1,7 +1,6 @@
 #pragma once
 #include <QObject>
 #include <Package.h>
-#include <AsyncHelpers.h>
 #include <memory>
 #include <Config.h>
 #include <Updates.h>

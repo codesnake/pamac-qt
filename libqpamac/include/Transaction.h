@@ -5,6 +5,7 @@
 #include <memory>
 #include <cstring>
 #include "Database.h"
+#include <QJSValue>
 
 #include <SnapPackage.h>
 namespace LibQPamac{
@@ -66,7 +67,6 @@ public:
         pamac_transaction_get_authorization(m_handle);
     }
 
-    Q_INVOKABLE GenericQmlFuture getBuildFiles(const QString& pkgname);
 
     Database* database() const
     {

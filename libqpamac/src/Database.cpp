@@ -1,5 +1,6 @@
 #include "Database.h"
 #include <functional>
+#include <QFile>
 
 namespace LibQPamac {
 Database::Database(PamacDatabase *db, QObject *parent):

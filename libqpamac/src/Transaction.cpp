@@ -4,35 +4,6 @@
 #include <atomic>
 #include <QVariant>
 
-GenericQmlFuture LibQPamac::Transaction::getBuildFiles(const QString &pkgname){
-    auto future = new QmlFutureImpl;
-//    pamac_transaction_get_build_files(m_handle,pkgname.toUtf8(),
-//                                      [](GObject* parent,GAsyncResult* res,gpointer futurePtr){
-//        auto future = reinterpret_cast<QmlFutureImpl*>(futurePtr);
-//        if(future->isRunning()){
-
-//            auto transaction = reinterpret_cast<PamacTransaction*>(parent);
-//            int length = 0;
-//            gchar** result = pamac_transaction_get_build_files_finish(transaction,res);
-//            QStringList resList;
-
-//            for(int i =0;i<length;i++){
-//                QFileInfo file(QString::fromUtf8(result[i]));
-//                resList.append(file.fileName());
-//                g_free(result[i]);
-//            }
-
-//            g_free(result);
-//            future->setFuture(QVariant::fromValue(resList));
-//        }
-//        else {
-//            delete future;
-//        }
-//    },future);
-    return GenericQmlFuture(future);
-
-}
-
 bool LibQPamac::Transaction::run(const QStringList& toInstall, const QStringList& toRemove, const QStringList& toLoad,
                                    const QStringList& toBuild, const QStringList& tempIgnore, const QStringList& overwriteFiles,
                                  const QList<SnapPackage>& toInstallSnap, const QList<SnapPackage>& toRemoveSnap)
