@@ -62,6 +62,7 @@ class Transaction : public QObject
 
 public:
     Transaction(QObject * parent = nullptr):QObject(parent){}
+    ~Transaction(){quitDaemon();}
 
     inline Q_INVOKABLE void getAuthorization(){
         pamac_transaction_get_authorization(m_handle);

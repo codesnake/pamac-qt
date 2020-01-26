@@ -53,10 +53,6 @@ ApplicationWindow {
             }
         }
 
-        Component.onDestruction: {
-            transaction.quitDaemon();
-        }
-
         requestChooseProvider: (depend,list)=>{
                                    let objects = {"depend":depend,"lst":list,"provider":undefined}
                                    objects = DialogRunner.exec(Qt.resolvedUrl("../Dialogs/ChooseProviderDialog.qml"),objects)
