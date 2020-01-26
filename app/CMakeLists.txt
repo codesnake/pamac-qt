@@ -2,10 +2,20 @@ cmake_minimum_required(VERSION 3.14)
 project(pamac-qt)
 
 find_package(Qt5Core REQUIRED)
+
 find_package(Qt5QuickCompiler)
-qt5_add_resources(RESOURCES qml.qrc)
+
+if ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+    qt5_add_resources(RESOURCES qml.qrc)
+elseif ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+    qtquick_compiler_add_resources(RESOURCES qml.qrc)
+endif ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+
 file(GLOB app_src "src/cpp/include/*.h" "src/cpp/src/*.cpp")
+
 add_executable(${PROJECT_NAME} ${app_src} ${RESOURCES})
+
+
 set_target_properties(${PROJECT_NAME} PROPERTIES AUTOMOC TRUE)
 set_target_properties(${PROJECT_NAME} PROPERTIES AUTORCC TRUE)
 add_definitions(-DQT_QML_DEBUG)
