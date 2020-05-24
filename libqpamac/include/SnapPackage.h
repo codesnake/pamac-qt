@@ -1,6 +1,5 @@
 #pragma once
 #include <QObject>
-#include <pamac.h>
 #include <Package.h>
 #include <Utils.h>
 namespace LibQPamac {

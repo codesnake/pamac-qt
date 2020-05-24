@@ -25,51 +25,51 @@ Database::Database(const QString& configFile, QObject *parent):
 
 QStringList Database::getRepos()
 {
-    return Utils::gListToQStringList(pamac_database_get_repos_names(handle),true);
+    return Utils::gsListToQStringList(pamac_database_get_repos_names(handle),true);
 }
 
 QStringList Database::getGroups()
 {
-    return Utils::gListToQStringList(pamac_database_get_groups_names(handle),true);
+    return Utils::gsListToQStringList(pamac_database_get_groups_names(handle),true);
 }
 
 QVariantList Database::searchPkgsInAur(const QString &name)
 {
 
-    return Utils::gListToQList<QVariant>(pamac_database_search_aur_pkgs(handle,name.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AurPackage));
+    return Utils::gSListToQList<QVariant>(pamac_database_search_aur_pkgs(handle,name.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AurPackage));
 }
 
 QVariantList Database::getCategoryPackages(const QString &category)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_get_category_pkgs(handle,category.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
+    return Utils::gSListToQList<QVariant>(pamac_database_get_category_pkgs(handle,category.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QVariantList Database::searchPkgs(const QString &name)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_search_pkgs(handle,name.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
+    return Utils::gSListToQList<QVariant>(pamac_database_search_pkgs(handle,name.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QVariantList Database::getGroupPackages(const QString &group)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_get_group_pkgs(handle,group.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
+    return Utils::gSListToQList<QVariant>(pamac_database_get_group_pkgs(handle,group.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QVariantList Database::getRepoPackages(const QString &repo)
 {
-    return Utils::gListToQList<QVariant>(pamac_database_get_repo_pkgs(handle,repo.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
+    return Utils::gSListToQList<QVariant>(pamac_database_get_repo_pkgs(handle,repo.toUtf8()),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 
 }
 
 QVariantList Database::getInstalledApps(){
-    return Utils::gListToQList<QVariant>(pamac_database_get_installed_apps(handle),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
+    return Utils::gSListToQList<QVariant>(pamac_database_get_installed_apps(handle),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 QStringList Database::getPkgFiles(const QString &name){
-    return  Utils::gListToQStringList(pamac_database_get_pkg_files(handle,name.toUtf8()),true);
+    return  Utils::gsListToQStringList(pamac_database_get_pkg_files(handle,name.toUtf8()),true);
 }
 
 QStringList Database::getMirrorsCountries(){
-    QStringList result = Utils::gListToQStringList(pamac_database_get_mirrors_countries(handle),true);
+    QStringList result = Utils::gsListToQStringList(pamac_database_get_mirrors_countries(handle),true);
     result.push_front("Worldwide");
     return result;
 }
@@ -148,7 +148,7 @@ void Database::init()
 }
 
 QVariantList LibQPamac::Database::getInstalledPackages(Database::InstalledPackageTypes type){
-    GList* result;
+    GSList* result;
     switch (type) {
     case Installed:
         result = pamac_database_get_installed_pkgs(handle);
@@ -164,7 +164,7 @@ QVariantList LibQPamac::Database::getInstalledPackages(Database::InstalledPackag
         break;
     }
 
-    return LibQPamac::Utils::gListToQList<QVariant>(result,PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
+    return LibQPamac::Utils::gSListToQList<QVariant>(result,PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(AlpmPackage));
 }
 
 

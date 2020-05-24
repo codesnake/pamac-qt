@@ -76,7 +76,7 @@ namespace LibQPamac::Utils{
 {\
     QStringList result;\
     auto tmp = method;\
-    for(auto el = g_list_first(tmp);el!=nullptr;el=el->next){\
+    for(auto el = tmp;el!=nullptr;el=el->next){\
     result.append((QString::fromUtf8(static_cast<char*>(el->data))));\
 }\
     return result;\
@@ -100,10 +100,10 @@ std::vector<char*> qStringListToCStringVector(const QStringList&);
 QStringList cStringArrayToQStringList(char** arr,int size);
 GList* qVariantListToGList(const QVariantList& lst);
 GVariant* qVariantToGVariant(const QVariant&);
-QStringList gListToQStringList(GList* lst,bool freeOriginal = false);
+QStringList gsListToQStringList(GSList* lst,bool freeOriginal = false);
 
 template <typename T>
-QList<T> gListToQList(GList* list,std::function<T(void*)> wrapFunction,GDestroyNotify freeFunc = nullptr)
+QList<T> gSListToQList(GSList* list,std::function<T(void*)> wrapFunction,GDestroyNotify freeFunc = nullptr)
 {
     QList<T> result;
     for(auto el = list;el!=nullptr;el=el->next)
@@ -112,7 +112,7 @@ QList<T> gListToQList(GList* list,std::function<T(void*)> wrapFunction,GDestroyN
     }
 
     if(freeFunc){
-        g_list_free_full(list,freeFunc);
+        g_slist_free_full(list,freeFunc);
     }
 
     return result;

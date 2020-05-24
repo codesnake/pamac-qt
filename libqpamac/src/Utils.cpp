@@ -66,7 +66,7 @@ GVariant *LibQPamac::Utils::qVariantToGVariant(const QVariant& value)
     }
 }
 
-QStringList LibQPamac::Utils::gListToQStringList(GList *list,bool freeOriginal)
+QStringList LibQPamac::Utils::gsListToQStringList(GSList *list,bool freeOriginal)
 {
     QStringList result;
     for(auto el = list;el!=nullptr;el=el->next)
@@ -75,7 +75,7 @@ QStringList LibQPamac::Utils::gListToQStringList(GList *list,bool freeOriginal)
     }
 
     if(freeOriginal){
-        g_list_free_full(list,g_free);
+        g_slist_free_full(list,g_free);
     }
 
     return result;

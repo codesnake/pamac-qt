@@ -22,23 +22,23 @@ public:
     TransactionSummary(PamacTransactionSummary* s):summary(s){}
     TransactionSummary()=default;
     QVariantList toInstall() const{
-        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_install(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
+        return Utils::gSListToQList<QVariant>(pamac_transaction_summary_get_to_install(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
     }
     QVariantList toRemove() const
     {
-        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_remove(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
+        return Utils::gSListToQList<QVariant>(pamac_transaction_summary_get_to_remove(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
     }
     QVariantList toReinstall() const
     {
-        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_reinstall(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
+        return Utils::gSListToQList<QVariant>(pamac_transaction_summary_get_to_reinstall(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
     }
     QVariantList toBuild() const
     {
-        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_build(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
+        return Utils::gSListToQList<QVariant>(pamac_transaction_summary_get_to_build(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
     }
     QVariantList toUpgrade() const
     {
-        return Utils::gListToQList<QVariant>(pamac_transaction_summary_get_to_upgrade(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
+        return Utils::gSListToQList<QVariant>(pamac_transaction_summary_get_to_upgrade(summary),PAMAC_QT_PACKAGE_TO_VARIANT_WRAP(Package));
     }
 private:
     PamacTransactionSummary* summary;
