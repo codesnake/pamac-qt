@@ -83,7 +83,7 @@ QString Database::getMirrorsChoosenCountry(){
 }
 
 Updates Database::getUpdates(){
-    return {pamac_database_get_updates(handle)};
+    return {pamac_database_get_updates(handle, false)};
 }
 
 AlpmPackage Database::getInstalledPackage(const QString &name){
